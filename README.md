@@ -1,1 +1,4 @@
-# dotfiles
+dotfiles
+
+- nixos configuration
+- spacemacs
