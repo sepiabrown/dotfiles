@@ -177,7 +177,7 @@ user_pref("services.sync.history.syncID", "-Ok1Pnr8Jlyo");
 user_pref("services.sync.lastPing", 1585884723);
 user_pref("services.sync.lastSync", "Sat Apr 04 2020 00:22:07 GMT+0900 (KST)");
 user_pref("services.sync.lastTabFetch", 1585925347);
-user_pref("services.sync.nextSync", 1585927417);
+user_pref("services.sync.nextSync", 0);
 user_pref("services.sync.passwords.lastSync", "1585922509.42");
 user_pref("services.sync.passwords.syncID", "8gm_SoQn0i7b");
 user_pref("services.sync.prefs.lastSync", "1585885006.06");
