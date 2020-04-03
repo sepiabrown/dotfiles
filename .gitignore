@@ -2,5 +2,4 @@
 .mozilla/systemextensionsdev
 .mozilla/firefox/8klwzwn3.default/*
 .mozilla/firefox/profiles.ini
-README.md
 !.mozilla/firefox/**/prefs.js
