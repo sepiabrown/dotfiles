@@ -170,7 +170,7 @@ user_pref("services.sync.engine.prefs.modified", false);
 user_pref("services.sync.extension-storage.lastSync", "0");
 user_pref("services.sync.forms.lastSync", "1585903317.96");
 user_pref("services.sync.forms.syncID", "AXmJsagV5g3W");
-user_pref("services.sync.globalScore", 0);
+user_pref("services.sync.globalScore", 20);
 user_pref("services.sync.history.lastSync", "1585929846.59");
 user_pref("services.sync.history.syncID", "-Ok1Pnr8Jlyo");
 user_pref("services.sync.lastPing", 1585884723);
