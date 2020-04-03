@@ -1,1 +1,2 @@
-# personal dotfiles used with NixOS configured on "mate+xmonad"
+# Dotfiles & Configs
+Personal dotfiles and configs used with NixOS configured on "mate+xmonad"
