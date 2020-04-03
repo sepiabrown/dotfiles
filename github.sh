@@ -2,7 +2,6 @@
 # Don't use PATHS!
 GITHUBPATHS="
 .config/
-.local/
 .mozilla/
 .spacemacs.d/
 .uim.d/
