@@ -1,0 +1,222 @@
+#+title: Shortcuts
+ 
+* Notes
+** bbbb
+   eueue
+** ooeaeu
+   aoeuaoeu
+* Shortcuts
+
+** Subtrees  
+
+   insert tree : * spc
+   
+   expand/colaps the subtree : Tab
+
+   change the subtree level : alt left/right
+
+   change the whole subtree level : alt shift left/right
+
+   transpose the subtree with adjacent line : alt shift up/down
+
+   transpose the whole subtree with adjacent subtree : alt up/down
+
+   navigate through the subtrees : g h/j/k/l
+   
+   new subtree same level after content : ctrl ret
+
+   new subtree same level before content : alt ret
+
+   make string subtree same level : , i h
+
+   make string subtree lower level : , i s
+
+   narrowed/widen subtree : , s n/N
+
+   centered distraction free : spc w c c
+
+   <motion> on element : <motion> a e
+   <motion> on tree : <motion> a r
+   - one of <motion> : = is indent
+   
+** Tables
+
+   Create a table : write '|x|y' and press tab which will result in
+ 
+   | x               | y                              |
+   | <l>             | <4>                            |
+   | aoeu            | he llo ae ua oe uae uao eu aoe |
+   | aoeuaoeu aoeueo | aoeu                           |
+   |                 |                                |
+
+   | x | y |
+   |---+---|
+   | 4 | 7 |
+   | 5 | 6 |
+   | 6 | 4 |
+   | 0 | 2 |
+ 
+   - jump around table : (shift) tab
+   - align with <n> by org-ctrl-c-tab : ctrl-c tab 
+   - transpose row/column with adjacent row/column : alt arrow
+   - sort tables increasing/decreasing : , t s n/N
+   - make ---+--- line : , ret
+   - insert/kill row : alt shift down/up
+   - insert/kill column :  alt shift right/left
+  
+   Import tables by org-table-import : , t I
+
+   use table as data sources : 
+
+   #+tblname: table-namename
+   | x    | y |
+   |------+---|
+   | John | 2 |
+   | Andy | 7 |
+   | Zoe  | 1 |
+
+   Convert table to Latex : highlight table -> Ctrl-c Ctrl-e l
+
+** Inline code 
+
+   write programs to your disk : :tangle ~~.py -> elisp:org-babel-tangle command
+
+   show equations in latex? : , , $\int_0^x \sin x = 0.56
+   
+   show symbols? : org-toggle-pretty-entities
+   
+   use executable code : , ,
+
+ #+BEGIN_SRC python :results output :var data=table-namename :tangle namename.py 
+   print data
+   # return 3
+ #+END_SRC
+
+ #+RESULTS:
+ : [['John', 2], ['Andy', 7], ['Zoe', 1]]
+
+** Links
+
+   Making links : =[[link][Link text]]=
+ 
+   Image link : =[[imagepath]]=
+
+   Caption image : 
+   #+caption : This is an image
+   #+name : test_image
+   =[[~~.extension]]=  
+   - enable inline images : spc spc org-toggle-inline-images
+
+   reference table? linking : ref:table-namename 
+
+** Editing 
+
+   comment/uncomment line : spc c l
+  
+   insert snippets : spc i s
+
+   formating bold/italics/code : , x b/i/c
+  
+   yank surround inner word (evil surround package) ? y s i w [~] : make a word code block - period key duplicates action
+
+** Tasks, Agenda  
+
+*** TODO new todo list [1/5] [20%]
+   - [ ] Subtask1
+   - [X] Subtask2
+   - [ ] Subtask3
+   - [ ] Subtask4
+   - [ ] Subtask5
+
+   New TODO list : T not working , shift alt ret
+
+   view todo trees by org-show-todo-tree : , T t
+
+   selectively show todos (sparce) : , s s 
+
+   TODO list toggle : ( shift right arrow ) / t 
+
+   date-deadline : , d d
+   date-schedule : , d s
+   - move through date : shift arrow
+
+   todo keyword state transitions config : spc f e d user-config org-todo-keywords
+   
+   todo keyword appearance config : spc f e d user-config org-todo-keyword-faces
+
+   clock-in : , C i 
+    
+   clock-goto : 
+  
+   sort by start of clock-in : , s S t
+
+   org-agenda options : , a / spc a o o
+
+   put in to agenda : spc spc 'agenda front to file' / C-c [
+
+   list todo items in agenda : , a t / spc a o t
+   - agenda sort : <num> r
+   - change status : t?
+   - refresh : g?
+
+   list agenda for current week or day : , a a / spc a o a
+
+   search and jump to the buffer : spc j i
+   #+ COLUMNS: %5TODO %25ITEM ... : numbers are width of the column
+
+** Layout/keyboard config
+
+   make column view : C-c C-x C-c
+   
+   -e : change value of column / edit tags
+
+   window maximize : spc w m
+   
+   keyboard shortcut config : 
+      spc f e d declare-prefix ~ 
+                set-leader-keys ~
+
+** Exporting
+
+   exporting options : , e e 
+   
+   Export scope : Buffer/Subtree
+   
+** Etc 
+   
+   bullet symbol change : put [setq org-bullets-bullet-list '(~~)] in user-config
+
+   numbering auto fix / checkbox checking : , ,
+
+   Capture? : (C-c c)   
+
+   Tags and Properties filter? : C-c a m
+
+   insert tags to the tree : , i t / C-c C-c
+   
+** Check Out
+   
+   exporting nicely : Org-html-theme -> ReadTheOrg
+   
+   Table Formulas
+   
+   Org Capture
+
+   Orgzly
+
+** DONE checkbox [0/2]
+   CLOSED: [2020-02-10 월 00:45] SCHEDULED: <2020-02-09 일 23:00-00:00>
+   :LOGBOOK:
+   CLOCK: [2020-02-10 월 00:32]--[2020-02-10 월 00:45] =>  0:13
+   :END:
+  1. [ ] aoeu
+  2. [ ] 
+     1. 
+
+  
+
+  #+BEGIN_SRC python
+    import 
+
+  #+END_SRC
+

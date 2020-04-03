@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: subscript_y
+# key: yy
+# condition: (when (org-inside-LaTeX-fragment-p) 'auto)
+# --
+${1:X}_y$0
