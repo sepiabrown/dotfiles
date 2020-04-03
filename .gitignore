@@ -1,2 +1,4 @@
-.mozilla/firefox/8klwzwn3.default/webappsstore*
-.mozilla/firefox/8klwzwn3.default/sessionstore-backups/*
+.mozilla/extensions
+.mozilla/systemextensionsdev
+.mozilla/firefox/8klwzwn3.default/*
+!.mozilla/firefox/**/prefs.js
