@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: fractionInParenthesis
+# regexp-key: \(.*)\)/
+# condition: (when (org-inside-LaTeX-fragment-p) 'auto)
+# --
+`(with-temp-buffer
+    (let ((str (nth 1 yas-matched-regexp-key-groups)))
+         (insert str)
+         (sp-get (sp-get-thing t)
+         (concat (buffer-substring 1 :beg) "\\frac{" (buffer-substring :beg-in :end-in)))))`}{${1:denominator}}$0

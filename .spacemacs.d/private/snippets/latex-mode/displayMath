@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: displayMath
+# key: dm
+# condition: 'auto
+# --
+\[
+$1
+\]
+$0

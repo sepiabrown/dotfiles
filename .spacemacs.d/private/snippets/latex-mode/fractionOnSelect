@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: fractionOnSelect
+# regexp-key: |/
+# condition: (when (org-inside-LaTeX-fragment-p) 't)
+# --
+\\frac{`(yank)`}{${1:denominator}}$0

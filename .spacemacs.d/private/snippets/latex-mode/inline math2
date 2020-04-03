@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name:inline2
+# key:mk2
+# --
+\\($1\\)${2:$$(unless (equal (substring yas-text 0 1) " " "," " " "-" "?") (concat " " yas-text))}$0

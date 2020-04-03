@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: fraction
+# regexp-key: \(\([0-9]+\)\|\([0-9]*\)\\?\([A-Za-z]+\)\(\(\^\|_\)\({[0-9]+}\|[0-9]+\)\)*\)/
+# condition: (when (org-inside-LaTeX-fragment-p) 'auto)
+# --
+\frac{${1:`(nth 1 yas-matched-regexp-key-groups)`}}{${2:denominator}}$0

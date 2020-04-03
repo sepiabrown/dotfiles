@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+RCLONEPATHS="_mobile __inbox _참고자료 통계학"
+RCLONEHOME="/commonground/gd/"
+RCLONEREMOTE="gd:"
+RCLONEREMOTE2="db:"
+#rclone check "${RCLONEREMOTE}" "${RCLONEHOME}" --filter-from filter-file
+#IFS=','
+#for RCPATH in $RCLONEPATHS
+#  do
+#    rclone check "${RCLONEREMOTE}${RCPATH}" "${RCLONEHOME}${RCPATH}" --filter-from filter-file
+#  done
+while true; do
+  read -p "Choose Task (copy, sync, check..) : " task
+  read -p "Choose Direction (remote to local : r , local to remote : l, dropbox : d) : " direction
+  read -p "Are you sure? : " safe
+  if [ ${task} == "check" -a ${safe} == "y" ]; then
+    for RCPATH in $RCLONEPATHS; do
+      rclone check "${RCLONEREMOTE}${RCPATH}" "${RCLONEHOME}${RCPATH}" --filter-from filter-file
+    done
+  elif [ ${direction} == "r" -a ${safe} == "y" ]; then
+    for RCPATH in $RCLONEPATHS; do
+      rclone mkdir "${RCLONEHOME}${RCPATH}"
+      rclone $task "${RCLONEREMOTE}${RCPATH}" "${RCLONEHOME}${RCPATH}" --backup-dir "${RCLONEHOME}/tmp" --suffix .rclone --verbose --filter-from filter-file
+    done
+    #  rclone $task "${RCLONEREMOTE}" "${RCLONEHOME}" --backup-dir "${RCLONEHOME}/tmp" --suffix .rclone --verbose --track-renames
+  elif [ ${direction} == "l" -a ${safe} == "y" ]; then
+    for RCPATH in $RCLONEPATHS; do
+      rclone mkdir "${RCLONEREMOTE}${RCPATH}"
+      rclone $task "${RCLONEHOME}${RCPATH}" "${RCLONEREMOTE}${RCPATH}" --backup-dir "${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --filter-from filter-file
+    done
+    #  rclone $task "${RCLONEHOME}" "${RCLONEREMOTE}" --backup-dir "${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --track-renames
+  elif [ ${direction} == "d" -a ${safe} == "y" ]; then
+    # for RCPATH in $RCLONEPATHS do
+      rclone $task "${RCLONEHOME}_mobile/structured" "${RCLONEREMOTE2}/_mobile/structured" --backup-dir "${RCLONEREMOTE2}/tmp" --suffix .rclone --verbose --filter-from filter-file
+    # done
+  elif [ ${task} == "quit" ]; then
+    read -p "Press [Enter] key to end..."
+    exit 1
+    
+    read -p "Error : Press [Enter] key to end..."
+    exit 1
+    fi
+done
