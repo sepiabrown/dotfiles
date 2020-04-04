@@ -1,5 +1,0 @@
-.mozilla/extensions
-.mozilla/systemextensionsdev
-.mozilla/firefox/8klwzwn3.default/*
-.mozilla/firefox/profiles.ini
-!.mozilla/firefox/**/prefs.js
