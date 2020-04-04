@@ -2,11 +2,10 @@
 # Don't use PATHS!
 GITHUBPATHS="
 .config/
-.mozilla/
 .spacemacs.d/
 .uim.d/
 filter-file
-github.sh
+my.dotfiles
 my.rclone
 shortcut
 .gitmodules
