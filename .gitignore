@@ -1,0 +1,11 @@
+*
+!.config/
+!.spacemacs.d/
+!.uim.d/
+!filter-file
+!my.rclone
+!shortcut
+!.gitmodules
+!.gitignore
+!.vimrc_bak
+!.xmobarrc

@@ -338,6 +338,19 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;(set-language-environment "Korean")
+  (let ((fontset "fontset-default"))
+    (set-fontset-font fontset 'latin '("D2Coding" . "unicode-bmp"))
+    (set-fontset-font fontset 'hangul '("D2Coding" . "unicode-bmp"))
+    (set-face-attribute 'default nil
+                        :font fontset
+                        :height 160))
+  ;; Korean input configuration
+  (global-set-key (kbd "<Hangul>") 'toggle-input-method)
+  ;(setq default-input-method 'korean-hangul)
+  ;(prefer-coding-system 'utf-8)
+  ;(setq default-korean-keyboard "3f")
+
   (setq yas-triggers-in-field nil)
   ;(setq yas-buffer-local-condition t)
   (defun my-yas-try-expanding-auto-snippets ()
@@ -370,7 +383,7 @@ you should place your code here."
   (with-eval-after-load 'org
      (plist-put org-format-latex-options :scale 2.0)
   )
-  (add-hooks '((org-mode . (org-fragtog-mode webkit-katex-render-mode org-latex-preview))))
+  (add-hooks '((org-mode . (visual-line-mode org-fragtog-mode webkit-katex-render-mode org-latex-preview))))
   (setq org-todo-keywords
     '((sequence "TODO(t!)" "NEXT(n!)" "DOINGNOW(d!)" "BLOCKED(b!)" "TODELEGATE(g!)" "DELEGATED(D!)" "FOLLOWUP(f!)" "TICKLE(T!)" "|" "CANCELLED(c!)" "DONE(F!)")))
   (setq org-confirm-babel-evaluate nil)
