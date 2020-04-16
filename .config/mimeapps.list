@@ -49,7 +49,7 @@ application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=calc.desktop
 
 [Added Associations]
 text/x-emacs-lisp=vim.desktop;
-text/plain=RStudio-1.2.5033.desktop;
+text/plain=RStudio-1.2.5033.desktop;atril.desktop;
 x-scheme-handler/ftp=firefox.desktop;
 x-scheme-handler/chrome=firefox.desktop;
 application/x-extension-htm=firefox.desktop;
