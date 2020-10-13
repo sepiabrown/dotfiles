@@ -49,6 +49,7 @@ values."
      markdown
      (org :variables
           ;org-format-latex-options '(:scale 5.0)
+          org-want-todo-bindings t
           org-enable-github-support t
           org-enable-reveal-js-support t)
      (shell :variables
@@ -354,23 +355,10 @@ you should place your code here."
   (setq yas-triggers-in-field nil)
   ;(setq yas-buffer-local-condition t)
   (defun my-yas-try-expanding-auto-snippets ()
-    ;(print "c1")
-    ;(print yas-moving-away-p)
-    ;(print "c2")
     (when (yas-minor-mode)
       (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
         (yas-expand))))
   (add-hook 'post-command-hook #'my-yas-try-expanding-auto-snippets)
-  ;(defun my-yas-try-expanding-auto-math-snippets ()
-  ;  (when (and (boundp 'yas-minor-mode) yas-minor-mode)
-  ;    (let ((yas-buffer-local-condition '(require-snippet-condition . auto-math)))
-  ;      (when (org-inside-LaTeX-fragment-p)(yas-expand)))))
-  ;(add-hook 'post-command-hook #'my-yas-try-expanding-auto-math-snippets)
-  ;(defun my-yas-try-expanding-math-snippets ()
-  ;  (when (and (boundp 'yas-minor-mode) yas-minor-mode)
-  ;    (setq yas-buffer-local-condition '(if (org-inside-LaTeX-fragment-p) '(require-snippet-condition . math) nil))))
-  ;(add-hook 'post-command-hook #'my-yas-try-expanding-math-snippets)
-  ;(setq yas-wrap-around-region nil)
   (setq posframe-mouse-banish nil)
   (use-package webkit-color-picker
   :ensure t
@@ -384,8 +372,9 @@ you should place your code here."
      (plist-put org-format-latex-options :scale 2.0)
   )
   (add-hooks '((org-mode . (visual-line-mode org-fragtog-mode webkit-katex-render-mode org-latex-preview))))
-  (setq org-todo-keywords
-    '((sequence "TODO(t!)" "NEXT(n!)" "DOINGNOW(d!)" "BLOCKED(b!)" "TODELEGATE(g!)" "DELEGATED(D!)" "FOLLOWUP(f!)" "TICKLE(T!)" "|" "CANCELLED(c!)" "DONE(F!)")))
+  ;(setq org-todo-keywords
+  ;'((sequence "TODO(t!)" "NEXT(n!)" "DOINGNOW(d!)" "BLOCKED(b!)" "TODELEGATE(g!)" "DELEGATED(D!)" "FOLLOWUP(f!)" "TICKLE(T!)" "|" "CANCELLED(c!)" "DONE(F!)"))) ### exclamation mark in (t!) adds created time, todos after "|" is timestamped anyway
+  ;'((sequence "WC(wc)" "CB(cb)" "A(a)" "B(b)" "C(c)" "?(?)" "|" " ")))
   (setq org-confirm-babel-evaluate nil)
   (org-babel-do-load-languages
    'org-babel-load-languages
