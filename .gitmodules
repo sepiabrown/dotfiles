@@ -1,3 +1,0 @@
-[submodule ".spacemacs.d/private/local/webkit-katex-render"]
-	path = .spacemacs.d/private/local/webkit-katex-render
-	url = https://github.com/sepiabrown/emacs-webkit-katex-render
