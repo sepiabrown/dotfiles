@@ -125,6 +125,8 @@
   environment.systemPackages = with pkgs; [
     # vimHugeX
     wget
+    refind
+    efibootmgr
     # firefox
     # git
     git-crypt
@@ -153,11 +155,11 @@
       libinput.enable = true; # Enable touchpad support.
       
       # Configure keymap in X11
-      layout = "us";
-      xkbVariant = "dvorak";
-      extraLayouts.custom_xkeyboard = 
+      layout = "custom_xkeyboard";
+      # xkbVariant = "dvorak";
+      extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
       let 
-      custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" ''
+      custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" '' # us-custom_xkeyboard : patch file name(maybe?)
         xkb_symbols "custom_xkeyboard"
         {
           include "us(dvorak)"
@@ -241,6 +243,9 @@
 
       vim = {
         enable = true;
+	extraConfig = ''
+          set mouse=a 
+	'';
       };
 
       alacritty = {
