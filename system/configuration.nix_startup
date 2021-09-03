@@ -155,7 +155,7 @@
       # Configure keymap in X11
       layout = "us";
       xkbVariant = "dvorak";
-      extraLayouts.us-greek = 
+      extraLayouts.custom_xkeyboard = 
       let 
       custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" ''
         xkb_symbols "custom_xkeyboard"
@@ -201,9 +201,9 @@
       # };
       in
       {
-        description = "US layout with alt-gr greek";
+        description = "US layout with sepiabrown's custom patch";
         languages   = [ "eng" ];
-        symbolsFile = us-greek_config;
+        symbolsFile = custom_xkeyboard_config;
       };
     };
   };
