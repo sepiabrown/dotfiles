@@ -32,15 +32,19 @@
 # sudo swapon /mnt/.swapfile
 #
 # sudo nixos-generate-config --root /mnt
+# 
+# Installing home-manager:
+# 
+# sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
+# or
+# sudo nix-channel --add https://git.marvid.fr/eeva/home-manager/archive/release-21.05.tar.gz home-manager
+# Thanks, https://git.marvid.fr/eeva/home-manager
+# sudo nix-channel --update
 #
 # Install:
 # sudo nixos-install
-# 
-# Installing home-manager
-# 
-# sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
-# sudo nix-channel --update
-
+# or
+# ../startup-system.sh
 
 { config, pkgs, ... }:
 
@@ -50,14 +54,13 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./configuration.nix # ./network.nix
+      ./configuration.nix1 # ./network.nix
+      ./without_keyboard_fix
+      # ./with_keyboard_fix
       <home-manager/nixos> # test!
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  # boot.loader.systemd-boot.enable = true;
-  # boot.loader.efi.canTouchEfiVariables = true;
-  # boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = [ "ntfs" ];
 
   networking = {
     hostName = "suwon-nix"; # Define your hostname.
@@ -96,6 +99,7 @@
 
   # Set your time zone.
   time.timeZone = "Asia/Seoul";
+  time.hardwareClockInLocalTime = true;
 
   # Select internationalisation properties.
   i18n.inputMethod.enabled = "uim";
@@ -154,47 +158,7 @@
       displayManager.sddm.enable = true;
       desktopManager.plasma5.enable = true;
       libinput.enable = true; # Enable touchpad support.
-      
-      # Configure keymap in X11
-      layout = "custom_xkeyboard";
-      # xkbVariant = "dvorak";
-      extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
-      let 
-      custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" '' # us-custom_xkeyboard : patch file name(maybe?)
-        xkb_symbols "custom_xkeyboard"
-        {
-          include "us(dvorak)"
-          key <ESC>  {	[ 		]	};
-          key <AE07>  {	[ L, l	]	};
-                                                                 
-          key <CAPS> {	[ Super_R		]	};
-          key <LWIN> {	[ Caps_Lock		]	};
-          key <RTSH> {	[ Escape		]	};
-          key <RWIN> {	[ NoSymbol		]	};
-                                                                 
-          modifier_map Mod3   { Super_R };
-          modifier_map Mod4   { Super_L };
-                                                                 
-          include "kr(ralt_hangul)"
-          include "kr(rctrl_hanja)"
-        };
-      '';
-      # custom_xkeyboard_config = pkgs.writeTextFile {
-      #   name = "us-custom_xkeyboard";
-      #   text =  ''
-      #     xkb_symbols "custom_xkeyboard"
-      #     {
-      #       include "us(dvorak)"
-      #     };
-      #   '';
-      #   destination = "/symbols";
-      # };
-      in
-      {
-        description = "US layout with sepiabrown's custom patch";
-        languages   = [ "eng" ];
-        symbolsFile = custom_xkeyboard_config;
-      };
+      # keyboard layout settings : with_keyboard_fix, without_keyboard_fix
     };
   };
 
