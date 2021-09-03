@@ -232,6 +232,7 @@
   };
 
   home-manager.users.sepiabrown = { pkgs, ... }: {
+    # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; [ 
         
     ];
