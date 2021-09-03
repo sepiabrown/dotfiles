@@ -245,7 +245,7 @@
 
       alacritty = {
         enable = true;
-        setting = {
+        settings = {
           env.TERM = "xterm-256color";
           window.dimensions = {
             lines = 3;
