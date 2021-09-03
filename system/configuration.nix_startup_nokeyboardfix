@@ -155,45 +155,35 @@
       libinput.enable = true; # Enable touchpad support.
       
       # Configure keymap in X11
-      layout = "custom_xkeyboard";
-      # xkbVariant = "dvorak";
-      extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
-      let 
-      custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" '' # us-custom_xkeyboard : patch file name(maybe?)
-        xkb_symbols "custom_xkeyboard"
-        {
-          include "us(dvorak)"
-          key <ESC>  {	[ 		]	};
-          key <AE07>  {	[ L, l	]	};
-                                                                 
-          key <CAPS> {	[ Super_R		]	};
-          key <LWIN> {	[ Caps_Lock		]	};
-          key <RTSH> {	[ Escape		]	};
-          key <RWIN> {	[ NoSymbol		]	};
-                                                                 
-          modifier_map Mod3   { Super_R };
-          modifier_map Mod4   { Super_L };
-                                                                 
-          include "kr(ralt_hangul)"
-          include "kr(rctrl_hanja)"
-        };
-      '';
-      # custom_xkeyboard_config = pkgs.writeTextFile {
-      #   name = "us-custom_xkeyboard";
-      #   text =  ''
-      #     xkb_symbols "custom_xkeyboard"
-      #     {
-      #       include "us(dvorak)"
-      #     };
-      #   '';
-      #   destination = "/symbols";
+      layout = "us"; # "custom_xkeyboard";
+      xkbVariant = "dvorak";
+      # extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
+      # let 
+      # custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" '' # us-custom_xkeyboard : patch file name(maybe?)
+      #   xkb_symbols "custom_xkeyboard"
+      #   {
+      #     include "us(dvorak)"
+      #     key <ESC>  {	[ 		]	};
+      #     key <AE07>  {	[ L, l	]	};
+      #                                                            
+      #     key <CAPS> {	[ Super_R		]	};
+      #     key <LWIN> {	[ Caps_Lock		]	};
+      #     key <RTSH> {	[ Escape		]	};
+      #     key <RWIN> {	[ NoSymbol		]	};
+      #                                                            
+      #     modifier_map Mod3   { Super_R };
+      #     modifier_map Mod4   { Super_L };
+      #                                                            
+      #     include "kr(ralt_hangul)"
+      #     include "kr(rctrl_hanja)"
+      #   };
+      # '';
+      # in
+      # {
+      #   description = "US layout with sepiabrown's custom patch";
+      #   languages   = [ "eng" ];
+      #   symbolsFile = custom_xkeyboard_config;
       # };
-      in
-      {
-        description = "US layout with sepiabrown's custom patch";
-        languages   = [ "eng" ];
-        symbolsFile = custom_xkeyboard_config;
-      };
     };
   };
 
