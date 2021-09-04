@@ -32,7 +32,18 @@
 # sudo swapon /mnt/.swapfile
 #
 # sudo nixos-generate-config --root /mnt
-# 
+# sudo cp configuration.nix_startup without_keyboard_fix
+# cd /mnt/etc/nixos
+# sudo mv configuration.nix configuration.nix1
+# sudo mv configuration.nix_startup configuration.nix
+# sudo vim configuration.nix1
+# Edit except boot/networking!
+# If Grub, add:
+# boot.loader.grub.device = "~~";
+# If Grub and multi boot, add:
+# boot.loader.grub.useOSProber = true;
+# If restricted device, erase all networking.~~.useDHCP = false
+#
 # Installing home-manager:
 # 
 # sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz home-manager
@@ -43,8 +54,6 @@
 #
 # Install:
 # sudo nixos-install
-# or
-# ../startup-system.sh
 
 { config, pkgs, ... }:
 
@@ -75,11 +84,11 @@
 
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
     # Per-interface useDHCP will be mandatory in the future, so this generated config
-    # replicates the default behaviour.
-    useDHCP = false;
-    extraHosts = ''
-    209.51.188.89 elpa.gnu.org
-    '';
+    # replicates the default behaviour
+##### useDHCP = false;
+    # extraHosts = ''
+    # 209.51.188.89 elpa.gnu.org
+    # '';
 
     # Device dependent options are in network.nix
     #
@@ -111,6 +120,10 @@
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
+  powerManagement.enable =true;
+  # hardware.enableRedistributableFirmware = true;
+  hardware.enableAllFirmware = true; # Let's make a working NixOS first.
+  hardware.bluetooth.enable = true;
 
   # Enable sound.
   # sound.enable = true;
@@ -128,13 +141,18 @@
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
-    # vimHugeX
     wget
     refind
     efibootmgr
+    gparted
+    blueman
+    git-crypt
+    
+    # Exists at home-manager
+    #
+    # vimHugeX
     # firefox
     # git
-    git-crypt
     # gnupg
   ];
 
