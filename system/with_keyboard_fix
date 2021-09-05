@@ -4,28 +4,32 @@
   services = {
     xserver = { 
       # Configure keymap in X11
+      xkbModel = "empty"
       layout = "custom_xkeyboard";
+      xkbVariant = "ESC_CAPS_fixed";
       extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
       let 
-      custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" '' # us-custom_xkeyboard : patch file name(maybe?)
-        xkb_symbols "custom_xkeyboard"
-        {
-          include "us(dvorak)"
-          key <ESC>  {	[ 		]	};
-          key <AE07>  {	[ L, l	]	};
-                                                                 
-          key <CAPS> {	[ Super_R		]	};
-          key <LWIN> {	[ Caps_Lock		]	};
-          key <RTSH> {	[ Escape		]	};
-          key <RWIN> {	[ NoSymbol		]	};
-                                                                 
-          modifier_map Mod3   { Super_R };
-          modifier_map Mod4   { Super_L };
-                                                                 
-          include "kr(ralt_hangul)"
-          include "kr(rctrl_hanja)"
-        };
-      '';
+      custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" # us-custom_xkeyboard : patch file name
+''
+default partial alphanumeric_keys modifier_keys
+xkb_symbols "ESC_CAPS_fixed"
+{
+  include "us(dvorak)"
+  key <ESC>  {	[ 		]	};
+  key <AE07>  {	[ L, l	]	};
+                                                         
+  key <CAPS> {	[ Super_R		]	};
+  key <LWIN> {	[ Caps_Lock		]	};
+  key <RTSH> {	[ Escape		]	};
+  key <RWIN> {	[ NoSymbol		]	};
+                                                         
+  modifier_map Mod3   { Super_R };
+  modifier_map Mod4   { Super_L };
+                                                         
+  include "kr(ralt_hangul)"
+  include "kr(rctrl_hanja)"
+};
+'';
       # custom_xkeyboard_config = pkgs.writeTextFile {
       #   name = "us-custom_xkeyboard";
       #   text =  ''
@@ -39,7 +43,7 @@
       in
       {
         description = "US layout with sepiabrown's custom patch";
-        languages   = [ "eng" ];
+        # languages   = [ "eng" ];
         symbolsFile = custom_xkeyboard_config;
       };
     };
