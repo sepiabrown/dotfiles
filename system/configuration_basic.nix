@@ -53,40 +53,10 @@
 # Install:
 # sudo nixos-install
 #
+# Important notes organized by sepiabrown at the back of the file!!
+#
 ##########################################################################
-#
-# Aliases:
-# I think that every apps are left only with the most top and bottom path name.
-# example: firefox
-# /nixos/nixpkgs/pkgs/applications/networking/browsers/firefox
-# becomes
-# nixos.firefox
-#
-#
-# Important paths:
-#
-# /nix/var/nix/profiles: all the generation link saved. rm link and nix-collect-garbage to clean up
-#
-# ~/.nix-defexpr: all the nix attribute paths saved in the 'channel'
-# ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/aliases.nix : all the easy attribute paths are saved
-#
-# ~~/packages.nix: may contain variants of packages with different attribute path names by setting variable name (ex: firefox-esr-91 = common rec { ...) or specifying attrPath (ex: attrPath = "firefox-esr-91-unwrapped"). At search.nixos.org, only these are searched (ex: firefox-wrapper is not found at search.nixos.org but found at nix-env -qaP firefox). 
-# example:
-#   /nixos/pkgs/applications/networking/browsers/firefox/packages.nix
-#   contains
-#     nixos.firefox-esr-91: attribute path name
-#     firefox-91.0.1esr: actual attribute name
-#   that is
-#     Name: firefox
-#     Version: 91.0.1esr
-#   !! pname variable is not involved !!
-#   firefox-esr-91-unwrapped is written at
-#     attrPath = "firefox-esr-91-unwrapped";
-# 
-# ~~/wrapper.nix: containing options for wrappers? If declared as attribute path in the file (like 
-# example:
-# /nixos/pkgs/applications/networking/browsers/firefox/wrapper.nix
-# firefox-wrapper
+
 { config, pkgs, ... }:
 
 { 
@@ -316,3 +286,83 @@
 
 }
 
+##########################################################################
+#
+# Important sites:
+# https://search.nixos.org
+# https://search.nix.gsc.io : hound that searches every document
+# 
+# Important tool:
+# nix repl: evaluate expression so that we can know the attributes!
+# example:
+# nix repl '<nixpkgs>'
+# >         # startup shell state
+# > :?      # help function!
+# > builtins.attrNames pkgs.hello   # attributes! includes nativeBuildInputs, buildInputs, depsBuildBuild,...
+#
+# Q1. When I do nix-env -qaP firefox
+# 
+# nixos.firefox-esr          firefox-78.13.0esr  #1  
+# nixos.firefox-esr-wrapper  firefox-78.13.0esr  #2
+# nixos.firefox              firefox-91.0.1      #3
+# nixos.firefox-wayland      firefox-91.0.1      #4
+# nixos.firefox-wrapper      firefox-91.0.1      #5
+# nixos.firefoxWrapper       firefox-91.0.1      #6
+# nixos.firefox-esr-91       firefox-91.0.1esr   #7
+# nixos.firefox-esr-wayland  firefox-91.0.1esr   #8
+#
+# What does nixos.firefox-esr-wayland mean?
+#
+# A1.
+# They are attribute name. Accessible like a path.
+# They are made in the form of variable names in .nix files in ~/.nix-defexpr/channels_root/nixos/...
+# Many of them are aliases!
+#
+# Aliases:
+# Check
+# ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/all-packages.nix 
+# and 
+# ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/aliases.nix
+# first and foremost!
+#
+# At  ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/all-packages.nix 
+# ...
+# firefox-unwrapped = firefoxPackages.firefox;
+# firefox-esr-78-unwrapped = firefoxPackages.firefox-esr-78;
+# firefox-esr-91-unwrapped = firefoxPackages.firefox-esr-91;
+# firefox = wrapFirefox firefox-unwrapped { };                                           #3
+# firefox-wayland = wrapFirefox firefox-unwrapped { forceWayland = true; };              #4
+# firefox-esr-wayland = wrapFirefox firefox-esr-91-unwrapped { forceWayland = true; };   #8
+# firefox-esr-78 = wrapFirefox firefox-esr-78-unwrapped { };
+# firefox-esr-91 = wrapFirefox firefox-esr-91-unwrapped { };                             #7
+# firefox-esr = firefox-esr-78;                                                          #1
+# ...
+#
+# At  ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/aliases.nix
+# ...
+# firefoxWrapper = ...   #6
+# ...
+#
+# ~~-wrapper missing (#2, #5).. no idea...
+#
+# Important paths:
+#
+# /nix/var/nix/profiles: all the generation link saved. rm link and nix-collect-garbage to clean up
+#
+# ~/.nix-defexpr: all the nix attribute paths saved in the 'channel'
+#
+# ~~/default.nix
+# ~~/packages.nix: may contain variants of packages with different attribute path names by setting variable name (ex: firefox-esr-91 = common rec { ...) or specifying attrPath (ex: attrPath = "firefox-esr-91-unwrapped"). At search.nixos.org, only these are searched (ex: firefox-wrapper is not found at search.nixos.org but found at nix-env -qaP firefox). 
+# example:
+#   /nixos/pkgs/applications/networking/browsers/firefox/packages.nix
+#   contains
+#     nixos.firefox-esr-91: attribute path name
+#     firefox-91.0.1esr: actual attribute name
+#   that is
+#     Name: firefox
+#     Version: 91.0.1esr
+#   !! pname variable is not involved !!
+#   firefox-esr-91-unwrapped is written at
+#     attrPath = "firefox-esr-91-unwrapped";
+# 
+#
