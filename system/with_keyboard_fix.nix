@@ -1,12 +1,14 @@
 { config, pkgs, ... }:
 
-{ 
+{
+  imports = [ ./configuration_basic.nix ]
   services = {
     xserver = { 
       # Configure keymap in X11
-      xkbModel = "empty"
+      xkbModel = "presario";
       layout = "custom_xkeyboard";
       xkbVariant = "ESC_CAPS_fixed";
+      xkbOptions = "grp:caps_toggle,grp_led:scroll";
       extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
       let 
       custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" # us-custom_xkeyboard : patch file name
@@ -15,8 +17,8 @@ default partial alphanumeric_keys modifier_keys
 xkb_symbols "ESC_CAPS_fixed"
 {
 // Edited by sepiabrown : search for '!!!'
-    include "us(dvorak)"
-    //key <ESC>  {	[ Escape		]	};
+    // include "us(dvorak)"
+    // key <ESC>  {	[ Escape		]	};
     key <ESC>  {	[ 		]	}; // !!!
 
     // The extra key on many European keyboards:
@@ -41,13 +43,13 @@ xkb_symbols "ESC_CAPS_fixed"
 
     key <LFSH> {	[ Shift_L		]	};
     key <LCTL> {	[ Control_L		]	};
-    //key <LWIN> {	[ Super_L		]	};
+    // key <LWIN> {	[ Super_L		]	};
     key <LWIN> {	[ Caps_Lock		]	}; // !!!
 
-    //key <RTSH> {	[ Shift_R		]	};
+    // key <RTSH> {	[ Shift_R		]	};
     key <RTSH> {	[ Escape		]	}; // !!!
     key <RCTL> {	[ Control_R		]	};
-    //key <RWIN> {	[ Super_R		]	};
+    // key <RWIN> {	[ Super_R		]	};
     key <RWIN> {	[ NoSymbol		]	}; // !!!
     key <MENU> {	[ Menu			]	};
 
@@ -101,7 +103,7 @@ xkb_symbols "ESC_CAPS_fixed"
       in
       {
         description = "US layout with sepiabrown's custom patch";
-        # languages   = [ "eng" ];
+        languages   = [ "eng" ];
         symbolsFile = custom_xkeyboard_config;
       };
     };

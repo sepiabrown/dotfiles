@@ -32,12 +32,10 @@
 # sudo swapon /mnt/.swapfile
 #
 # sudo nixos-generate-config --root /mnt
-# sudo cp configuration.nix_startup without_keyboard_fix
+# sudo cp configuration_basic.nix without_keyboard_fix.nix /mnt/etc/nixos
 # cd /mnt/etc/nixos
-# sudo mv configuration.nix configuration.nix1
-# sudo mv configuration.nix_startup configuration.nix
-# sudo vim configuration.nix1
-# Edit except boot/networking!
+# sudo vim configuration.nix
+# Add ./without_keyboard_fix.nix at imports = [ ] !!
 # If Grub, add:
 # boot.loader.grub.device = "~~";
 # If Grub and multi boot, add:
@@ -54,7 +52,41 @@
 #
 # Install:
 # sudo nixos-install
-
+#
+##########################################################################
+#
+# Aliases:
+# I think that every apps are left only with the most top and bottom path name.
+# example: firefox
+# /nixos/nixpkgs/pkgs/applications/networking/browsers/firefox
+# becomes
+# nixos.firefox
+#
+#
+# Important paths:
+#
+# /nix/var/nix/profiles: all the generation link saved. rm link and nix-collect-garbage to clean up
+#
+# ~/.nix-defexpr: all the nix attribute paths saved in the 'channel'
+# ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/aliases.nix : all the easy attribute paths are saved
+#
+# ~~/packages.nix: may contain variants of packages with different attribute path names by setting variable name (ex: firefox-esr-91 = common rec { ...) or specifying attrPath (ex: attrPath = "firefox-esr-91-unwrapped"). At search.nixos.org, only these are searched (ex: firefox-wrapper is not found at search.nixos.org but found at nix-env -qaP firefox). 
+# example:
+#   /nixos/pkgs/applications/networking/browsers/firefox/packages.nix
+#   contains
+#     nixos.firefox-esr-91: attribute path name
+#     firefox-91.0.1esr: actual attribute name
+#   that is
+#     Name: firefox
+#     Version: 91.0.1esr
+#   !! pname variable is not involved !!
+#   firefox-esr-91-unwrapped is written at
+#     attrPath = "firefox-esr-91-unwrapped";
+# 
+# ~~/wrapper.nix: containing options for wrappers? If declared as attribute path in the file (like 
+# example:
+# /nixos/pkgs/applications/networking/browsers/firefox/wrapper.nix
+# firefox-wrapper
 { config, pkgs, ... }:
 
 { 
@@ -63,9 +95,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./configuration.nix1 # ./network.nix
-      ./with_keyboard_fix
-      # ./with_keyboard_fix
       <home-manager/nixos> # test!
     ];
 
@@ -120,10 +149,16 @@
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
-  powerManagement.enable =true;
-  # hardware.enableRedistributableFirmware = true;
-  hardware.enableAllFirmware = true; # Let's make a working NixOS first.
+  powerManagement.enable = true;
   hardware.bluetooth.enable = true;
+  # hardware.enableRedistributableFirmware = true;
+  hardware.enableAllFirmware = true; # Let's make a working NixOS first. This option needs nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    # permittedInsecurePackages = [
+    #   "xpdf-4.02"
+    # ];
+  };
 
   # Enable sound.
   # sound.enable = true;
