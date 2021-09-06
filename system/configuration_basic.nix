@@ -32,13 +32,17 @@
 # sudo swapon /mnt/.swapfile
 #
 # sudo nixos-generate-config --root /mnt
+# check system.stateVersion at configuration.nix and make sure it is same at /run/media/nixos/USB_DATA/.dotfiles/system/configuration_basic.nix
+##########################
 # sudo cp configuration_basic.nix without_keyboard_fix.nix /mnt/etc/nixos
 # cd /mnt/etc/nixos
-# sudo vim configuration.nix
-# Add ./without_keyboard_fix.nix at imports = [ ] !!
-# If Grub, add:
+# sudo mv configuration.nix configuration_gen.nix
+# sudo mv configuration_basic.nix configuration.nix
+##########################
+#
+# If Grub, add the following at configuration.nix:
 # boot.loader.grub.device = "~~";
-# If Grub and multi boot, add:
+# If Grub and multi boot, add the follwing at configuration.nix
 # boot.loader.grub.useOSProber = true;
 # If restricted device, erase all networking.~~.useDHCP = false
 #
@@ -51,7 +55,7 @@
 # sudo nix-channel --update
 #
 # Install:
-# sudo nixos-install
+# /run/media/nixos/USB_DATA/.dotfiles/startup-system.sh
 #
 # Important notes organized by sepiabrown at the back of the file!!
 #
@@ -64,7 +68,9 @@
 
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      #./hardware-configuration.nix
+      #./configuration_gen.nix
+      #/etc/nixos/configuration_gen.nix
       <home-manager/nixos> # test!
     ];
 
@@ -131,8 +137,8 @@
   };
 
   # Enable sound.
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -170,7 +176,7 @@
   # };
 
   # List services that you want to enable:
-  services = {
+  services = pkgs.lib.mkForce { # https://nixos.org/manual/nixos/stable/#sec-modularity
     openssh.enable = true; # Enable the OpenSSH daemon.
     blueman.enable = true;
     xl2tpd.enable = true;
@@ -282,7 +288,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
+  system.stateVersion = pkgs.lib.mkForce "21.05"; # Did you read the comment?
 
 }
 
