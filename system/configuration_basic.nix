@@ -214,7 +214,7 @@
     };
   };
 
-  home-manager.users.sepiabrown = { pkgs, ... }: {
+  home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; [ 
         
@@ -306,6 +306,10 @@
 # > :?      # help function!
 # > builtins.attrNames pkgs.hello   # attributes! includes nativeBuildInputs, buildInputs, depsBuildBuild,...
 #
+# ripgrep string in files
+# example:
+# sudo rg bboxone /nix/store -l
+#
 # Q1. When I do nix-env -qaP firefox
 # 
 # nixos.firefox-esr          firefox-78.13.0esr  #1  
@@ -346,10 +350,11 @@
 #
 # At  ~/.nix-defexpr/channels_root/nixos/pkgs/top-level/aliases.nix
 # ...
-# firefoxWrapper = ...   #6
+# firefox-esr-wrapper = firefox-esr;  # 2016-01   #2
+# firefox-wrapper = firefox;          # 2016-01   #5
+# firefoxWrapper = firefox;           # 2015-09   #6
 # ...
 #
-# ~~-wrapper missing (#2, #5).. no idea...
 #
 # Important paths:
 #
