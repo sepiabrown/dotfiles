@@ -1,23 +1,23 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./configuration_basic.nix ];
+  #imports = [ ./configuration_basic.nix ]
   services = {
     xserver = { 
       # Configure keymap in X11
-      xkbModel = "presario";
+      # xkbModel = "presario";
+      displayManager.sessionCommands = "setxkbmap -symbols \"custom_xkeyboard+us(dvorak)+inet(evdev)\" -option \"terminate:ctrl_alt_bksp\"";
       layout = "custom_xkeyboard";
-      xkbVariant = "ESC_CAPS_fixed";
-      xkbOptions = "grp:caps_toggle,grp_led:scroll";
       extraLayouts.custom_xkeyboard = # custom_xkeyboard : real xkb symbol file name(maybe?) 
       let 
       custom_xkeyboard_config = pkgs.writeText "us-custom_xkeyboard" # us-custom_xkeyboard : patch file name
 ''
+// '!!!' for changes made by sepiabrown
 default partial alphanumeric_keys modifier_keys
-xkb_symbols "ESC_CAPS_fixed"
+//xkb_symbols "ESC_CAPS_fixed"
+xkb_symbols "basic" // !!!
 {
-// Edited by sepiabrown : search for '!!!'
-    // include "us(dvorak)"
+    include "us(dvorak)" // !!!
     // key <ESC>  {	[ Escape		]	};
     key <ESC>  {	[ 		]	}; // !!!
 
@@ -58,7 +58,9 @@ xkb_symbols "ESC_CAPS_fixed"
     modifier_map Lock   { Caps_Lock };
     modifier_map Control{ Control_L, Control_R };
     modifier_map Mod2   { Num_Lock };
-    modifier_map Mod4   { Super_L, Super_R };
+    // modifier_map Mod4   { Super_L, Super_R }; // !!!
+    modifier_map Mod3   { Super_R }; // !!!
+    modifier_map Mod4   { Super_L }; // !!!
 
     // Fake keys for virtual<->real modifiers mapping:
     key <LVL3> {	[ ISO_Level3_Shift	]	};
@@ -75,9 +77,6 @@ xkb_symbols "ESC_CAPS_fixed"
     modifier_map Mod4   { <SUPR> };
 
     key <HYPR> {	[ NoSymbol, Hyper_L	]	};
-    
-    modifier_map Mod3   { Super_R }; // !!!
-    modifier_map Mod4   { Super_L }; // !!!
     modifier_map Mod4   { <HYPR> };
     // End of modifier mappings.
 
@@ -109,4 +108,3 @@ xkb_symbols "ESC_CAPS_fixed"
     };
   };
 }
-

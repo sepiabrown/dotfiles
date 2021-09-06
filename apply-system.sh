@@ -1,5 +1,5 @@
 #!/bin/sh
-CONFIG_PATH="~/.dotfiles/system/configuration_current.nix"
+CONFIG_PATH="./system/configuration_current.nix"
 if [ $# -eq 0 ]
   then
     # pushd ~/.dotfiles
@@ -7,6 +7,6 @@ if [ $# -eq 0 ]
     # popd
   else
     # pushd ~/.dotfiles
-    sudo nixos-rebuild switch -I nixos-config="${CONFIG_PATH}" -p $1
+    sudo nixos-rebuild switch -I nixos-config="${CONFIG_PATH}" -p $1 --show-trace
     # popd
 fi

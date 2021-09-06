@@ -176,7 +176,7 @@
   # };
 
   # List services that you want to enable:
-  services = pkgs.lib.mkForce { # https://nixos.org/manual/nixos/stable/#sec-modularity
+  services = { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
     openssh.enable = true; # Enable the OpenSSH daemon.
     blueman.enable = true;
     xl2tpd.enable = true;
@@ -184,8 +184,8 @@
       enable = true; # Enable the X11 windowing system.
       # displayManager.defaultSession = "mate";
       # desktopManager.mate.enable = true;
-      displayManager.sddm.enable = true;
-      desktopManager.plasma5.enable = true;
+      displayManager.sddm.enable = true; # or maybe pkgs.lib.mkForce true
+      desktopManager.plasma5.enable = true; # or maybe pkgs.lib.mkForce true
       libinput.enable = true; # Enable touchpad support.
       # keyboard layout settings : with_keyboard_fix, without_keyboard_fix
     };
@@ -306,9 +306,16 @@
 # > :?      # help function!
 # > builtins.attrNames pkgs.hello   # attributes! includes nativeBuildInputs, buildInputs, depsBuildBuild,...
 #
-# ripgrep string in files
+# ripgrep string in files:
 # example:
 # sudo rg bboxone /nix/store -l
+#
+# Nix derivation traking:
+# To find packges that are needed by ~~ package
+# nix-store -q --tree /nix/store/~~
+#
+# To find packges that needs ~~ packges
+# nix-store -q --referrers-closure /nix/store/~~
 #
 # Q1. When I do nix-env -qaP firefox
 # 
