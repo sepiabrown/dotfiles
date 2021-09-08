@@ -152,6 +152,9 @@
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
+    xorg.xev
+    xorg.xkbcomp
+    xorg.xmodmap
     wget
     refind
     efibootmgr
@@ -316,6 +319,10 @@
 #
 # To find packges that needs ~~ packges
 # nix-store -q --referrers-closure /nix/store/~~
+#
+# A packge depends on B depndency. Why?
+# nix why-depends A_package B_dependency
+# 
 #
 # Q1. When I do nix-env -qaP firefox
 # 
