@@ -5,6 +5,6 @@ if [ $# -eq 0 ]
   then
     sudo nixos-rebuild switch -I nixos-config="${CONFIG_PATH}"
   else
-    sudo nixos-rebuild switch -I nixos-config="${CONFIG_PATH}" -p $1 --show-trace
+    sudo nixos-rebuild switch -I nixos-config="${CONFIG_PATH}" -p $1 #--show-trace
 fi
 popd

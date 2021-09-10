@@ -193,6 +193,9 @@
       # keyboard layout settings : with_keyboard_fix, without_keyboard_fix
     };
   };
+  systemd.extraConfig = ''
+    DefaultTimeoutStopSec=30s
+  ''; # Reduce Lagging caused by interrupted or unexecutable process when shutdown
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;

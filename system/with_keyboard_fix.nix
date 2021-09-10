@@ -140,6 +140,14 @@ xkb_symbols "basic" // !!!
   };
 }
 #
+# Check out
+# cd /nix/store/5vn5ndrjbmvw5aakv9lpxjwnjkan8ssl-xkeyboard-config-2.31/share/X11/xkb/symbols
+#
+# Useful Sites
+# https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Enhancing.html#Defining_New_Layouts
+# https://www.charvolant.org/doug/xkb/html/node5.html
+# https://nixos.org/manual/nixos/stable/#custom-xkb-layouts
+# https://wiki.archlinux.org/title/X_keyboard_extension
 # Useful Facts
 # - Keys that are assigned to Mod4 keys(usually Super keys in default) open up windows menu!
 # //////////wrong?- To Disable that, you need to erase Super keys in Mod4 keys and ALSO assign it to other Mod keys like lock! (modifier_map Lock)
