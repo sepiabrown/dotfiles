@@ -9,9 +9,6 @@
     ];
 
   environment.systemPackages = with pkgs; [
-    # network
-    dig
-    traceroute
     # vpn
     tailscale
 

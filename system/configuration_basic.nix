@@ -32,15 +32,8 @@
 # sudo swapon /mnt/.swapfile
 #
 # sudo nixos-generate-config --root /mnt
-# check system.stateVersion at configuration.nix and make sure it is same at /run/media/nixos/USB_DATA/.dotfiles/system/configuration_basic.nix
-##########################
-# sudo cp configuration_basic.nix without_keyboard_fix.nix /mnt/etc/nixos
-# cd /mnt/etc/nixos
-# sudo mv configuration.nix configuration_gen.nix
-# sudo mv configuration_basic.nix configuration.nix
-##########################
 #
-# If Grub, add the following at configuration.nix:
+# If Grub, add the following at /mnt/etc/nixos/configuration.nix:
 # boot.loader.grub.device = "~~";
 # If Grub and multi boot, add the follwing at configuration.nix
 # boot.loader.grub.useOSProber = true;
@@ -69,15 +62,14 @@
   imports =
     [ # Include the results of the hardware scan.
       #./hardware-configuration.nix
-      #./configuration_gen.nix
-      #/etc/nixos/configuration_gen.nix
+      ./secret.nix
       <home-manager/nixos> # test!
     ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking = {
-    hostName = "suwon-nix"; # Define your hostname.
+    hostName = "sepiabrown-nix"; # Define your hostname.
     networkmanager = {
       enable = true;   # wpa_spplicant and networkmanager collide
       packages = [
@@ -152,22 +144,22 @@
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
+    # system
     xorg.xev
     xorg.xkbcomp
     xorg.xmodmap
-    wget
     refind
     efibootmgr
     gparted
     blueman
-    git-crypt
+
+    # network
+    wget
+    dig
+    traceroute
     
-    # Exists at home-manager
-    #
-    # vimHugeX
-    # firefox
-    # git
-    # gnupg
+    # apps
+    firefox
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -207,34 +199,40 @@
   # networking.firewall.enable = false;
 
   # Define a user account. 
-  users = {
-    users.sepiabrown = {
-      isNormalUser = true;
-      # initialPassword = "P@ssw@rd01"; # Idea from Will T. Don't forget to set a password with ‘passwd’.
-      home = "/home/sepiabrown";
-      hashedPassword = "$6$U4rwuO8Gycc$lOleYt0NLgOoUj2FrROHM1qu01joT1RhM2FLgnhqZGtNd0ALnbBY5DIzMH0EY1WFs2SEK4o8Z1H35M8nKpguP0";
-      extraGroups = [ 
-        "wheel"
-        "networkmanager"
-      ]; # Enable ‘sudo’ for the user.
-    };
-  };
+  # users = {
+  #   users.sepiabrown = {
+  #     isNormalUser = true;
+  #     # initialPassword = "P@ssw@rd01"; # Idea from Will T. Don't forget to set a password with ‘passwd’.
+  #     home = "/home/sepiabrown";
+  #     hashedPassword = "$6$U4rwuO8Gycc$lOleYt0NLgOoUj2FrROHM1qu01joT1RhM2FLgnhqZGtNd0ALnbBY5DIzMH0EY1WFs2SEK4o8Z1H35M8nKpguP0";
+  #     extraGroups = [ 
+  #       "wheel"
+  #       "networkmanager"
+  #     ]; # Enable ‘sudo’ for the user.
+  #   };
+  # };
 
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; [ 
-        
+      git-crypt
+      pinentry_qt
+          
+      # home-manager pkgs:
+      # alacritty
+      # vimHugeX
+      # firefox, but for all users
+      # git
+      # gnupg
     ];
-
+    
     programs = {
-
       vim = {
         enable = true;
 	extraConfig = ''
           set mouse=a 
 	'';
       };
-
       alacritty = {
         enable = true;
         settings = {
@@ -251,51 +249,42 @@
           #   }
           # ];
         };
-        # setting in another way
-        # home.file = {
-        #   ".config/alacritty/alacritty.yaml".text = ''
-        #     env:
-        #       TERM: xterm-256color
-        #     window:
-        #       dimensions:
-        #         lines : 3
-        #         columns : 200
-        #     key_bindings:
-        #       - { key: K, mods: Control, chars: "\x0c"  }
-        #   '';
-        # };
+      # setting alacritty in another way
+      # home.file = {
+      #   ".config/alacritty/alacritty.yaml".text = ''
+      #     env:
+      #       TERM: xterm-256color
+      #     window:
+      #       dimensions:
+      #         lines : 3
+      #         columns : 200
+      #     key_bindings:
+      #       - { key: K, mods: Control, chars: "\x0c"  }
+      #   '';
+      # };
       };
-
       git = {
         enable = true;
         userName = "sepiabrown";
         userEmail = "sepiabrown@naver.com";
       };
-
       gpg = {
         enable = true;
       };
+    };
 
-      firefox = {
+    services = {
+      gpg-agent = {
         enable = true;
+        pinentryFlavor = "qt";
       };
     };
-    
-    
-  };
-  nix.allowedUsers = [ "sepiabrown" ];
-  security.sudo.extraConfig = ''
-    %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
-  '';
-  
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = pkgs.lib.mkForce "21.05"; # Did you read the comment?
 
+  };
+  # nix.allowedUsers = [ "sepiabrown" ];
+  # security.sudo.extraConfig = ''
+  #   %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
+  # '';
 }
 
 ##########################################################################

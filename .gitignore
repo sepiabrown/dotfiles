@@ -7,6 +7,8 @@
 !/shortcut
 !/.gitmodules
 !/.gitignore
+!/.gitattributes
+!/.git-crypt/
 !/.vimrc_bak
 !/.xmobarrc
 !/system/
