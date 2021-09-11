@@ -63,7 +63,7 @@
     [ # Include the results of the hardware scan.
       #./hardware-configuration.nix
       ./secret.nix
-      <home-manager/nixos> # test!
+      <home-manager/nixos>
     ];
 
   boot.supportedFilesystems = [ "ntfs" ];
@@ -144,22 +144,26 @@
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
-    # system
+    # keyboard
     xorg.xev
     xorg.xkbcomp
     xorg.xmodmap
+
+    # sudo
     refind
     efibootmgr
     gparted
-    blueman
 
-    # network
+    # network/bluetooth
+    blueman
     wget
     dig
     traceroute
     
     # apps
     firefox
+    git
+    vimHugeX
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -212,75 +216,6 @@
   #   };
   # };
 
-  home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
-    # xsession.enable = true; # needed for graphical session related services such as xscreensaver
-    home.packages = with pkgs; [ 
-      git-crypt
-      pinentry_qt
-          
-      # home-manager pkgs:
-      # alacritty
-      # vimHugeX
-      # firefox, but for all users
-      # git
-      # gnupg
-    ];
-    
-    programs = {
-      vim = {
-        enable = true;
-	extraConfig = ''
-          set mouse=a 
-	'';
-      };
-      alacritty = {
-        enable = true;
-        settings = {
-          env.TERM = "xterm-256color";
-          window.dimensions = {
-            lines = 3;
-            columns = 200;
-          };
-          # key_bindings = [
-          #   {
-          #     key = "K";
-          #     mods = "Control";
-          #     chars = "\\x0c";
-          #   }
-          # ];
-        };
-      # setting alacritty in another way
-      # home.file = {
-      #   ".config/alacritty/alacritty.yaml".text = ''
-      #     env:
-      #       TERM: xterm-256color
-      #     window:
-      #       dimensions:
-      #         lines : 3
-      #         columns : 200
-      #     key_bindings:
-      #       - { key: K, mods: Control, chars: "\x0c"  }
-      #   '';
-      # };
-      };
-      git = {
-        enable = true;
-        userName = "sepiabrown";
-        userEmail = "sepiabrown@naver.com";
-      };
-      gpg = {
-        enable = true;
-      };
-    };
-
-    services = {
-      gpg-agent = {
-        enable = true;
-        pinentryFlavor = "qt";
-      };
-    };
-
-  };
   # nix.allowedUsers = [ "sepiabrown" ];
   # security.sudo.extraConfig = ''
   #   %wheel      ALL=(ALL:ALL) NOPASSWD: ALL

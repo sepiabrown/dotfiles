@@ -8,6 +8,10 @@
       # Configure keymap in X11
       # xkbModel = "pc105"; not used in extraLayouts
       # displayManager.sessionCommands = "setxkbmap -symbols \"us(dvorak)\" -option \"terminate:ctrl_alt_bksp\""; doesn't work
+
+      # Disable plasma application menu popup: https://www.reddit.com/r/kde/comments/9uspp8/how_do_i_disable_the_plasma_application_menu_pop/
+      displayManager.sessionCommands = ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure'';
+      
       layout = "custom_apple";
       extraLayouts.custom_windows = # custom_windows: real xkb symbol file name
       let 

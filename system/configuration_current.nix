@@ -8,17 +8,74 @@
       /etc/nixos/configuration.nix
     ];
 
-  environment.systemPackages = with pkgs; [
-    # vpn
-    tailscale
+  home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
+    # xsession.enable = true; # needed for graphical session related services such as xscreensaver
+    home.packages = with pkgs; [ 
+      git-crypt
+      pinentry_qt
+      tailscale
+    ];
+    
+    programs = {
+      vim = {
+        enable = true;
+	extraConfig = ''
+          set mouse=a 
+	'';
+      };
+      alacritty = {
+        enable = true;
+        settings = {
+          env.TERM = "xterm-256color";
+          window.dimensions = {
+            lines = 3;
+            columns = 200;
+          };
+          # key_bindings = [
+          #   {
+          #     key = "K";
+          #     mods = "Control";
+          #     chars = "\\x0c";
+          #   }
+          # ];
+        };
+      # setting alacritty in another way
+      # home.file = {
+      #   ".config/alacritty/alacritty.yaml".text = ''
+      #     env:
+      #       TERM: xterm-256color
+      #     window:
+      #       dimensions:
+      #         lines : 3
+      #         columns : 200
+      #     key_bindings:
+      #       - { key: K, mods: Control, chars: "\x0c"  }
+      #   '';
+      # };
+      };
+      git = {
+        enable = true;
+        userName = "sepiabrown";
+        userEmail = "sepiabrown@naver.com";
+      };
+      gpg = {
+        enable = true;
+      };
+    };
 
-    # Exists at home-manager
-    #
-    # vimHugeX
-    # firefox
-    # git
-    # gnupg
-  ];
+    services = {
+      gpg-agent = {
+        enable = true;
+        pinentryFlavor = "qt";
+      };
+    };
+
+  };
+
+  # environment.systemPackages = with pkgs; [
+  #   # vpn
+  #   tailscale
+  # ];
 
   services = {
     tailscale.enable = true;
