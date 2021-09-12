@@ -429,8 +429,10 @@
 #   Useful commands:
 #   - nix flake info
 #   - nix flake list-inputs
-#   - nix flake update; nix flake update --recreate-lock-file
+#   - nix flake update --recreate-lock-file
 #   - nix registry list # nixpkgs.url in flake.nix from here
 #   - nix flake show
 #   - nix build .#         # builds output in flake.nix, making them usable at result folder
+#   - nix build .#homeManagerConfigurations.sepiabrown.activationPackage && ./result/activate
 #   - nixos-rebuild switch --flake .# / nixos-rebuild switch --flake .#sepiabrown-nix
+

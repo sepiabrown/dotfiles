@@ -13,8 +13,8 @@
       
       displayManager.sessionCommands = 
         if config.services.xserver.displayManager.sddm.enable == true 
-        then ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "ALT+F1" qdbus org.kde.KWin /KWin reconfigure''
-        else ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure'';
+        then ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure''
+        else ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "ALT+F1" qdbus org.kde.KWin /KWin reconfigure'';
       layout = "custom_apple";
       extraLayouts.custom_windows = # custom_windows: real xkb symbol file name
       let 

@@ -13,4 +13,4 @@
 !/.xmobarrc
 !/system/
 !/user/
-!/startup-system.sh
+!/apply-git.sh
