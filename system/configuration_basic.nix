@@ -57,13 +57,13 @@
 { config, pkgs, ... }:
 
 { 
-  system.copySystemConfiguration = true;  
+  # system.copySystemConfiguration = true;  # not working with flakes?
 
   imports =
     [ # Include the results of the hardware scan.
       #./hardware-configuration.nix
       ./secret.nix
-      <home-manager/nixos>
+      # <home-manager/nixos>
     ];
 
   boot.supportedFilesystems = [ "ntfs" ];
@@ -220,6 +220,10 @@
   # security.sudo.extraConfig = ''
   #   %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
   # '';
+  nix = {
+    extraOptions = "experimental-features = nix-command flakes";
+    package = pkgs.nixFlakes;
+  };
 }
 
 ##########################################################################
@@ -228,17 +232,6 @@
 # https://search.nixos.org
 # https://search.nix.gsc.io : hound that searches every document
 # 
-# Important tool:
-# nix repl: evaluate expression so that we can know the attributes!
-# example:
-# nix repl '<nixpkgs>'
-# >         # startup shell state
-# > :?      # help function!
-# > builtins.attrNames pkgs.hello   # attributes! includes nativeBuildInputs, buildInputs, depsBuildBuild,...
-#
-# ripgrep string in files:
-# example:
-# sudo rg bboxone /nix/store -l
 #
 # Nix derivation traking:
 # To find packges that are needed by ~~ package
@@ -297,13 +290,11 @@
 # ...
 #
 #
-# Important paths:
-#
-# /nix/var/nix/profiles: all the generation link saved. rm link and nix-collect-garbage to clean up
+# Important files:
 #
 # ~/.nix-defexpr: all the nix attribute paths saved in the 'channel'
 #
-# ~~/default.nix
+# ~~/default.nix: When the a folder gets imported, default.nix under that folder is loaded automatically 
 # ~~/packages.nix: may contain variants of packages with different attribute path names by setting variable name (ex: firefox-esr-91 = common rec { ...) or specifying attrPath (ex: attrPath = "firefox-esr-91-unwrapped"). At search.nixos.org, only these are searched (ex: firefox-wrapper is not found at search.nixos.org but found at nix-env -qaP firefox). 
 # example:
 #   /nixos/pkgs/applications/networking/browsers/firefox/packages.nix
@@ -316,5 +307,130 @@
 #   !! pname variable is not involved !!
 #   firefox-esr-91-unwrapped is written at
 #     attrPath = "firefox-esr-91-unwrapped";
-# 
 #
+######################################################################
+# Wil T 
+#
+# Bin paths(not editable):
+#   /run/current-system/sw/bin
+#   /nix/var/nix/profiles/per-user/sepiabrown/home-manager/home-path/bin
+#   ~/.nix-profile/bin # links to /nix/var/nix/profiles/per-user/sepiabrown/home-manager/home-path/bin if home-manager enabled
+# Store:
+#   /nix/store
+#
+# Nix profiles:
+### Link files to /nix/store. All the generation links saved here. 
+### files in /nix/store being linked are not removable
+### rm link files and do nix-store --gc / nix-collect-garbage
+#
+#   common(system-wide user):
+#     /nix/var/nix/profiles 
+#   system: # current file links to the same /nix/store file as /run/current-system
+#     /nix/var/nix/profiles/system-profiles
+#     /nix/var/nix/profiles/system
+#     /nix/var/nix/profiles/per-user/root # channels are saved
+#   user:
+#     /nix/var/nix/profiles/per-user/sepiabrown/home-manager
+#     /nix/var/nix/profiles/per-user/sepiabrown/profile == ~/.nix-profile # files inside link to files under /nix/var/nix/profiles/per-user/sepiabrown/home-manager/home-path if home-manager enabled
+#
+# Nix configuration file(should not edit, just for reference):
+# /etc/nix/nix.conf
+# /etc/nix/registry.json # Flakes, like channels
+#
+# Nix Log files:
+# /nix/var/log/nix/drvs # not useful, use 'nix log' command; able to see all the text, build output while building derivations
+# ex:
+# nix log /nix/store/<path to folder>
+#
+# Nix Language:
+#   Derivations := instructions for nix on how to actually build something; .drv
+#   Realisation of a derivation := build executable packages from the instructions given in derivation; automatically makes new path under /nix/store/<path>
+#   Sets:
+#   { attribute = value;};
+#   Lists:
+#   [ 1 2 3 4 ];
+#   Functions:
+#   func1 = foo: foo + 1;
+#   func2 = {a, b}: a + b;
+#   func3 = a: b: a + b;
+#   Derivation:
+#   derivation {
+#     system = "x86_64-linux";
+#     name = "foo";
+#     builder = ./builder.sh;
+#     outputs = [ "out" ];
+#   }
+#   better alternatives for 'derivation' : mkDerivation, runCommand, writeScriptBin
+#   Import:
+#   x = import ./myotherfile.nix
+#   y = import ./folder # will load default.nix
+#   Inherit:
+#   x = x;
+#   inherit y; # pull variables at the scope just out side this set
+#   If: cannot create block inside if or else
+#   new_val = if x == 7 then "yes" else "no;
+#   Let: when you need intermediate values for calculation but don't want them in the result
+#   my_func:
+#   let
+#     x = 7;
+#   in {
+#     y = x;
+#   }; 
+#   
+#   Important tool:
+#   nix repl: evaluate expression so that we can know the attributes!; 
+#   - close with ctrl+d
+#   - set variables to values and output them to the repl
+#   - import files
+#   example:
+#   nix repl '<nixpkgs>'
+#   >         # startup shell state
+#   > :?      # help function!
+#   > builtins.attrNames pkgs.hello   # attributes! includes nativeBuildInputs, buildInputs, depsBuildBuild,...
+#  
+#   ripgrep string in files:
+#   example:
+#   sudo rg bboxone /nix/store -l
+#
+#   Language server: https://github.com/nix-community/rnix-lsp 
+#
+# Nix shell
+# - originally designed to debug nix
+# - can be used as a development environment
+#   Simple shell: nix-shell -p hello; nix-shell -p hello --run hello
+#   More complicated shell: 
+#   At shell.nix:
+#   { pkglet
+#   let
+#     myScript = pkgs.writeScriptBin "foobar" ''
+#       echo "Foobar" | figlet
+#     '';
+#   in
+#   pkgs.mkShell { 
+#     name = "MyAwesomeShell";
+#     buildInputs = with pkgs; [
+#       figlet # packages that will actually be in the shell; can add python, ruby or anything 
+#       myScript # call this function not with 'myScript' but with 'foobar'
+#     ];
+#
+#     shellHook = ''
+#       echo "Welcome to my awesome shell"; # like start script
+#     ''
+#   }
+#   $ nix-shell
+#   - activates any file named shell.nix in the folder
+# Nix Flakes
+# - project file
+# - dependancy management
+# - updates
+#   Setup: at configuration.nix add experimental option; or test at nix shell by adding to shell.nix
+#   Inputs: other flakes that we want to pull things in from
+#   Outputs: things that we can run inside of our flake; things that we are gonna provide in our flake
+#   Useful commands:
+#   - nix flake info
+#   - nix flake list-inputs
+#   - nix flake update; nix flake update --recreate-lock-file
+#   - nix registry list # nixpkgs.url in flake.nix from here
+#   - nix flake show
+#   - nix build .#         # builds output in flake.nix, making them usable at result folder
+#   - nixos-rebuild switch --flake .# / nixos-rebuild switch --flake .#sepiabrown-nix

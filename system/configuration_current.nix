@@ -5,7 +5,8 @@
     [ 
       ./configuration_basic.nix 
       ./with_keyboard_fix.nix
-      /etc/nixos/configuration.nix
+      # /etc/nixos/configuration.nix # not allowed with flakes
+      ./configuration.nix
     ];
 
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html

@@ -9,9 +9,12 @@
       # xkbModel = "pc105"; not used in extraLayouts
       # displayManager.sessionCommands = "setxkbmap -symbols \"us(dvorak)\" -option \"terminate:ctrl_alt_bksp\""; doesn't work
 
-      # Disable plasma application menu popup: https://www.reddit.com/r/kde/comments/9uspp8/how_do_i_disable_the_plasma_application_menu_pop/
-      displayManager.sessionCommands = ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure'';
+      # Disable plasma application menu popup: https://www.reddit.com/r/kde/comments/9uspp8/how_do_i_disable_the_plasma_application_menu_pop/  https://zren.github.io/kde/#windowsmeta-key
       
+      displayManager.sessionCommands = 
+        if config.services.xserver.displayManager.sddm.enable == true 
+        then ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "ALT+F1" qdbus org.kde.KWin /KWin reconfigure''
+        else ''kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure'';
       layout = "custom_apple";
       extraLayouts.custom_windows = # custom_windows: real xkb symbol file name
       let 
