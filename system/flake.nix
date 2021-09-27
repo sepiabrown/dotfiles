@@ -14,6 +14,18 @@
     };
     lib = nixpkgs.lib;
   in {
+    # homeManagerConfigurations = {
+    #   sepiabrown = home-manager.lib.homeManagerConfiguration {
+    #     inherit system pkgs;
+    #     username = "sepiabrown";
+    #     homeDirectory = "/home/sepiabrown";
+    #     configuration = {
+    #       import = [
+    #         ./users/sepiabrown/home.nix
+    #       ];
+    #     };
+    #   };
+    # };
     nixosConfigurations = {
       sepiabrown-nix = lib.nixosSystem {
         inherit system;

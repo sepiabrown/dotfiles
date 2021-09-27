@@ -12,10 +12,115 @@
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; [ 
+      # system
+      ripgrep
+      zip
+      unzip
       git-crypt
       pinentry_qt
-      tailscale
-    ];
+      lvm2
+      rclone
+      file # show the file's type
+      baobab # Disk Usage Analyser
+      dua # Disk Usage
+      duc # Disk Usage
+      testdisk # data recovery software. recover lost partition, make non booting disk bootable again
+
+      # network
+      tailscale # vpn
+
+      # documents
+      libreoffice
+      okular # kde
+      # evince # gnome
+      foxitreader
+
+      # multimedia
+      vlc
+      flameshot
+      shutter
+      capture # no sound
+      simplescreenrecorder # with sound
+      
+      #unfree
+      zoom-us
+      ];
+
+    home.file = {
+      "my.rclone".text = ''
+#!/usr/bin/env bash
+RCLONEPATHS="_mobile __inbox _참고자료 통계학"
+#RCLONEHOME= "/commonground/gd/"
+RCLONEHOME="/home/sepiabrown/gd/"
+RCLONEREMOTE="gd:"
+RCLONEREMOTE2="db:"
+FILTERFILEUPLOAD="/home/sepiabrown/filter-file-upload"
+FILTERFILEDOWNLOAD="/home/sepiabrown/filter-file-download"
+#rclone check "$\{RCLONEREMOTE\}" "$\{RCLONEHOME\}" --filter-from filter-file
+#IFS=','
+#for RCPATH in $RCLONEPATHS
+#  do
+#    rclone check "$\{RCLONEREMOTE\}$\{RCPATH\}" "$\{RCLONEHOME\}$\{RCPATH\}" --filter-from filter-file
+#  done
+while true; do
+  read -p "Choose Task (copy, sync, check, quit..) : " task
+    if [ $\{task\} == "quit" ]; then
+      read -p "Press [Enter] key to end..."
+      exit 1
+    else
+      read -p "Choose Direction (remote to local : r , local to remote : l, dropbox : d) : " direction
+      read -p "Are you sure? : " safe
+      if [ $\{task\} == "check" -a $\{safe\} == "y" ]; then
+        for RCPATH in $RCLONEPATHS; do
+		rclone check "$\{RCLONEREMOTE\}$\{RCPATH\}" "$\{RCLONEHOME\}$\{RCPATH\}" --filter-from "$\{FILTERFILEDOWNLOAD\}"
+        done
+      elif [ $\{direction\} == "r" -a $\{safe\} == "y" ]; then
+        for RCPATH in $RCLONEPATHS; do
+	  echo "$\{RCLONEHOME\}$\{RCPATH\}"	
+          rclone mkdir "$\{RCLONEHOME\}$\{RCPATH\}"
+          rclone $task "$\{RCLONEREMOTE\}$\{RCPATH\}" "$\{RCLONEHOME\}$\{RCPATH\}" --backup-dir "$\{RCLONEHOME\}/tmp" --suffix .rclone --verbose --filter-from "$\{FILTERFILEDOWNLOAD\}"
+        done
+        #  rclone $task "$\{RCLONEREMOTE\}" "$\{RCLONEHOME\}" --backup-dir "$\{RCLONEHOME\}/tmp" --suffix .rclone --verbose --track-renames
+      elif [ $\{direction\} == "l" -a $\{safe\} == "y" ]; then
+        for RCPATH in $RCLONEPATHS; do
+          rclone mkdir "$\{RCLONEREMOTE\}$\{RCPATH\}"
+          rclone $task "$\{RCLONEHOME\}$\{RCPATH\}" "$\{RCLONEREMOTE\}$\{RCPATH\}" --backup-dir "$\{RCLONEREMOTE\}/tmp" --suffix .rclone --verbose --filter-from "$\{FILTERFILEUPLOAD\}"
+        done
+        #  rclone $task "$\{RCLONEHOME\}" "$\{RCLONEREMOTE\}" --backup-dir "$\{RCLONEREMOTE\}/tmp" --suffix .rclone --verbose --track-renames
+      elif [ $\{direction\} == "d" -a $\{safe\} == "y" ]; then
+        # for RCPATH in $RCLONEPATHS do
+          rclone $task "$\{RCLONEHOME\}_mobile/structured" "$\{RCLONEREMOTE2\}/_mobile/structured" --backup-dir "$\{RCLONEREMOTE2\}/tmp" --suffix .rclone --verbose --filter-from "$\{FILTERFILEUPLOAD\}"
+        # done
+      else 
+        read -p "Error : Press [Enter] key to end..."
+        exit 1
+      fi
+    fi
+done
+      '';
+      "filter-file-upload".text = ''
+- ltximg/**
+- Notability/**
+      '';
+      "filter-file-download".text = ''
+- ltximg/**
+      '';
+      "apply-flake.sh".text = ''
+#!/bin/sh
+# pushd ~/.dotfiles
+# CONFIG_PATH="./system/configuration_current.nix"
+pushd ~/dotfiles/system
+if [ $# -eq 0 ]
+  then
+    # sudo nixos-rebuild switch -I nixos-config="$\{CONFIG_PATH\}" --flake .#
+    sudo nixos-rebuild switch --flake .#
+  else
+    # sudo nixos-rebuild switch -I nixos-config="$\{CONFIG_PATH\}" -p $1 --flake .#  #--show-trace
+    sudo nixos-rebuild switch -p $1 --flake .#  --show-trace
+fi
+popd
+      '';
+    };
     
     programs = {
       vim = {
@@ -83,10 +188,60 @@
     openssh.openFirewall = false;
   };
 
+  fonts = {
+    enableDefaultFonts = true;
+    fontDir.enable = true;
+    enableGhostscriptFonts = true;
+    fonts = with pkgs; [ 
+      anonymousPro # unfree, TrueType font set intended for source code 
+      corefonts # unfree, Microsoft's TrueType core fonts for the Web has an unfree license (‘unfreeRedistributable’), refusing to evaluate.
+      dejavu_fonts # unfree, A typeface family based on the Bitstream Vera fonts
+      noto-fonts # Beautiful and free fonts for many languages
+      freefont_ttf # GNU Free UCS Outline Fonts
+      google-fonts
+      inconsolata # A monospace font for both screen and print
+      liberation_ttf # Liberation Fonts, replacements for Times New Roman, Arial, and Courier New
+      powerline-fonts  # unfree? Oh My ZSH, agnoster fonts  
+      source-code-pro
+      terminus_font  # unfree, A clean fixed width font
+      ttf_bitstream_vera # unfree
+      ubuntu_font_family
+      d2coding
+    ];
+  };
   # networking.firewall.allowedUDPPorts = [ 41641 ];
 
 }
-#
+# TODO 1
+# environment = {  
+#   etc."ipsec.secrets".text = ''
+#     include ipsec.d/ipsec.nm-l2tp.secrets
+#   '';
+#   #variables = {
+#   #  TERMINAL = [ "mate-terminal" ];
+#   #  # OH_MY_ZSH = [ "${pkgs.oh-my-zsh}/share/oh-my-zsh" ];
+#   #};
+# };
+# TODO 2
+# - emacs overlays
+# - nixpkgs.config.permittedInsecurePackages @ configuration_basic.nix
+# - mate + xmonad
+# - xmobar
+# - dmenu
+# - virtualbox
+# - rstudio
+# - texlive
+# - dev tools
+# - chromium ?
+# - samba
+# - samba4Full
+# - hplip
+# - nvramtool
+# - refind
+# - blueman
+# - networkmanager
+# - networkmanagerapplet
+
 # How to set up tailscale:
 # https://www.reddit.com/r/NixOS/comments/olou0x/using_vpn_on_nixos/h5hhrfp/
 # 1. Go to Tailscale.com and create an account.
