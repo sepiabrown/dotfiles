@@ -8,7 +8,13 @@
       # /etc/nixos/configuration.nix # not allowed with flakes
       ./configuration.nix
     ];
-
+  
+  # Apple Keyboard Configuration 
+  # https://wiki.archlinux.org/title/Apple_Keyboard#hid_apple_module_options
+  boot.kernelParams = [
+    "hid_apple.fnmode = 2" # 0 = disabled; 1 = normally media keys, switchable to function keys by holding Fn key (Default); 2 = normally function keys, switchable to media keys by holding Fn key
+    "hid_apple.swap_fn_leftctrl = 1" # 0 = as silkscreened, Mac layout (Default); 1 = swapped, PC layout
+  ];
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; [ 
