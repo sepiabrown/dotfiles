@@ -13,12 +13,12 @@
         config = { allowUnfree = true; };
       };
       lib = nixpkgs.lib;
-
+      # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
       targets = map (pkgs.lib.removeSuffix ".nix") (
         pkgs.lib.attrNames (
           pkgs.lib.filterAttrs
             (_: entryType: entryType == "regular")
-            (builtins.readDir ./targets)
+            (builtins.readDir ./devices)
         )
       );
       build-target = target: {
@@ -26,7 +26,14 @@
         value = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            home-manager.nixosModules.home-manager
+            ./configuration_current.nix
+            ./configuration_basic.nix
+            ./with_keyboard_fix.nix
+            ./secret.nix
+            home-manager.nixosModules.home-manager {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+            }
             (import (./devices + "/${target}.nix"))
             (import (./devices + "/${target}/hardware-configuration.nix"))
           ];
@@ -48,8 +55,8 @@
     # };
     nixosConfigurations = builtins.listToAttrs (
       pkgs.lib.flatten (map ( target: [ (build-target target) ] ) targets)
-      );
-    };    
+    );
+  };    
     # nixosConfigurations = {
     #   sepiabrown-nix = lib.nixosSystem {
     #     inherit system;
@@ -67,6 +74,5 @@
     #     ];
     #   };
     # };
-  };
 }
 # put this under folder with configuration_current.nix

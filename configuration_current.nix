@@ -17,7 +17,43 @@
   #];
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
-    home.packages = with pkgs; [ 
+    home.packages = with pkgs; with rPackages;
+      let 
+      bmis_list = [
+          R
+          Rcpp
+          RcppArmadillo
+          missForest
+          ggplot2
+      ];
+      bmis = buildRPackage {
+        name = "bmis";
+        src = ./samsungDS/code/bmis_1.0.1.tar.gz;
+        buildInputs = bmis_list;
+      };
+      rpackage_list =  [
+      pacman   
+      tidyverse
+      ggplot2
+      stringr
+
+      #bmis
+      bmis
+      caret
+      mice
+      VIM
+      e1071
+      mvtnorm
+      ROSE
+      ]; 
+      customRStudio = rstudioWrapper.override { packages = # with rPackages;
+        rpackage_list;
+      };
+      customR = rWrapper.override { packages = # with rPackages;
+        rpackage_list;
+      };
+      in
+      [
       # system
       ripgrep
       zip
@@ -36,11 +72,13 @@
       tailscale # vpn
       brave
 
-      # documents
+      # tools
       libreoffice
       okular # kde
       # evince # gnome
       foxitreader
+      customR
+      customRStudio
 
       # multimedia
       vlc

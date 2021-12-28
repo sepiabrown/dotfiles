@@ -12,6 +12,7 @@
 !/.git-crypt/
 !/.vimrc_bak
 !/.xmobarrc
-!/system/
+!/devices/
 !/user/
 !/apply-git.sh
+!/samsungDS
