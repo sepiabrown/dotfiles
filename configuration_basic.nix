@@ -59,12 +59,12 @@
 { 
   # system.copySystemConfiguration = true;  # not working with flakes?
 
-  imports =
-    [ # Include the results of the hardware scan.
-      #./hardware-configuration.nix
-      ./secret.nix
-      # <home-manager/nixos>
-    ];
+  # imports =
+  #   [ # Include the results of the hardware scan.
+  #     #./hardware-configuration.nix
+  #     ./secret.nix
+  #     # <home-manager/nixos>
+  #   ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
