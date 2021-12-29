@@ -18,13 +18,11 @@
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; with rPackages;
-      let 
+    let 
       bmis_list = [
           R
           Rcpp
           RcppArmadillo
-          missForest
-          ggplot2
       ];
       bmis = buildRPackage {
         name = "bmis";
@@ -40,11 +38,16 @@
       #bmis
       bmis
       caret
+      missForest
       mice
       VIM
       e1071
       mvtnorm
       ROSE
+      imbalance
+
+      #vscode
+      languageserver
       ]; 
       customRStudio = rstudioWrapper.override { packages = # with rPackages;
         rpackage_list;
@@ -52,7 +55,25 @@
       customR = rWrapper.override { packages = # with rPackages;
         rpackage_list;
       };
-      in
+      extensions = (with pkgs.vscode-extensions; [
+        bbenoist.Nix
+        ms-python.python
+        #ms-azuretools.vscode-docker
+        ms-vscode-remote.remote-ssh
+        ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+        name = "r";
+        publisher = "Ikuyadeu";
+        version = "2.3.5";
+        sha256 = "sha256-X6KfJLxjuUqgagyOZk8rYAs1LwtBWN67XWne1M0j9iQ=";
+        # name = "remote-ssh-edit";
+        # publisher = "ms-vscode-remote";
+        # version = "0.47.2";
+        # sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
+      }];
+      vscode-with-extensions = pkgs.vscode-with-extensions.override {
+         vscodeExtensions = extensions;
+      };
+    in
       [
       # system
       ripgrep
@@ -79,6 +100,7 @@
       foxitreader
       customR
       customRStudio
+      vscode-with-extensions
 
       # multimedia
       vlc
