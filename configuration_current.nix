@@ -9,12 +9,15 @@
   #     ./configuration.nix
   #   ];
   
+<<<<<<< Updated upstream:configuration_current.nix
   # Apple Keyboard Configuration 
   # https://wiki.archlinux.org/title/Apple_Keyboard#hid_apple_module_options
   #boot.kernelParams = [
   #  "hid_apple.fnmode = 2" # 0 = disabled; 1 = normally media keys, switchable to function keys by holding Fn key (Default); 2 = normally function keys, switchable to media keys by holding Fn key
   #  "hid_apple.swap_fn_leftctrl = 1" # 0 = as silkscreened, Mac layout (Default); 1 = swapped, PC layout
   #];
+=======
+>>>>>>> Stashed changes:system/configuration_current.nix
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
     home.packages = with pkgs; with rPackages;
@@ -114,7 +117,7 @@
       ];
 
     home.file = {
-      "my.rclone".text = ''
+      "my.rclone".source = pkgs.writeScript "my_rclone" ''
 #!/usr/bin/env bash
 RCLONEPATHS="_mobile __inbox _참고자료 통계학"
 #RCLONEHOME= "/commonground/gd/"
@@ -123,40 +126,40 @@ RCLONEREMOTE="gd:"
 RCLONEREMOTE2="db:"
 FILTERFILEUPLOAD="/home/sepiabrown/filter-file-upload"
 FILTERFILEDOWNLOAD="/home/sepiabrown/filter-file-download"
-#rclone check "$\{RCLONEREMOTE\}" "$\{RCLONEHOME\}" --filter-from filter-file
+#rclone check "''${RCLONEREMOTE}" "''${RCLONEHOME}" --filter-from filter-file
 #IFS=','
-#for RCPATH in $RCLONEPATHS
+#for RCPATH in ''${RCLONEPATHS}
 #  do
-#    rclone check "$\{RCLONEREMOTE\}$\{RCPATH\}" "$\{RCLONEHOME\}$\{RCPATH\}" --filter-from filter-file
+#    rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from filter-file
 #  done
 while true; do
   read -p "Choose Task (copy, sync, check, quit..) : " task
-    if [ $\{task\} == "quit" ]; then
+    if [ ''${task} == "quit" ]; then
       read -p "Press [Enter] key to end..."
       exit 1
     else
       read -p "Choose Direction (remote to local : r , local to remote : l, dropbox : d) : " direction
       read -p "Are you sure? : " safe
-      if [ $\{task\} == "check" -a $\{safe\} == "y" ]; then
+      if [ ''${task} == "check" -a ''${safe} == "y" ]; then
         for RCPATH in $RCLONEPATHS; do
-		rclone check "$\{RCLONEREMOTE\}$\{RCPATH\}" "$\{RCLONEHOME\}$\{RCPATH\}" --filter-from "$\{FILTERFILEDOWNLOAD\}"
+		rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from "''${FILTERFILEDOWNLOAD}"
         done
-      elif [ $\{direction\} == "r" -a $\{safe\} == "y" ]; then
+      elif [ ''${direction} == "r" -a ''${safe} == "y" ]; then
         for RCPATH in $RCLONEPATHS; do
-	  echo "$\{RCLONEHOME\}$\{RCPATH\}"	
-          rclone mkdir "$\{RCLONEHOME\}$\{RCPATH\}"
-          rclone $task "$\{RCLONEREMOTE\}$\{RCPATH\}" "$\{RCLONEHOME\}$\{RCPATH\}" --backup-dir "$\{RCLONEHOME\}/tmp" --suffix .rclone --verbose --filter-from "$\{FILTERFILEDOWNLOAD\}"
+	  echo "''${RCLONEHOME}''${RCPATH}"	
+          rclone mkdir "''${RCLONEHOME}''${RCPATH}"
+          rclone $task "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEDOWNLOAD}"
         done
-        #  rclone $task "$\{RCLONEREMOTE\}" "$\{RCLONEHOME\}" --backup-dir "$\{RCLONEHOME\}/tmp" --suffix .rclone --verbose --track-renames
-      elif [ $\{direction\} == "l" -a $\{safe\} == "y" ]; then
+        #  rclone $task "''${RCLONEREMOTE}" "''${RCLONEHOME}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --track-renames
+      elif [ ''${direction} == "l" -a ''${safe} == "y" ]; then
         for RCPATH in $RCLONEPATHS; do
-          rclone mkdir "$\{RCLONEREMOTE\}$\{RCPATH\}"
-          rclone $task "$\{RCLONEHOME\}$\{RCPATH\}" "$\{RCLONEREMOTE\}$\{RCPATH\}" --backup-dir "$\{RCLONEREMOTE\}/tmp" --suffix .rclone --verbose --filter-from "$\{FILTERFILEUPLOAD\}"
+          rclone mkdir "''${RCLONEREMOTE}''${RCPATH}"
+          rclone $task "''${RCLONEHOME}''${RCPATH}" "''${RCLONEREMOTE}''${RCPATH}" --backup-dir "''${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEUPLOAD}"
         done
-        #  rclone $task "$\{RCLONEHOME\}" "$\{RCLONEREMOTE\}" --backup-dir "$\{RCLONEREMOTE\}/tmp" --suffix .rclone --verbose --track-renames
-      elif [ $\{direction\} == "d" -a $\{safe\} == "y" ]; then
+        #  rclone $task "''${RCLONEHOME}" "''${RCLONEREMOTE}" --backup-dir "''${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --track-renames
+      elif [ ''${direction} == "d" -a ''${safe} == "y" ]; then
         # for RCPATH in $RCLONEPATHS do
-          rclone $task "$\{RCLONEHOME\}_mobile/structured" "$\{RCLONEREMOTE2\}/_mobile/structured" --backup-dir "$\{RCLONEREMOTE2\}/tmp" --suffix .rclone --verbose --filter-from "$\{FILTERFILEUPLOAD\}"
+          rclone $task "''${RCLONEHOME}_mobile/structured" "''${RCLONEREMOTE2}/_mobile/structured" --backup-dir "''${RCLONEREMOTE2}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEUPLOAD}"
         # done
       else 
         read -p "Error : Press [Enter] key to end..."
@@ -172,17 +175,17 @@ done
       "filter-file-download".text = ''
 - ltximg/**
       '';
-      "apply-flake.sh".text = ''
+      "apply-flake.sh".source = pkgs.writeScript "apply-flake_sh" ''
 #!/bin/sh
 # pushd ~/.dotfiles
 # CONFIG_PATH="./system/configuration_current.nix"
 pushd ~/dotfiles/system
 if [ $# -eq 0 ]
   then
-    # sudo nixos-rebuild switch -I nixos-config="$\{CONFIG_PATH\}" --flake .#
+    # sudo nixos-rebuild switch -I nixos-config="''${CONFIG_PATH}" --flake .#
     sudo nixos-rebuild switch --flake .#
   else
-    # sudo nixos-rebuild switch -I nixos-config="$\{CONFIG_PATH\}" -p $1 --flake .#  #--show-trace
+    # sudo nixos-rebuild switch -I nixos-config="''${CONFIG_PATH}" -p $1 --flake .#  #--show-trace
     sudo nixos-rebuild switch -p $1 --flake .#  --show-trace
 fi
 popd
