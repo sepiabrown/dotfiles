@@ -108,7 +108,7 @@
       ];
 
     home.file = {
-      "my.rclone2".source = pkgs.writeScript "my_rclone" ''
+      "my.rclone".source = pkgs.writeScript "my_rclone" ''
 #!/usr/bin/env bash
 RCLONEPATHS="_mobile __inbox _참고자료 통계학"
 #RCLONEHOME= "/commonground/gd/"
