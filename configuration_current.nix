@@ -39,6 +39,7 @@
       mvtnorm
       ROSE
       imbalance
+      rattle_data
 
       #vscode
       languageserver

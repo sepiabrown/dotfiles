@@ -10,9 +10,9 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        config = { allowUnfree = true; };
+        # config = { allowUnfree = true; };
       };
-      lib = nixpkgs.lib;
+      # lib = nixpkgs.lib;
       # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
       targets = map (pkgs.lib.removeSuffix ".nix") (
         pkgs.lib.attrNames (
