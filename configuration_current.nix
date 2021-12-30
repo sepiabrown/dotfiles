@@ -86,6 +86,7 @@
       # network
       tailscale # vpn
       brave
+      google-chrome
 
       # tools
       libreoffice
@@ -246,7 +247,12 @@ popd
   services = {
     tailscale.enable = true;
     openssh.openFirewall = false;
+    xrdp = {
+      enable = true;
+      defaultWindowManager = "startplasma-x11";
+    };
   };
+  
 
   fonts = {
     enableDefaultFonts = true;
@@ -269,8 +275,10 @@ popd
       d2coding
     ];
   };
-  # networking.firewall.allowedUDPPorts = [ 41641 ];
-
+  networking.firewall = {
+    allowedUDPPorts = [ 41641 ];
+    allowedTCPPorts = [ 3389 ];
+  };
 }
 # TODO 1
 # environment = {  

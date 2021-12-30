@@ -122,7 +122,7 @@
   # hardware.enableRedistributableFirmware = true;
   hardware.enableAllFirmware = true; # Let's make a working NixOS first. This option needs nixpkgs.config.allowUnfree = true;
   nixpkgs.config = {
-    allowUnfree = true;
+    # allowUnfree = true;
     # permittedInsecurePackages = [
     #   "xpdf-4.02"
     # ];
