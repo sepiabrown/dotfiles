@@ -1,13 +1,13 @@
 { config, pkgs, ... }:
 
 {
-  # imports = 
-  #   [ 
-  #     ./configuration_basic.nix 
-  #     ./with_keyboard_fix.nix
-  #     # /etc/nixos/configuration.nix # not allowed with flakes
-  #     ./configuration.nix
-  #   ];
+  imports = 
+    [ 
+      # ./configuration_basic.nix 
+      # ./with_keyboard_fix.nix
+      # /etc/nixos/configuration.nix # not allowed with flakes
+      # ./configuration.nix
+    ];
   
   home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
     # xsession.enable = true; # needed for graphical session related services such as xscreensaver
@@ -20,7 +20,7 @@
       ];
       bmis = buildRPackage {
         name = "bmis";
-        src = ./samsungDS/code/bmis_1.0.1.tar.gz;
+        src = ./samsungDS/vbmis_1.0.1.tar;
         buildInputs = bmis_list;
       };
       rpackage_list =  [
@@ -60,10 +60,6 @@
         publisher = "Ikuyadeu";
         version = "2.3.5";
         sha256 = "sha256-X6KfJLxjuUqgagyOZk8rYAs1LwtBWN67XWne1M0j9iQ=";
-        # name = "remote-ssh-edit";
-        # publisher = "ms-vscode-remote";
-        # version = "0.47.2";
-        # sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
       }];
       vscode-with-extensions = pkgs.vscode-with-extensions.override {
          vscodeExtensions = extensions;
@@ -87,7 +83,6 @@
       # network
       tailscale # vpn
       brave
-      google-chrome
 
       # tools
       libreoffice
@@ -240,10 +235,10 @@ popd
 
   };
 
-  # environment.systemPackages = with pkgs; [
-  #   # vpn
-  #   tailscale
-  # ];
+  environment.systemPackages = with pkgs; [
+    # vpn
+    # tailscale
+  ];
 
   services = {
     tailscale.enable = true;
@@ -253,7 +248,7 @@ popd
       defaultWindowManager = "startplasma-x11";
     };
   };
-  
+
 
   fonts = {
     enableDefaultFonts = true;

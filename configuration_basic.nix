@@ -59,12 +59,13 @@
 { 
   # system.copySystemConfiguration = true;  # not working with flakes?
 
-  # imports =
-  #   [ # Include the results of the hardware scan.
-  #     #./hardware-configuration.nix
-  #     ./secret.nix
-  #     # <home-manager/nixos>
-  #   ];
+   imports =
+     [ # Include the results of the hardware scan.
+       #./hardware-configuration.nix
+       #./secret.nix
+       # <home-manager/nixos>
+       ./crd/chrome-remote-desktop.nix
+     ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -123,6 +124,7 @@
   hardware.enableAllFirmware = true; # Let's make a working NixOS first. This option needs nixpkgs.config.allowUnfree = true;
   nixpkgs.config = {
     allowUnfree = true;
+    # packageOverrides = import ./crd3;
     # permittedInsecurePackages = [
     #   "xpdf-4.02"
     # ];
@@ -173,8 +175,18 @@
     firefox
     git
     vimHugeX
+
+    # etc
+    # chrome-remote-desktop
+    chromium
   ];
 
+  programs = {
+    chromium = {
+      enable = true;
+      extensions = [ "inomeogfingihgjfjlpeplalcfajhgai" ];
+    };
+  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -197,7 +209,18 @@
       libinput.enable = true; # Enable touchpad support.
       # keyboard layout settings : with_keyboard_fix, without_keyboard_fix
     };
+
+    chrome-remote-desktop = {
+      enable = true;
+      user = "sepiabrown";
+      # session = "plasmashell";
+    };
   };
+  nixpkgs.overlays = [
+    (self: super: {
+      chrome-remote-desktop = super.callPackage ./crd/default.nix {};
+    })
+  ];
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=30s
   ''; # Reduce Lagging caused by interrupted or unexecutable process when shutdown
