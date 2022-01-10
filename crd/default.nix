@@ -1,4 +1,4 @@
-{ stdenv, pkgs, lib, config, fetchurl, fetchgit, dpkg, python3, glibc, glib, pam, nss
+{ enableNewSession ? false, stdenv, pkgs, lib, config, fetchurl, fetchgit, dpkg, python3, glibc, glib, pam, nss
 , nspr, expat, gnome3, xorg, fontconfig, dbus_daemon, alsaLib, shadow, mesa, libdrm, libxkbcommon, wayland}:
 stdenv.mkDerivation rec {
   name = "chrome-remote-desktop";
@@ -43,6 +43,7 @@ stdenv.mkDerivation rec {
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/pkexec /run/wrappers/bin/pkexec
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/gpasswd ${shadow}/bin/gpasswd
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/groupadd ${shadow}/bin/groupadd
+  '' + lib.optionalString (!enableNewSession) ''
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "FIRST_X_DISPLAY_NUMBER = 20" "FIRST_X_DISPLAY_NUMBER = 0"
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "while os.path.exists(X_LOCK_FILE_TEMPLATE % display):" "# while os.path.exists(X_LOCK_FILE_TEMPLATE % display):"
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "display += 1" "# display += 1"

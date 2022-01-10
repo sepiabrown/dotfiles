@@ -59,21 +59,21 @@
 { 
   # system.copySystemConfiguration = true;  # not working with flakes?
 
-   imports =
-     [ # Include the results of the hardware scan.
+  imports =
+    [ # Include the results of the hardware scan.
        #./hardware-configuration.nix
        #./secret.nix
        # <home-manager/nixos>
        ./crd/chrome-remote-desktop.nix
      ];
 
-  boot.supportedFilesystems = [ "ntfs" ];
+     boot.supportedFilesystems = [ "ntfs" ];
 
-  networking = {
-    hostName = "sepiabrown-nix"; # Define your hostname.
-    networkmanager = {
-      enable = true;   # wpa_spplicant and networkmanager collide
-      packages = [
+     networking = {
+       hostName = "sepiabrown-nix"; # Define your hostname.
+       networkmanager = {
+         enable = true;   # wpa_spplicant and networkmanager collide
+         packages = [
         #????????????????????????????????????
         pkgs.networkmanager-l2tp
       ];
@@ -170,14 +170,14 @@
     curl
     dig
     traceroute
-    
+
     # apps
     firefox
     git
     vimHugeX
 
     # etc
-    # chrome-remote-desktop
+    #chrome-remote-desktop
     chromium
   ];
 
@@ -197,11 +197,11 @@
 
   # List services that you want to enable:
   services = { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
-    openssh.enable = true; # Enable the OpenSSH daemon.
-    blueman.enable = true;
-    xl2tpd.enable = true;
-    xserver = { 
-      enable = true; # Enable the X11 windowing system.
+  openssh.enable = true; # Enable the OpenSSH daemon.
+  blueman.enable = true;
+  xl2tpd.enable = true;
+  xserver = { 
+    enable = true; # Enable the X11 windowing system.
       # displayManager.defaultSession = "mate";
       # desktopManager.mate.enable = true;
       displayManager.sddm.enable = true; # or maybe pkgs.lib.mkForce true
@@ -213,14 +213,16 @@
     chrome-remote-desktop = {
       enable = true;
       user = "sepiabrown";
-      # session = "plasmashell";
+      # newSession = true;
     };
   };
+
   nixpkgs.overlays = [
     (self: super: {
       chrome-remote-desktop = super.callPackage ./crd/default.nix {};
     })
   ];
+
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=30s
   ''; # Reduce Lagging caused by interrupted or unexecutable process when shutdown
