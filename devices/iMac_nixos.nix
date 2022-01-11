@@ -45,9 +45,12 @@
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-  
 
   # Configure keymap in X11
+  # displayManager.sessionCommands = "setxkbmap -symbols \"us(dvorak)\" -option \"terminate:ctrl_alt_bksp\""; doesn't work
+  services.xserver.displayManager.sessionCommands = "setxkbmap -keycodes custom_apple";
+  services.xserver.layout = "custom_apple";
+
   # services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 

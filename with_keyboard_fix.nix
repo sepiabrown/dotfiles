@@ -8,14 +8,9 @@
     xserver = { 
       # Configure keymap in X11
       # xkbModel = "pc105"; not used in extraLayouts
-      # displayManager.sessionCommands = "setxkbmap -symbols \"us(dvorak)\" -option \"terminate:ctrl_alt_bksp\""; doesn't work
-      displayManager.sessionCommands = 
-        if config.services.xserver.displayManager.sddm.enable == true 
-        then "setxkbmap -keycodes custom_apple" else "";
-        # Disable plasma application menu popup: https://www.reddit.com/r/kde/comments/9uspp8/how_do_i_disable_the_plasma_application_menu_pop/  https://zren.github.io/kde/#windowsmeta-key
-        # kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure
-        # to enable meta to turn on application launcher in kde plasma, erase ~/.config/kwinrc to reset or put 'kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu" qdbus org.kde.KWin /KWin reconfigure' in the if statement instead.
-      layout = "custom_apple";
+      # Disable plasma application menu popup: https://www.reddit.com/r/kde/comments/9uspp8/how_do_i_disable_the_plasma_application_menu_pop/  https://zren.github.io/kde/#windowsmeta-key
+      # kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure
+      # to enable meta to turn on application launcher in kde plasma, erase ~/.config/kwinrc to reset or put 'kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu" qdbus org.kde.KWin /KWin reconfigure' in the if statement instead.
       extraLayouts.custom_windows = # custom_windows: real xkb symbol file name
       let 
         custom_windows_config = pkgs.writeText "windows_custom_xkeyboard" # windows_custom_xkeyboard : patch file name
@@ -96,22 +91,13 @@ xkb_symbols "basic" // !!!
     // include "kr(rctrl_hanja)" // !!! not possible for apple aluminium since there is no rctrl
 };
 '';
-      # custom_xkeyboard_config = pkgs.writeTextFile {
-      #   name = "us-custom_xkeyboard";
-      #   text =  ''
-      #     xkb_symbols "custom_xkeyboard"
-      #     {
-      #       include "us(dvorak)"
-      #     };
-      #   '';
-      #   destination = "/symbols";
-      # };
       in
       {
         description = "US layout with sepiabrownn's windows custom patch";
         languages   = [ "eng" ];
         symbolsFile = custom_windows_config;
       };
+
       extraLayouts.custom_apple =
       let 
         custom_apple_symbols = pkgs.writeText "custom_apple_symbols_xkeyboard"
