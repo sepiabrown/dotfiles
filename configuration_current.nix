@@ -79,6 +79,7 @@
       dua # Disk Usage
       duc # Disk Usage
       testdisk # data recovery software. recover lost partition, make non booting disk bootable again
+      direnv
 
       # network
       tailscale # vpn
@@ -92,7 +93,6 @@
       customR
       customRStudio
       vscode-with-extensions
-
       # multimedia
       vlc
       flameshot
@@ -100,7 +100,7 @@
       capture # no sound
       simplescreenrecorder # with sound
 
-      #unfree
+      # unfree
       zoom-us
       ];
 
@@ -156,13 +156,6 @@ while true; do
     fi
 done
       '';
-      "filter-file-upload".text = ''
-- ltximg/**
-- Notability/**
-      '';
-      "filter-file-download".text = ''
-- ltximg/**
-      '';
       "apply-flake.sh".source = pkgs.writeScript "apply-flake_sh" ''
 #!/bin/sh
 # CONFIG_PATH="./system/configuration_current.nix"
@@ -176,6 +169,16 @@ else
   sudo nixos-rebuild switch --flake ''$1 -p ''$2 --show-trace
 fi
 popd
+      '';
+      "filter-file-upload".text = ''
+- ltximg/**
+- Notability/**
+      '';
+      "filter-file-download".text = ''
+- ltximg/**
+      '';
+      ".bashrc".text = ''
+eval "''$(direnv hook bash)"
       '';
     };
     
