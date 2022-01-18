@@ -18,19 +18,38 @@
           Rcpp
           RcppArmadillo
       ];
-      bmis = buildRPackage {
-        name = "bmis";
+      vbmis = buildRPackage {
+        name = "vbmis";
         src = ./samsungDS/vbmis_1.0.1.tar;
         buildInputs = bmis_list;
       };
-      rpackage_list =  [
+      bmis = buildRPackage {
+        name = "bmis";
+        src = ./samsungDS/code/bmis_1.0.1.tar.gz;
+        buildInputs = bmis_list;
+      };
+      rpackage_list = [
+      
+      #develop
+      devtools
+      roxygen2
+
+      #basic
       pacman   
       tidyverse
       ggplot2
+      plotly
       stringr
+
+      #ML
+      mlbench
+      lightgbm
+      xgboost
+      RSSL
 
       #bmis
       bmis
+      vbmis
       caret
       missForest
       mice
@@ -79,7 +98,6 @@
       dua # Disk Usage
       duc # Disk Usage
       testdisk # data recovery software. recover lost partition, make non booting disk bootable again
-      direnv
 
       # network
       tailscale # vpn
@@ -226,6 +244,14 @@ eval "''$(direnv hook bash)"
       };
       gpg = {
         enable = true;
+      };
+      direnv = {
+        enable = true;
+        nix-direnv = {
+          enable = true;
+  # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
+          enableFlakes = true;
+        };
       };
     };
 
