@@ -1,110 +1,118 @@
 { config, pkgs, ... }:
 
 {
-  imports = 
-  [ 
+  # search: https://rycee.gitlab.io/home-manager/options.html
+  # xsession.enable = true; # needed for graphical session related services such as xscreensaver
+  home.packages = with pkgs;
+  [
+    # test -> if error, put under configuration_basic.nix
+    xorg.xev
+    xorg.xkbcomp
+    xorg.xmodmap
+    gparted
+    baobab # Disk Usage Analyser
+    dua # Disk Usage
+    duc # Disk Usage
+    testdisk # data recovery software. recover lost partition, make non booting disk bootable again
+    partition-manager
+
+    # system
+    wget
+    curl
+    dig
+    traceroute
+    ripgrep
+    zip
+    unzip
+    gzip
+    git-crypt
+    pinentry_qt
+    refind
+    lvm2
+    rclone
+    file # show the file's type
+
+    # dev
+    gnumake
   ];
-  
-  home-manager.users.sepiabrown = { pkgs, ... }: { # search: https://rycee.gitlab.io/home-manager/options.html
-    # xsession.enable = true; # needed for graphical session related services such as xscreensaver
-    home.packages = with pkgs;
-    [
-      # test -> if error, put under configuration_basic.nix
-      xorg.xev
-      xorg.xkbcomp
-      xorg.xmodmap
-      gparted
-      baobab # Disk Usage Analyser
-      dua # Disk Usage
-      duc # Disk Usage
-      testdisk # data recovery software. recover lost partition, make non booting disk bootable again
-      partition-manager
 
-      # system
-      wget
-      curl
-      dig
-      traceroute
-      ripgrep
-      zip
-      unzip
-      gzip
-      git-crypt
-      pinentry_qt
-      refind
-      lvm2
-      rclone
-      file # show the file's type
+  programs = {
+    home-manager.enable = true;
 
-      # dev
-      gnumake
-    ];
+    htop.enable = true;
 
-    programs = {
-      htop.enable = true;
-      vim = {
-        enable = true;
-	extraConfig = ''
-          set mouse=a 
-	'';
-      };
-      alacritty = {
-        enable = true;
-        settings = {
-          env.TERM = "xterm-256color";
-          window.dimensions = {
-            lines = 3;
-            columns = 200;
-          };
-          # key_bindings = [
-          #   {
-          #     key = "K";
-          #     mods = "Control";
-          #     chars = "\\x0c";
-          #   }
-          # ];
-        };
-      # setting alacritty in another way
-      # home.file = {
-      #   ".config/alacritty/alacritty.yaml".text = ''
-      #     env:
-      #       TERM: xterm-256color
-      #     window:
-      #       dimensions:
-      #         lines : 3
-      #         columns : 200
-      #     key_bindings:
-      #       - { key: K, mods: Control, chars: "\x0c"  }
-      #   '';
-      # };
-      };
-      git = {
-        enable = true;
-        userName = "sepiabrown";
-        userEmail = "sepiabrown@naver.com";
-      };
-      gpg = {
-        enable = true;
-      };
-      direnv = {
-        enable = true;
-        nix-direnv = {
-          enable = true;
-          # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
-          enableFlakes = true;
-        };
-      };
+    vim = {
+      enable = true;
+      extraConfig = ''
+        set mouse=a 
+      '';
     };
 
-    services = {
-      gpg-agent = {
-        enable = true;
-        pinentryFlavor = "qt";
+    alacritty = {
+      enable = true;
+      settings = {
+        env.TERM = "xterm-256color";
+        window.dimensions = {
+          lines = 3;
+          columns = 200;
+        };
+        # key_bindings = [
+        #   {
+        #     key = "K";
+        #     mods = "Control";
+        #     chars = "\\x0c";
+        #   }
+        # ];
       };
+    # setting alacritty in another way
+    # home.file = {
+    #   ".config/alacritty/alacritty.yaml".text = ''
+    #     env:
+    #       TERM: xterm-256color
+    #     window:
+    #       dimensions:
+    #         lines : 3
+    #         columns : 200
+    #     key_bindings:
+    #       - { key: K, mods: Control, chars: "\x0c"  }
+    #   '';
+    # };
     };
 
-    home.file = {
-      "my.rclone".source = pkgs.writeScript "my_rclone" ''
+    git = {
+      enable = true;
+      userName = "sepiabrown";
+      userEmail = "sepiabrown@naver.com";
+    };
+
+    gh = {
+      enable = true;
+      gitProtocol = "ssh";
+    };
+
+    gpg = {
+      enable = true;
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv = {
+        enable = true;
+        # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
+        enableFlakes = true;
+      };
+    };
+  };
+
+  services = {
+    gpg-agent = {
+      enable = true;
+      pinentryFlavor = "qt";
+    };
+  };
+
+  home.file = {
+    "my.rclone".source = pkgs.writeScript "my_rclone" ''
 #!/usr/bin/env bash
 RCLONEPATHS="_mobile __inbox _참고자료 통계학"
 #RCLONEHOME= "/commonground/gd/"
@@ -154,8 +162,8 @@ while true; do
       fi
     fi
 done
-      '';
-      "apply-flake.sh".source = pkgs.writeScript "apply-flake_sh" ''
+    '';
+    "apply-flake.sh".source = pkgs.writeScript "apply-flake_sh" ''
 #!/bin/sh
 # CONFIG_PATH="./system/configuration_current.nix"
 pushd ~/dotfiles
@@ -168,22 +176,22 @@ else
   sudo nixos-rebuild switch --flake ''$1 -p ''$2 --show-trace
 fi
 popd
-      '';
-      "filter-file-upload".text = ''
+    '';
+    "filter-file-upload".text = ''
 - ltximg/**
 - Notability/**
-      '';
-      "filter-file-download".text = ''
+    '';
+    "filter-file-download".text = ''
 - ltximg/**
-      '';
-      ".bashrc".text = ''
+    '';
+    ".bashrc".text = ''
 eval "''$(direnv hook bash)"
-      '';
-      ".direnvrc".text = ''
+    '';
+    ".direnvrc".text = ''
 source /run/current-system/sw/share/nix-direnv/direnvrc 
-      '';
-    };
-  };  
+    '';
+  };
+
 }
 # TODO 1
 # environment = {  

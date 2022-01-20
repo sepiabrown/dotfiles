@@ -15,5 +15,5 @@
 !/devices/
 !/user/
 !/apply-git.sh
-!/samsungDS
 !/crd
+!*.nix

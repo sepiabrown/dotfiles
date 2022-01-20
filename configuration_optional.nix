@@ -35,6 +35,19 @@
     };
   };
 
+  nixpkgs.overlays = [
+    (self: super: {
+      chrome-remote-desktop = super.callPackage ./crd/default.nix {};
+    })
+  ];
+
+  fonts = {
+    enableDefaultFonts = true;
+    enableGhostscriptFonts = true;
+    fontDir.enable = true;
+    fontDir.decompressFonts = true;
+  };
+
   networking.firewall = {
     allowedUDPPorts = [ 41641 ];
     allowedTCPPorts = [ 3389 ];
@@ -48,11 +61,4 @@
       keep-derivations = true
     '';
   };
-
-
-  nixpkgs.overlays = [
-    (self: super: {
-      chrome-remote-desktop = super.callPackage ./crd/default.nix {};
-    })
-  ];
 }

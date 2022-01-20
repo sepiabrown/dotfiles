@@ -384,7 +384,11 @@
 #   sudo rg bboxone /nix/store -l
 #
 #   Language server: https://github.com/nix-community/rnix-lsp 
-#
+# 
+# Nix garbage collect
+# - rm link files and do nix-store --gc / nix-collect-garbage
+# - To see which result files prevent garbage collection
+# $ nix-store --gc --print-roots
 # Nix shell
 # - originally designed to debug nix
 # - can be used as a development environment
