@@ -1,4 +1,5 @@
 {
+  # Manual : https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-flake.html#flake-references
   description = "sepiabrown's awesome system config of doom";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05"; # "nixpkgs/nixos-21.05"; 
@@ -26,8 +27,10 @@
         value = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            ./configuration_current.nix
             ./configuration_basic.nix
+            ./configuration_optional.nix
+            ./homemanager_basic.nix
+            ./homemanager_optional.nix
             ./with_keyboard_fix.nix
             ./secret.nix
             home-manager.nixosModules.home-manager {

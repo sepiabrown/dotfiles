@@ -59,45 +59,41 @@
 { 
   # system.copySystemConfiguration = true;  # not working with flakes?
 
-  imports =
-    [ # Include the results of the hardware scan.
-       #./hardware-configuration.nix
-       #./secret.nix
-       # <home-manager/nixos>
-       ./crd/chrome-remote-desktop.nix
-     ];
+  imports = 
+  [ # Include the results of the hardware scan.
+  ];
 
-     boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = [ "ntfs" ];
 
-     networking = {
-       hostName = "sepiabrown-nix"; # Define your hostname.
-       networkmanager = {
-         enable = true;   # wpa_spplicant and networkmanager collide
-         packages = [
-        #????????????????????????????????????
-        pkgs.networkmanager-l2tp
+  networking = {
+    hostName = "sepiabrown-nix"; # Define your hostname.
+    networkmanager = {
+      enable = true;   # wpa_spplicant and networkmanager collide
+      packages = [
+      #????????????????????????????????????
+      pkgs.networkmanager-l2tp
       ];
     };
-    # wireless.enable = true;  # Enables wireless support via wpa_supplicant. Don't use with networkmanager
+  # wireless.enable = true;  # Enables wireless support via wpa_supplicant. Don't use with networkmanager
 
-    # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-    # Per-interface useDHCP will be mandatory in the future, so this generated config
-    # replicates the default behaviour
-##### useDHCP = false;
-    # extraHosts = ''
-    # 209.51.188.89 elpa.gnu.org
-    # '';
+  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+  # Per-interface useDHCP will be mandatory in the future, so this generated config
+  # replicates the default behaviour
+### useDHCP = false;
+  # extraHosts = ''
+  # 209.51.188.89 elpa.gnu.org
+  # '';
 
-    # Device dependent options are in network.nix
-    #
-    # defaultGateway = "192.168.0.1";
-    # nameservers = [ "147.46.80.1" ];
-    # interfaces = {
-    #   enp4s0f0.ipv4.addresses = [ { 
-    #     address = "192.168.0.98";
-    #     prefixLength = 24;
-    #   } ]; 
-    # };
+  # Device dependent options are in network.nix
+  #
+  # defaultGateway = "192.168.0.1";
+  # nameservers = [ "147.46.80.1" ];
+  # interfaces = {
+  #   enp4s0f0.ipv4.addresses = [ { 
+  #     address = "192.168.0.98";
+  #     prefixLength = 24;
+  #   } ]; 
+  # };
   };
 
   # Configure network proxy if necessary
@@ -140,68 +136,39 @@
     package = pkgs.pulseaudioFull;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  # users.users.jane = {
-  #   isNormalUser = true;
-  #   extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-  # };
-
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
     # keyboard
-    xorg.xev
-    xorg.xkbcomp
-    xorg.xmodmap
+    # xorg.xev
+    # xorg.xkbcomp
+    # xorg.xmodmap
 
     #system
-    htop
-    refind
     efibootmgr
-    gparted
-    partition-manager
-
-    # network/bluetooth
-    blueman
-    wget
-    curl
-    dig
-    traceroute
-
-    # apps
-    firefox
-    git
-    vimHugeX
-
-    # etc
-    #chrome-remote-desktop
-    chromium
+    # gparted
+    # baobab # Disk Usage Analyser
+    # dua # Disk Usage
+    # duc # Disk Usage
+    # testdisk # data recovery software. recover lost partition, make non booting disk bootable again
+    # partition-manager
   ];
 
-  programs = {
-    chromium = {
-      enable = true;
-      extensions = [ "inomeogfingihgjfjlpeplalcfajhgai" ];
-    };
-  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
+  # programs.gnupg.agent = { # gpg at homemanager_basic.nix?
   #   enable = true;
   #   enableSSHSupport = true;
   # };
 
   # List services that you want to enable:
   services = { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
-  openssh.enable = true; # Enable the OpenSSH daemon.
-  blueman.enable = true;
-  xl2tpd.enable = true;
-  xserver = { 
-    enable = true; # Enable the X11 windowing system.
+    openssh.enable = true; # Enable the OpenSSH daemon.
+    blueman.enable = true;
+    xl2tpd.enable = true;
+    xserver = { 
+      enable = true; # Enable the X11 windowing system.
       # displayManager.defaultSession = "mate";
       # desktopManager.mate.enable = true;
       displayManager.sddm.enable = true; # or maybe pkgs.lib.mkForce true
@@ -209,19 +176,7 @@
       libinput.enable = true; # Enable touchpad support.
       # keyboard layout settings : with_keyboard_fix, without_keyboard_fix
     };
-
-    chrome-remote-desktop = {
-      enable = true;
-      user = "sepiabrown";
-      # newSession = true;
-    };
   };
-
-  nixpkgs.overlays = [
-    (self: super: {
-      chrome-remote-desktop = super.callPackage ./crd/default.nix {};
-    })
-  ];
 
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=30s
@@ -255,7 +210,9 @@
   #   %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
   # '';
   nix = {
-    extraOptions = "experimental-features = nix-command flakes";
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
     package = pkgs.nixFlakes;
   };
 }
