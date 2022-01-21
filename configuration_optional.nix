@@ -10,6 +10,8 @@
 
   environment.systemPackages = with pkgs; [
     # network/bluetooth
+    protonvpn-cli
+    protonvpn-gui
     blueman
 
     # apps

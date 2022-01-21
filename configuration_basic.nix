@@ -139,12 +139,16 @@
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
-    # keyboard
+    ##keyboard
     # xorg.xev
     # xorg.xkbcomp
     # xorg.xmodmap
 
-    #system
+    ##network
+    # protonvpn-cli
+    # protonvpn-gui # consider installing when github, youtube is blocked
+    
+    ##system
     efibootmgr
     # gparted
     # baobab # Disk Usage Analyser
