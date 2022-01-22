@@ -27,6 +27,11 @@
     { device = "/dev/disk/by-uuid/6A3A-E19E";
       fsType = "vfat";
     };
+  
+  fileSystems."/commonground" =
+    { device = "/dev/disk/by-uuid/2D240CAD52071D9E";
+      fsType = "ntfs";
+    };
 
   swapDevices = [ ];
 
