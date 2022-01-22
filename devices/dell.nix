@@ -77,6 +77,9 @@
     };
   };
 
+  # Configure keymap in X11
+  services.xserver.layout = "custom_windows";
+  services.xserver.xkbOptions = "korean:ralt_hangul";
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
