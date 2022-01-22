@@ -29,7 +29,6 @@
   putty
   openssh
   nextcloud-client
-  google-chrome
 
   # tools
   libreoffice

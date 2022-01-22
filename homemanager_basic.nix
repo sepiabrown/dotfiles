@@ -28,6 +28,7 @@
     git-crypt
     pinentry_qt
     refind
+    gptfdisk # required by refind on BIOS
     lvm2
     rclone
     file # show the file's type
