@@ -1,6 +1,25 @@
 { config, pkgs, ... }:
 
 {
+  #        
+  #
+  # Install nix 
+  # - on non-NixOS Linux distro by (using multi user installation)
+  # $ sh <(curl -L https://nixos.org/nix/install) --daemon
+  # - on macOS by
+  # $ sh <(curl -L https://nixos.org/nix/install)
+  # - on Windows WSL2 by (using single user installation)
+  # $ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+  # - with nix-unstable-installer: https://github.com/numtide/nix-unstable-installer
+  #   - didn't work well.. not good..?
+  #   - needs user account with sudo privilege
+  #   - needs to add 'experimental-features = nix-command flakes' to nix.conf (generally found in ~/.config/nix)
+  #   $ sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)
+  # 
+  # Install home-manager by
+  # $ 
+  #
+  #
   # search: https://rycee.gitlab.io/home-manager/options.html
   # xsession.enable = true; # needed for graphical session related services such as xscreensaver
   home.packages = with pkgs;
@@ -15,8 +34,13 @@
     duc # Disk Usage
     testdisk # data recovery software. recover lost partition, make non booting disk bootable again
     partition-manager
+    cowsay
 
     # system
+    #(pkgs.writeScriptBin "nixFlakes" ''
+    #  exec ${pkgs.nixUnstable}/bin/nix --experimental-features "nix-command flakes" "$@"
+    #'')
+    nixUnstable
     wget
     curl
     dig
@@ -28,13 +52,9 @@
     git-crypt
     pinentry_qt
     refind
-    gptfdisk # required by refind on BIOS
     lvm2
     rclone
     file # show the file's type
-
-    # dev
-    gnumake
   ];
 
   programs = {
@@ -82,13 +102,15 @@
 
     git = {
       enable = true;
-      userName = "sepiabrown";
+      package = pkgs.gitAndTools.gitFull;
+      userName = "Suwon Park";
       userEmail = "sepiabrown@naver.com";
     };
 
     gh = {
       enable = true;
-      gitProtocol = "ssh";
+      #gitProtocol = "ssh";
+      settings.git_protocol = "ssh"; # after release-21.05
     };
 
     gpg = {
@@ -100,7 +122,7 @@
       nix-direnv = {
         enable = true;
         # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
-        enableFlakes = true;
+        # enableFlakes = true;
       };
     };
   };
@@ -188,9 +210,9 @@ popd
     ".bashrc".text = ''
 eval "''$(direnv hook bash)"
     '';
-    ".direnvrc".text = ''
-source /run/current-system/sw/share/nix-direnv/direnvrc 
-    '';
+    #".direnvrc".text = ''
+#source /run/current-system/sw/share/nix-direnv/direnvrc 
+    #'';
   };
 
 }

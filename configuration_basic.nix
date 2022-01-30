@@ -2,6 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 #
+# Configuring ssh :
+# $ ssh-keygen -t ed25519 -C "sepiabrown@naver.com"
+# $ eval "$(ssh-agent -s)"
+# $ ssh-add ~/.ssh/id_ed25519
+# $ cat .ssh/id_ed25519.pub
+# paste it into github ssh and GPG keys
+#
 # Installing NIXOS essential (https://nixos.org/manual/nixos/stable/#sec-installation) :
 #
 # Partitioning :

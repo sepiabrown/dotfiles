@@ -22,6 +22,11 @@
   # test
   brave
 
+  ## dev
+  # gnumake
+  # cmake
+  # gcc
+
   # system
 
   # network
@@ -41,6 +46,7 @@
   poppler_utils
   pandoc
   python38Packages.nbconvert
+  #texlive.combined.scheme-full
 
   # JVM / Scala
   sbt
@@ -62,7 +68,7 @@
   dejavu_fonts # unfree, A typeface family based on the Bitstream Vera fonts
   noto-fonts # Beautiful and free fonts for many languages
   freefont_ttf # GNU Free UCS Outline Fonts
-  # google-fonts
+  # google-fonts # not working with Emacs??
   inconsolata # A monospace font for both screen and print
   liberation_ttf # Liberation Fonts, replacements for Times New Roman, Arial, and Courier New
   powerline-fonts  # unfree? Oh My ZSH, agnoster fonts  
