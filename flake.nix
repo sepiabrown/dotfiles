@@ -60,6 +60,15 @@
         homeDirectory = "/home/sepiabrown";
         configuration.imports = [ ./homemanager_basic.nix 
                                   #./homemanager_optional.nix 
+                                  ({...}:{
+                                    home.file = {
+                                      ".config/nix/nix.conf".text = ''
+                                        experimental-features = nix-command flakes
+                                        keep-derivations = true
+                                        keep-outputs = true
+                                      '';
+                                    };
+                                  })
                                 ];
       };
     };

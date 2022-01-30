@@ -1,24 +1,21 @@
 { config, pkgs, ... }:
 
 {
-  #        
-  #
   # Install nix 
-  # - on non-NixOS Linux distro by (using multi user installation)
-  # $ sh <(curl -L https://nixos.org/nix/install) --daemon
-  # - on macOS by
-  # $ sh <(curl -L https://nixos.org/nix/install)
-  # - on Windows WSL2 by (using single user installation)
-  # $ sh <(curl -L https://nixos.org/nix/install) --no-daemon
-  # - with nix-unstable-installer: https://github.com/numtide/nix-unstable-installer
-  #   - didn't work well.. not good..?
-  #   - needs user account with sudo privilege
-  #   - needs to add 'experimental-features = nix-command flakes' to nix.conf (generally found in ~/.config/nix)
+  # - needs user account with sudo privilege
+  # - needs to add 'experimental-features = nix-command flakes' to nix.conf (generally found in ~/.config/nix)
+  #   - with nix-unstable-installer: https://github.com/numtide/nix-unstable-installer (recommended)
   #   $ sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)
-  # 
-  # Install home-manager by
-  # $ 
+  #     - can install flake directly using
+  #     $ nix build '.#homeConfigurations.sepiabrown.activationPackage' --extra-experimental-features flakes --extra-experimental-features nix-command
   #
+  #   - on non-NixOS Linux distro by (using multi user installation)
+  #   $ sh <(curl -L https://nixos.org/nix/install) --daemon
+  #   - on macOS by
+  #   $ sh <(curl -L https://nixos.org/nix/install)
+  #   - on Windows WSL2 by (using single user installation)
+  #   $ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+  #     - needs to install home-manager with nix-env and write nixUnstable in home.package
   #
   # search: https://rycee.gitlab.io/home-manager/options.html
   # xsession.enable = true; # needed for graphical session related services such as xscreensaver
@@ -121,8 +118,8 @@
       enable = true;
       nix-direnv = {
         enable = true;
-        # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
-        # enableFlakes = true;
+       # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
+       # enableFlakes = true;
       };
     };
   };
@@ -207,14 +204,13 @@ popd
     "filter-file-download".text = ''
 - ltximg/**
     '';
-    ".bashrc".text = ''
-eval "''$(direnv hook bash)"
-    '';
+    #".bashrc".text = ''
+#eval "''$(direnv hook bash)"
+    #'';
     #".direnvrc".text = ''
 #source /run/current-system/sw/share/nix-direnv/direnvrc 
     #'';
   };
-
 }
 # TODO 1
 # environment = {  
