@@ -7,6 +7,7 @@
   #   - with nix-unstable-installer: https://github.com/numtide/nix-unstable-installer (recommended)
   #   $ sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)
   #     - can install flake directly using
+  #     $ nix-env --set-flag priority 6 nix
   #     $ nix build '.#homeConfigurations.sepiabrown.activationPackage' --extra-experimental-features flakes --extra-experimental-features nix-command
   #
   #   - on non-NixOS Linux distro by (using multi user installation)
