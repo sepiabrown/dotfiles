@@ -157,12 +157,8 @@
     
     ##system
     efibootmgr
-    # gparted
-    # baobab # Disk Usage Analyser
-    # dua # Disk Usage
-    # duc # Disk Usage
-    # testdisk # data recovery software. recover lost partition, make non booting disk bootable again
-    # partition-manager
+    gparted
+    partition-manager
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

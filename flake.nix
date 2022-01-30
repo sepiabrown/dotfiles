@@ -59,7 +59,7 @@
         username = "sepiabrown";
         homeDirectory = "/home/sepiabrown";
         configuration.imports = [ ./homemanager_basic.nix 
-                                  #./homemanager_optional.nix 
+                                  ./homemanager_optional.nix 
                                   ({...}:{
                                     home.file = {
                                       ".config/nix/nix.conf".text = ''

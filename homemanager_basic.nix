@@ -22,18 +22,11 @@
   # xsession.enable = true; # needed for graphical session related services such as xscreensaver
   home.packages = with pkgs;
   [
-    # test -> if error, put under configuration_basic.nix
+    # keyboard
     xorg.xev
     xorg.xkbcomp
     xorg.xmodmap
-    gparted
-    baobab # Disk Usage Analyser
-    dua # Disk Usage
-    duc # Disk Usage
-    testdisk # data recovery software. recover lost partition, make non booting disk bootable again
-    partition-manager
-    cowsay
-
+    
     # system
     #(pkgs.writeScriptBin "nixFlakes" ''
     #  exec ${pkgs.nixUnstable}/bin/nix --experimental-features "nix-command flakes" "$@"
@@ -53,6 +46,10 @@
     lvm2
     rclone
     file # show the file's type
+    baobab # Disk Usage Analyser
+    dua # Disk Usage
+    duc # Disk Usage
+    testdisk # data recovery software. recover lost partition, make non booting disk bootable again
   ];
 
   programs = {
@@ -120,7 +117,7 @@
       nix-direnv = {
         enable = true;
        # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
-       # enableFlakes = true;
+        enableFlakes = true;
       };
     };
   };
