@@ -9,14 +9,22 @@
   #     - can install flake directly using
   #     $ nix-env --set-flag priority 6 nix
   #     $ nix build '.#homeConfigurations.sepiabrown.activationPackage' --extra-experimental-features flakes --extra-experimental-features nix-command
-  #
-  #   - on non-NixOS Linux distro by (using multi user installation)
+  #   - on non-NixOS Linux distro (using multi user installation)
   #   $ sh <(curl -L https://nixos.org/nix/install) --daemon
-  #   - on macOS by
+  #   - on macOS
   #   $ sh <(curl -L https://nixos.org/nix/install)
-  #   - on Windows WSL2 by (using single user installation)
+  #   - on Windows WSL2 (using single user installation)
   #   $ sh <(curl -L https://nixos.org/nix/install) --no-daemon
   #     - needs to install home-manager with nix-env and write nixUnstable in home.package
+  #   - on non-NixOS Linux distro without sudo privilige ex) CENTOS
+  #   $ yum makecache
+  #   $ yum -y install cargo
+  #   $ curl -L https://github.com/nix-community/nix-user-chroot/releases/download/1.2.2/nix-user-chroot-bin-1.2.2-x86_64-unknown-linux-musl
+  #   $ mkdir -m 0755 ~/.nix
+  #   $ cargo install nix-user-chroot
+  #   $ nix-user-chroot ~/.nix bash -c "sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)"
+  #   log in again or type $ . /home/sepiabrown/.nix-profile/etc/profile.d/nix.sh
+  #   $ nix-user-chroot ~/.nix bash -l # need it every time logging in
   #
   # search: https://rycee.gitlab.io/home-manager/options.html
   # xsession.enable = true; # needed for graphical session related services such as xscreensaver
@@ -117,7 +125,7 @@
       nix-direnv = {
         enable = true;
        # optional for nix flakes support in home-manager 21.11, not required in home-manager unstable or 22.05
-        enableFlakes = true;
+       # enableFlakes = true;
       };
     };
   };
