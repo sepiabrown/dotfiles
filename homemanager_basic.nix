@@ -131,7 +131,7 @@
 
     bash = {
       enable = true;
-      historyControl = [ "ignoreboth" ];
+      historyControl = [ "ignoredups" "ignorespace" ];
       
     };
     dircolors = {
