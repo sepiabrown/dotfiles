@@ -45,7 +45,7 @@
   # document tools
   poppler_utils
   pandoc
-  python38Packages.nbconvert
+  #python38Packages.nbconvert
   #texlive.combined.scheme-full
 
   # JVM / Scala
