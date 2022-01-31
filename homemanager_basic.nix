@@ -34,6 +34,9 @@
   # xsession.enable = true; # needed for graphical session related services such as xscreensaver
   home.packages = with pkgs;
   [
+    # test
+    hello
+
     # keyboard
     xorg.xev
     xorg.xkbcomp
