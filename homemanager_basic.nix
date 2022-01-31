@@ -128,6 +128,15 @@
        # enableFlakes = true;
       };
     };
+
+    bash = {
+      enable = true;
+      historyControl = [ "ignoreboth" ];
+      
+    };
+    dircolors = {
+      enable = true;
+    };
   };
 
   services = {
