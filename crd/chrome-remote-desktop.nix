@@ -37,7 +37,8 @@ in {
 
     security = {
       wrappers.crd-user-session.source = "${pkgs.chrome-remote-desktop_final}/opt/google/chrome-remote-desktop/user-session";
-
+      wrappers.crd-user-session.owner = "sepiabrown";
+      wrappers.crd-user-session.group = "chrome-remote-desktop";
       pam.services.chrome-remote-desktop.text = ''
         auth        required    pam_unix.so
         account     required    pam_unix.so
@@ -46,6 +47,7 @@ in {
       '';
     };
 
+ 
     users.groups.chrome-remote-desktop = {};
 
     users.users.${cfg.user}.extraGroups = [ "chrome-remote-desktop" ];

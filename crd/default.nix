@@ -1,5 +1,5 @@
 { enableNewSession ? false, stdenv, pkgs, lib, config, fetchurl, fetchgit, dpkg, python3, glibc, glib, pam, nss
-, nspr, expat, gnome3, xorg, fontconfig, dbus_daemon, alsaLib, shadow, mesa, libdrm, libxkbcommon, wayland}:
+, nspr, expat, gtk3, dconf, xorg, fontconfig, dbus_daemon, alsaLib, shadow, mesa, libdrm, libxkbcommon, wayland}:
 stdenv.mkDerivation rec {
   name = "chrome-remote-desktop";
   src = fetchurl {
@@ -59,8 +59,8 @@ stdenv.mkDerivation rec {
       nss
       nspr
       expat
-      gnome3.gtk
-      gnome3.dconf
+      gtk3
+      dconf
       xorg.libXext
       xorg.libX11
       xorg.libXcomposite

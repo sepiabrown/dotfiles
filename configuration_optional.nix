@@ -5,10 +5,13 @@
 
   imports =
   [ # Include the results of the hardware scan.
-     ./crd/chrome-remote-desktop.nix
+    # ./crd/chrome-remote-desktop.nix
   ];
 
   environment.systemPackages = with pkgs; [
+    # test
+    ponysay
+    cowsay
     # network/bluetooth
     protonvpn-cli
     protonvpn-gui
@@ -30,18 +33,18 @@
       enable = true;
       defaultWindowManager = "startplasma-x11";
     };
-    chrome-remote-desktop = {
-      enable = true;
-      user = "sepiabrown";
-      # newSession = true;
-    };
+    #chrome-remote-desktop = {
+    #  enable = true;
+    #  user = "sepiabrown";
+    #  # newSession = true;
+    #};
   };
 
-  nixpkgs.overlays = [
-    (self: super: {
-      chrome-remote-desktop = super.callPackage ./crd/default.nix {};
-    })
-  ];
+  #nixpkgs.overlays = [
+  #  (self: super: {
+  #    chrome-remote-desktop = super.callPackage ./crd/default.nix {};
+  #  })
+  #];
 
   fonts = {
     enableDefaultFonts = true;
