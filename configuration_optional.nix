@@ -5,24 +5,25 @@
 
   imports =
   [ # Include the results of the hardware scan.
-    # ./crd/chrome-remote-desktop.nix
+    #./crd/chrome-remote-desktop.nix
   ];
 
   environment.systemPackages = with pkgs; [
     # test
     ponysay
     cowsay
+
     # network/bluetooth
     protonvpn-cli
     protonvpn-gui
     blueman
+    teamviewer
+    anydesk
 
     # apps
     firefox
 
-    home-manager
     # etc
-    #chrome-remote-desktop
   ];
 
   # List services that you want to enable:
@@ -33,11 +34,12 @@
       enable = true;
       defaultWindowManager = "startplasma-x11";
     };
-    #chrome-remote-desktop = {
-    #  enable = true;
-    #  user = "sepiabrown";
-    #  # newSession = true;
-    #};
+    chrome-remote-desktop = {
+      enable = true;
+      user = "sepiabrown";
+      # newSession = true;
+    };
+    teamviewer.enable = true;
   };
 
   #nixpkgs.overlays = [

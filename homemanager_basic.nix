@@ -71,6 +71,11 @@
   programs = {
     home-manager.enable = true;
 
+    chromium = {
+      enable = true;
+      extensions = [ "inomeogfingihgjfjlpeplalcfajhgai" ];
+    };
+
     htop.enable = true;
 
     vim = {

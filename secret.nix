@@ -14,7 +14,8 @@
       ]; # Enable ‘sudo’ for the user.
     };
   }; 
-  nix.settings.allowed-users = [ "sepiabrown" ];
+  #nix.settings.allowed-users = [ "sepiabrown" ];
+  nix.allowedUsers = [ "sepiabrown" ];
   security.sudo.extraConfig = ''
     %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
   '';

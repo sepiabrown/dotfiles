@@ -80,10 +80,6 @@
   ];
 
   programs = {
-    chromium = {
-      enable = true;
-      extensions = [ "inomeogfingihgjfjlpeplalcfajhgai" ];
-    };
     emacs.enable = true;
   };
 

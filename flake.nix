@@ -2,19 +2,25 @@
   # Manual : https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-flake.html#flake-references
   description = "sepiabrown's awesome system config of doom";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
+    #nixos_unstable.url = "github:sepiabrown/nixpkgs/nixos-unstable";
+    #nixos_unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    #home-manager_unstable.url = "github:nix-community/home-manager";
+    #home-manager_unstable.inputs.nixpkgs.follows = "nixos_unstable";
     # nix-darwin.url = "github:lnl7/nix-darwin";
-    #nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05"; # "nixpkgs/nixos-21.05"; 
-    #nixpkgs.config.allowUnfree = true;
-    #home-manager.url = "github:nix-community/home-manager/release-21.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    #home-manager.config.allowUnfree = true;
+    #nixos_unstable_fixed.url = "github:nixos/nixpkgs/ffdadd3ef9167657657d60daf3fe0f1b3176402d";
+    #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
+    #nixos_2111.url = "github:sepiabrown/nixpkgs/584ea848083a51eee19f7c6a60998edae743b3cc"; 
+    nixos_2111.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop-21.11"; 
+    home-manager_2111.url = "github:nix-community/home-manager/release-21.11";
+    home-manager_2111.inputs.nixpkgs.follows = "nixos_2111";
+    #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
   };
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixos_2111, home-manager_2111, ... }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
+      #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
+      #pkgs = nixos_2111.legacyPackages.x86_64-linux;#system;
+      pkgs = import nixos_2111 {
         inherit system;
         config.allowUnfree = true;
       };
@@ -29,22 +35,23 @@
       );
       build-target = target: {
         name = target;
-        value = nixpkgs.lib.nixosSystem {
+        value = nixos_2111.lib.nixosSystem {
           inherit system;
           modules = [
+            { nixpkgs = { inherit pkgs; }; }
             ./configuration_basic.nix
             ./configuration_optional.nix
             #./homemanager_basic.nix
             #./homemanager_optional.nix
             ./with_keyboard_fix.nix
             ./secret.nix
-            home-manager.nixosModules.home-manager {
+            home-manager_2111.nixosModules.home-manager {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.sepiabrown.imports = [ ./homemanager_basic.nix ./homemanager_optional.nix ];
             }
-            (import (./devices + "/${target}.nix"))
-            (import (./devices + "/${target}/hardware-configuration.nix"))
+            (./devices + "/${target}.nix")
+            (./devices + "/${target}/hardware-configuration.nix")
           ];
         };
       };
@@ -54,7 +61,7 @@
       pkgs.lib.flatten (map ( target: [ (build-target target) ] ) targets)
     );
     homeConfigurations = {
-      sepiabrown = home-manager.lib.homeManagerConfiguration {
+      sepiabrown = home-manager_2111.lib.homeManagerConfiguration {
         inherit system pkgs;
         username = "sepiabrown";
         homeDirectory = "/home/sepiabrown";
