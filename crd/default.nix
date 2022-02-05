@@ -1,13 +1,15 @@
 { enableNewSession ? false, stdenv, pkgs, lib, config, fetchurl, fetchgit, dpkg, python3, glibc, glib, pam, nss
-, nspr, expat, gtk3, dconf, xorg, fontconfig, dbus_daemon, alsaLib, shadow, mesa, libdrm, libxkbcommon, wayland}:
+, nspr, expat, gtk3, dconf, xorg, fontconfig, dbus_daemon, alsa-lib, shadow, mesa, libdrm, libxkbcommon, wayland }:
 stdenv.mkDerivation rec {
-  name = "chrome-remote-desktop";
+  pname = "chrome-remote-desktop";
+  version = "unstable-2022-02-03";
+
   src = fetchurl {
-    sha256 = "sha256-CNE3kvAj7Jp4cB5x2D/YUA1H9Ri397C6rxQBRmstz1c="; # This hash needs frequent updates
+    sha256 = "sha256-CNE3kvAj7Jp4cB5x2D/YUA1H9Ri397C6rxQBRmstz1c=";
     url = "https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb";
   };
 
-  buildInputs = [ pkgs.makeWrapper ];
+  buildInputs = [] ++ lib.optionals (!stdenv.isDarwin) [ pkgs.makeWrapper ];
 
   dontBuild = true;
   dontConfigure = true;
@@ -24,7 +26,8 @@ stdenv.mkDerivation rec {
   replacePrefix = "/opt/google/chrome-remote-desktop";
   replaceTarget = "/run/current-system/sw/bin/./././";
 
-  patchPhase = ''
+  patchPhase =
+  ''
     sed \
     -e '/^.*sudo_command =/ s/"gksudo .*"/"pkexec"/' \
     -e '/^.*command =/ s/s -- sh -c/s sh -c/' \
@@ -42,7 +45,8 @@ stdenv.mkDerivation rec {
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/sudo /run/wrappers/bin/sudo
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/pkexec /run/wrappers/bin/pkexec
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/gpasswd ${shadow}/bin/gpasswd
-    substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/groupadd ${shadow}/bin/groupadd
+    substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/sbin/groupadd ${shadow}/sbin/groupadd
+    substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "os.path.isfile(DEBIAN_XSESSION_PATH)" "True"
   '' + lib.optionalString (!enableNewSession) ''
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "FIRST_X_DISPLAY_NUMBER = 20" "FIRST_X_DISPLAY_NUMBER = 0"
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "while os.path.exists(X_LOCK_FILE_TEMPLATE % display):" "# while os.path.exists(X_LOCK_FILE_TEMPLATE % display):"
@@ -53,14 +57,11 @@ stdenv.mkDerivation rec {
   '';
 
   preFixup = let
-    libPath = lib.makeLibraryPath [
+    libPath = lib.makeLibraryPath ([
+    ] ++ lib.optionals (!stdenv.isDarwin) [
       glib
-      pam
       nss
-      nspr
-      expat
-      gtk3
-      dconf
+      fontconfig
       xorg.libXext
       xorg.libX11
       xorg.libXcomposite
@@ -72,20 +73,34 @@ stdenv.mkDerivation rec {
       xorg.libXi
       xorg.libXtst
       xorg.libxcb
-      fontconfig
       xorg.libXScrnSaver
+      alsa-lib
+
+      pam
+      nspr
+      expat
+      gtk3
+      dconf
       dbus_daemon.lib
-      alsaLib
-      mesa # added!
-      libdrm # added!
-      libxkbcommon # added!
-      wayland # added!
-    ];
+      libxkbcommon
+      shadow
+      mesa
+      libdrm
+      wayland
+    ]);
   in ''
         for i in $out/$replacePrefix/{chrome-remote-desktop-host,start-host,native-messaging-host,remote-assistance-host,user-session}; do
           sed -i "s|$replacePrefix|$replaceTarget|g" $i
           patchelf --set-rpath "${libPath}" $i
           patchelf --set-interpreter ${glibc}/lib/ld-linux-x86-64.so.2 $i
         done
-      '';
+  '';
+
+  meta = with lib; {
+    description = "Chrome Remote Desktop";
+    homepage = "https://remotedesktop.google.com/";
+    license = licenses.unfree;
+    platforms = [ "x86_64-linux" ];
+    maintainers = with maintainers; [ sepiabrown ];
+  };
 }

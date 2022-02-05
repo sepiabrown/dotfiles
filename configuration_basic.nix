@@ -113,14 +113,15 @@
 
   # Select internationalisation properties.
   #i18n.inputMethod.enabled = "uim";
-  i18n.inputMethod.enabled = "kime";
-  i18n.inputMethod.kime.config = {
-    engine = {
-      hangul = {
-        layout = "sebeolsik-3-90";
-      };
-    };
-  };
+  #i18n.inputMethod.enabled = "kime";
+  #i18n.inputMethod.kime.config = {
+  #  engine = {
+  #    hangul = {
+  #      layout = "sebeolsik-3-91";
+  #    };
+  #  };
+  #};
+
   # i18n.defaultLocale = "en_US.UTF-8";
   # console = {
   #   font = "Lat2-Terminus16";

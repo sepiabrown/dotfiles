@@ -35,7 +35,7 @@
   home.packages = with pkgs;
   [
     # test
-    hello
+    # hello
 
     # keyboard
     xorg.xev

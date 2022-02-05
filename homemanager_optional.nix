@@ -17,6 +17,20 @@
     vscode-with-extensions = pkgs.vscode-with-extensions.override {
        vscodeExtensions = extensions;
     };
+    #kimelib = pkgs.fetchurl {
+    #  #url = "https://github.com/Riey/kime/releases/download/v2.5.6/libkime-qt-5.12.9.so";
+    #  #sha256 = "c7b9661272e58b1e47005ce7524ba42ba5e9da14ca027e775347af148c503ddd";
+    #  url = "https://github.com/sepiabrown/kime/releases/download/v2.5.7/libkime-qt-5.12.9.so";
+    #  sha256 = "sha256-SCYEbVs27EFyZQR1uOX8pZaqmurL6Fb5f/YVtD6fj/k=";
+    #};
+    #myzoom-us = zoom-us.overrideAttrs(old: {
+    #  postFixup = ''
+    #    substituteInPlace $out/share/applications/Zoom.desktop --replace "Exec=" "Exec=env QT_IM_MODULE=kime"
+    #  '';
+    #  postInstall = ''
+    #    install -Dm755 ${kimelib} $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
+    #  '';
+    #});
   in
   [
   # test
@@ -60,7 +74,9 @@
   simplescreenrecorder # with sound
 
   # unfree
-  zoom-us
+  #myzoom-us
+
+  #$prePhases unpackPhase patchPhase $preConfigurePhases configurePhase $preBuildPhases buildPhase checkPhase $preInstallPhases installPhase fixupPhase installCheckPhase $preDistPhases distPhase $postPhases
 
   #fonts
   anonymousPro # unfree, TrueType font set intended for source code 
