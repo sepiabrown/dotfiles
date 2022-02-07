@@ -315,9 +315,9 @@ if [ -z ''$1 ]; then
   echo "needs at least one command"
   # sudo nixos-rebuild switch -I nixos-config="''${CONFIG_PATH}" --flake .#
 elif [ -z ''$2 ]; then
-  sudo nixos-rebuild switch --flake ''$1
+  sudo nix flake update; sudo nixos-rebuild switch --flake ''$1
 else
-  sudo nixos-rebuild switch --flake ''$1 -p ''$2 --show-trace
+  sudo nix flake update; sudo nix flake update & sudo nixos-rebuild switch --flake ''$1 -p ''$2 --show-trace
 fi
 popd
     '';

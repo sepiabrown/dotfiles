@@ -16,13 +16,9 @@
     # test
     ponysay
     cowsay
-    #nimf
-    #helloflake
-    #filebrowserflake
 
     # network/bluetooth
-    protonvpn-cli
-    protonvpn-gui
+    protonvpn-gui # run protonvpn-cli by nix run nixpkgs#protovpn-cli
     blueman
     teamviewer
     anydesk

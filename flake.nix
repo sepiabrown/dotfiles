@@ -10,11 +10,13 @@
     #nixos_unstable_fixed.url = "github:nixos/nixpkgs/ffdadd3ef9167657657d60daf3fe0f1b3176402d";
     #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
     #nixos_2111.url = "github:sepiabrown/nixpkgs/584ea848083a51eee19f7c6a60998edae743b3cc"; 
+    #nixos_2105.url = "nixpkgs/nixos-21.05";
     nixos_2111.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop-21.11"; 
     home-manager_2111.url = "github:nix-community/home-manager/release-21.11";
     home-manager_2111.inputs.nixpkgs.follows = "nixos_2111";
     nimf.url = "github:sepiabrown/nimf/NixOS_nimf";
     pinpox.url = "github:pinpox/nixos";
+    #nixos_unstable.url = "github:nixos/nixpkgs/nixos-21.05";
     #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
   };
   outputs = inputs:
@@ -56,12 +58,18 @@
             (./devices + "/${target}/hardware-configuration.nix")
 
             ({nixpkgs.overlays = [
-              (_: _: { nimfflake = nimf.defaultPackage.${system}; })
-              (_: _: { helloflake = pinpox.packages.${system}.hello-custom; })
-              (_: _: { filebrowserflake = pinpox.packages.${system}.filebrowser; })
+              (_: _: { nimf_flake = nimf.defaultPackage.${system}; })
+              (_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
+              (_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+              #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
             ];})
 
-            ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ nimfflake helloflake filebrowserflake];})
+            ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
+              nimf_flake 
+              hello_flake 
+              filebrowser_flake 
+              ];
+            })
           ];
           specialArgs = { inherit inputs; };
         };
