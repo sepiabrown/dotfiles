@@ -51,6 +51,15 @@
   services.xserver.layout = "custom_windows";
   services.xserver.xkbOptions = "korean:ralt_hangul";
 
+  i18n.inputMethod.enabled = "kime";
+  i18n.inputMethod.kime.config = {
+    engine = {
+      hangul = {
+        layout = "sebeolsik-3-91";
+      };
+    };
+  };
+
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 

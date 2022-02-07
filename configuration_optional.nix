@@ -16,8 +16,8 @@
     # test
     ponysay
     cowsay
-    nimf
-    helloflake
+    #nimf
+    #helloflake
     #filebrowserflake
 
     # network/bluetooth

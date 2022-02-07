@@ -13,8 +13,8 @@
     nixos_2111.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop-21.11"; 
     home-manager_2111.url = "github:nix-community/home-manager/release-21.11";
     home-manager_2111.inputs.nixpkgs.follows = "nixos_2111";
-    nimf_src.url = "github:sepiabrown/nimf/NixOS_nimf";
-    pinpox_src.url = "github:pinpox/nixos";
+    nimf.url = "github:sepiabrown/nimf/NixOS_nimf";
+    pinpox.url = "github:pinpox/nixos";
     #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
   };
   outputs = inputs:
@@ -56,9 +56,9 @@
             (./devices + "/${target}/hardware-configuration.nix")
 
             {nixpkgs.overlays = [
-              (_: _: { nimf = nimf_src.defaultPackage.${system}; })
-              (_: _: { helloflake = pinpox_src.packages.${system}.hello-custom; })
-              (_: _: { filebrowserflake = pinpox_src.packages.${system}.filebrowser; })
+              (_: _: { nimfflake = nimf.defaultPackage.${system}; })
+              (_: _: { helloflake = pinpox.packages.${system}.hello-custom; })
+              (_: _: { filebrowserflake = pinpox.packages.${system}.filebrowser; })
             ];}
           ];
           specialArgs = { inherit inputs; };
