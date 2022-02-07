@@ -91,6 +91,9 @@
     allowedUDPPorts = [ 41641 ];
     allowedTCPPorts = [ 3389 ];
   };
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # Optional: To protect your nix-shell against garbage collection you also need to add these options to your Nix configuration.
   # On other systems with Nix add the following configuration to your /etc/nix/nix.conf

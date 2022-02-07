@@ -102,4 +102,5 @@
   fonts = {
     fontconfig.enable = true;
   };
+
 }

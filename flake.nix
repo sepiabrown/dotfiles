@@ -55,11 +55,13 @@
             (./devices + "/${target}.nix")
             (./devices + "/${target}/hardware-configuration.nix")
 
-            {nixpkgs.overlays = [
+            ({nixpkgs.overlays = [
               (_: _: { nimfflake = nimf.defaultPackage.${system}; })
               (_: _: { helloflake = pinpox.packages.${system}.hello-custom; })
               (_: _: { filebrowserflake = pinpox.packages.${system}.filebrowser; })
-            ];}
+            ];})
+
+            ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ nimfflake helloflake filebrowserflake];})
           ];
           specialArgs = { inherit inputs; };
         };
