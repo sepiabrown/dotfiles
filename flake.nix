@@ -52,7 +52,11 @@
             home-manager_2111.nixosModules.home-manager {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.sepiabrown.imports = [ ./homemanager_basic.nix ./homemanager_optional.nix ];
+              home-manager.users.sepiabrown.imports = [
+                ./homemanager_basic.nix
+                ./homemanager_optional.nix 
+                (./devices + "/${target}/homemanager.nix")
+              ];
             }
             (./devices + "/${target}.nix")
             (./devices + "/${target}/hardware-configuration.nix")
