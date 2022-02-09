@@ -20,8 +20,8 @@
     # network/bluetooth
     protonvpn-gui # run protonvpn-cli by nix run nixpkgs#protovpn-cli
     blueman
-    teamviewer
-    anydesk
+    #teamviewer
+    #anydesk
 
     # apps
     firefox

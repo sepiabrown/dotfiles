@@ -26,6 +26,7 @@
   #   log in again or type $ . /home/sepiabrown/.nix-profile/etc/profile.d/nix.sh
   #     - Login procedure
   #     $ ssh -p 7777 -t sepiabrown@snubayes.duckdns.org "./.cargo/bin/nix-user-chroot ~/.nix bash -l"     
+  #     $ unset HISTFILE
   #
   # After installing flake:
   # $ git update-index --skip-worktree flake.lock
