@@ -25,7 +25,7 @@
   #   $ nix-user-chroot ~/.nix bash -c "sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)"
   #   log in again or type $ . /home/sepiabrown/.nix-profile/etc/profile.d/nix.sh
   #     - Login procedure
-  #     $ ssh -p 7777 -t sepiabrown@snubayes.duckdns.org "./.cargo/bin/nix-user-chroot ~/.nix bash -l"     
+  #     $ ssh -X -p 7777 -t sepiabrown@snubayes.duckdns.org "./.cargo/bin/nix-user-chroot ~/.nix bash -l"     
   #     $ unset HISTFILE
   #
   # After installing flake:

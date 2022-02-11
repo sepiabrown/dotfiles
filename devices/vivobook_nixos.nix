@@ -55,7 +55,7 @@
   i18n.inputMethod.kime.config = {
     engine = {
       hangul = {
-        layout = "sebeolsik-3-91";
+        layout = "sebeolsik-3-90";
       };
     };
   };
