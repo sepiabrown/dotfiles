@@ -55,6 +55,7 @@
               home-manager.users.sepiabrown.imports = [
                 ./homemanager_basic.nix
                 ./homemanager_optional.nix 
+              ] ++ pkgs.lib.optionals (builtins.pathExists(./devices + "/${target}/homemanager.nix")) [ 
                 (./devices + "/${target}/homemanager.nix")
               ];
             }
