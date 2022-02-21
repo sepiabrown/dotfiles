@@ -17,11 +17,13 @@
     ponysay
     cowsay
 
-    # network/bluetooth
+    # network/bluetooth/printer
     protonvpn-gui # run protonvpn-cli by nix run nixpkgs#protovpn-cli
     blueman
     #teamviewer
     #anydesk
+    #hplipWithPlugin
+    #(steam.override { withJava = true; extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib glxinfo ]; nativeOnly = true; }).run # for hp-setup? after rebuild, do $ steam-run hp-setup
 
     # apps
     firefox
@@ -31,7 +33,7 @@
   ];
 
   # List services that you want to enable:
-  services = { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
+  services = with pkgs; { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
     tailscale.enable = true;
     openssh.openFirewall = false;
     xrdp = {
@@ -44,6 +46,20 @@
       # newSession = true;
     };
     teamviewer.enable = true;
+    printing = {
+      enable = true;
+      browsing = true;
+      defaultShared = true;
+      drivers = [ hplipWithPlugin ];
+    };
+    avahi = {
+      enable = true;
+      publish = {
+        enable = true;
+        userServices = true;
+      };
+      nssmdns = true;
+    };
   };
 
   nixpkgs.overlays =
@@ -84,8 +100,8 @@
   };
 
   networking.firewall = {
-    allowedUDPPorts = [ 41641 ];
-    allowedTCPPorts = [ 3389 ];
+    allowedUDPPorts = [ 41641 631 ];
+    allowedTCPPorts = [ 3389 631 ];
   };
 
   virtualisation.virtualbox = {
@@ -95,6 +111,9 @@
     };
     guest.enable = true;
   };
+
+  hardware.sane.enable = true;
+  
   users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # Optional: To protect your nix-shell against garbage collection you also need to add these options to your Nix configuration.

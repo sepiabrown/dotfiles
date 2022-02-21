@@ -133,14 +133,7 @@
   powerManagement.enable = true;
   hardware.bluetooth.enable = true;
   # hardware.enableRedistributableFirmware = true;
-  hardware.enableAllFirmware = true; # Let's make a working NixOS first. This option needs nixpkgs.config.allowUnfree = true;
-  nixpkgs.config = {
-    allowUnfree = true;
-    # packageOverrides = import ./crd3;
-    # permittedInsecurePackages = [
-    #   "xpdf-4.02"
-    # ];
-  };
+  #hardware.enableAllFirmware = true; # Let's make a working NixOS first. This option needs nixpkgs.config.allowUnfree = true;
 
   # Enable sound.
   sound.enable = true;

@@ -27,7 +27,7 @@
       #pkgs = nixos_2111.legacyPackages.x86_64-linux;#system;
       pkgs = import inputs.nixos_2111 {
         inherit system;
-        config.allowUnfree = true;
+
       };
       # lib = nixpkgs.lib;
       # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
@@ -67,6 +67,28 @@
               (_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
               #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
             ];})
+
+            ({nixpkgs.config = {
+              #allowUnfree = true;
+              allowBroken = true;
+              allowUnfreePredicate = pkg: builtins.elem (nixos_2111.lib.getName pkg) [
+                "corefonts"
+                "hplip"
+                "hplipWithPlugin"
+                "dropbox"
+                "zoom"
+                "foxitreader"
+                "vscode"
+                "vscode-with-extensions"
+                "vscode-extension-ms-vscode-remote-remote-ssh"
+                "chrome-remote-desktop"
+                "teamviewer"
+                "Oracle_VM_VirtualBox_Extension_Pack"
+              ];
+              #permittedInsecurePackages = [
+              #  "xpdf-4.02"
+              #];
+            };})
 
             ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
               nimf_flake 

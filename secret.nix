@@ -16,6 +16,8 @@
   }; 
   #nix.settings.allowed-users = [ "sepiabrown" ];
   nix.allowedUsers = [ "sepiabrown" ];
+  nix.trustedUsers = [ "root" "sepiabrown" ];
+
   security.sudo.extraConfig = ''
     %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
   '';

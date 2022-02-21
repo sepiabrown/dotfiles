@@ -40,6 +40,7 @@
   # gnumake
   # cmake
   # gcc
+  cachix
 
   # system
 
