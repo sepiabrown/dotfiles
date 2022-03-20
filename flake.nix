@@ -16,6 +16,7 @@
     home-manager_2111.inputs.nixpkgs.follows = "nixos_2111";
     nimf.url = "github:sepiabrown/nimf/NixOS_nimf";
     pinpox.url = "github:pinpox/nixos";
+    #nix-direnv.url = "github:nix-community/nix-direnv";
     #nixos_unstable.url = "github:nixos/nixpkgs/nixos-21.05";
     #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
   };
@@ -43,29 +44,26 @@
         value = nixos_2111.lib.nixosSystem {
           inherit system;
           modules = [
-            ./configuration_basic.nix
-            ./configuration_optional.nix
-            #./homemanager_basic.nix
-            #./homemanager_optional.nix
-            ./with_keyboard_fix.nix
-            ./secret.nix
-            home-manager_2111.nixosModules.home-manager {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.sepiabrown.imports = [
-                ./homemanager_basic.nix
-                ./homemanager_optional.nix 
-              ] ++ pkgs.lib.optionals (builtins.pathExists(./devices + "/${target}/homemanager.nix")) [ 
-                (./devices + "/${target}/homemanager.nix")
-              ];
-            }
-            (./devices + "/${target}.nix")
-            (./devices + "/${target}/hardware-configuration.nix")
-
             ({nixpkgs.overlays = [
               (_: _: { nimf_flake = nimf.defaultPackage.${system}; })
               (_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
               (_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+              # because home-manager uses nixpkgs nix-direnv which requires 'enableFlakes' argument,
+              # 'enableFlakes' is built into home-manager's module config used by xdg submodule. 
+              # It is nearly impossible to fix submodule config. mkForce, mkRemovedOptionModule 
+              # can't erase config's 'enableFlakes'. However the nix-community version doesn't 
+              # have argument for 'enableFlakes'.  Changing only version doesn't 
+              # affect the file status. Change sha256 arbitrarily to update!
+              (self: super: { nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
+                version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
+                src = super.fetchFromGitHub {
+                  owner = "nix-community";
+                  repo = "nix-direnv";
+                  rev = version;
+                  sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
+                };
+              });}) 
+              #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
               #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
             ];})
 
@@ -85,6 +83,10 @@
                 "chrome-remote-desktop"
                 "teamviewer"
                 "Oracle_VM_VirtualBox_Extension_Pack"
+                "lutris"
+                "steam"
+                "steam-original"
+                "steam-runtime"
               ];
               #permittedInsecurePackages = [
               #  "xpdf-4.02"
@@ -97,6 +99,25 @@
               filebrowser_flake 
               ];
             })
+
+            ./configuration_basic.nix
+            ./configuration_optional.nix
+            #./homemanager_basic.nix
+            #./homemanager_optional.nix
+            ./with_keyboard_fix.nix
+            ./secret.nix
+            home-manager_2111.nixosModules.home-manager {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.sepiabrown.imports = [
+                ./homemanager_basic.nix
+                ./homemanager_optional.nix 
+              ] ++ pkgs.lib.optionals (builtins.pathExists(./devices + "/${target}/homemanager.nix")) [ 
+                (./devices + "/${target}/homemanager.nix")
+              ];
+            }
+            (./devices + "/${target}.nix")
+            (./devices + "/${target}/hardware-configuration.nix")
           ];
           specialArgs = { inherit inputs; };
         };

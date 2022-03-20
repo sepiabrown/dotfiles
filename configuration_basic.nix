@@ -59,6 +59,9 @@
 #
 # Important notes organized by sepiabrown at the back of the file!!
 #
+# Screen Brightness
+# xrandr --output eDP-1 --brightness 1 -> default
+# xrandr --output eDP-1 --brightness 0.01 -> 0.01 times brighter than default
 ##########################################################################
 
 { config, pkgs, ... }:

@@ -43,6 +43,7 @@
   cachix
 
   # system
+  glxinfo
 
   # network
   # tailscale # vpn

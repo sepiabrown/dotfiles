@@ -44,6 +44,8 @@
       enable = true;
       user = "sepiabrown";
       # newSession = true;
+      # xrandr --output eDP-1 --brightness 1 -> default
+      # xrandr --output eDP-1 --brightness 0.01 -> 0.01 times brighter than default
     };
     teamviewer.enable = true;
     printing = {

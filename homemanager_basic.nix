@@ -1,6 +1,3 @@
-{ config, pkgs, ... }:
-
-{
   # Install nix 
   # - needs user account with sudo privilege
   # - needs to add 'experimental-features = nix-command flakes' to nix.conf (generally found in ~/.config/nix)
@@ -33,6 +30,10 @@
   #
   # search: https://rycee.gitlab.io/home-manager/options.html
   # xsession.enable = true; # needed for graphical session related services such as xscreensaver
+
+{ config, pkgs, ... }:
+
+{
   home.packages = with pkgs;
   [
     # test
@@ -248,6 +249,7 @@ if [ -e ''$HOME/.cargo/env ]; then . ''$HOME/.cargo/env; fi
       enable = true;
     };
   };
+  # end of program
 
   services = {
     gpg-agent = {
@@ -282,11 +284,11 @@ while true; do
       read -p "Are you sure? : " safe
       if [ ''${task} == "check" -a ''${safe} == "y" ]; then
         for RCPATH in $RCLONEPATHS; do
-		rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from "''${FILTERFILEDOWNLOAD}"
+        	rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from "''${FILTERFILEDOWNLOAD}"
         done
       elif [ ''${direction} == "r" -a ''${safe} == "y" ]; then
         for RCPATH in $RCLONEPATHS; do
-	  echo "''${RCLONEHOME}''${RCPATH}"	
+          echo "''${RCLONEHOME}''${RCPATH}"	
           rclone mkdir "''${RCLONEHOME}''${RCPATH}"
           rclone $task "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEDOWNLOAD}"
         done
@@ -336,6 +338,7 @@ popd
 #source /run/current-system/sw/share/nix-direnv/direnvrc 
     #'';
   };
+  
 }
 # TODO 1
 # environment = {  
