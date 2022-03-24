@@ -39,11 +39,43 @@
             (builtins.readDir ./devices)
         )
       );
+
+      nix_config = {
+        nixpkgs.config = {
+          #allowUnfree = true;
+          allowBroken = true;
+          allowUnfreePredicate = pkg: builtins.elem (nixos_2111.lib.getName pkg) [
+            "corefonts"
+            "hplip"
+            "hplipWithPlugin"
+            "dropbox"
+            "zoom"
+            "foxitreader"
+            "vscode"
+            "vscode-with-extensions"
+            "vscode-extension-ms-vscode-remote-remote-ssh"
+            "chrome-remote-desktop"
+            "teamviewer"
+            "Oracle_VM_VirtualBox_Extension_Pack"
+            "lutris"
+            "steam"
+            "steam-original"
+            "steam-runtime"
+          ];
+          #permittedInsecurePackages = [
+          #  "xpdf-4.02"
+          #];
+        };
+      };
+
       build-target = target: {
         name = target;
         value = nixos_2111.lib.nixosSystem {
           inherit system;
           modules = [
+
+            nix_config
+
             ({nixpkgs.overlays = [
               (_: _: { nimf_flake = nimf.defaultPackage.${system}; })
               (_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
@@ -66,32 +98,6 @@
               #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
               #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
             ];})
-
-            ({nixpkgs.config = {
-              #allowUnfree = true;
-              allowBroken = true;
-              allowUnfreePredicate = pkg: builtins.elem (nixos_2111.lib.getName pkg) [
-                "corefonts"
-                "hplip"
-                "hplipWithPlugin"
-                "dropbox"
-                "zoom"
-                "foxitreader"
-                "vscode"
-                "vscode-with-extensions"
-                "vscode-extension-ms-vscode-remote-remote-ssh"
-                "chrome-remote-desktop"
-                "teamviewer"
-                "Oracle_VM_VirtualBox_Extension_Pack"
-                "lutris"
-                "steam"
-                "steam-original"
-                "steam-runtime"
-              ];
-              #permittedInsecurePackages = [
-              #  "xpdf-4.02"
-              #];
-            };})
 
             ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
               nimf_flake 
@@ -134,6 +140,7 @@
         homeDirectory = "/home/sepiabrown";
         configuration.imports = [ ./homemanager_basic.nix 
                                   ./homemanager_optional.nix 
+                                  nix_config
                                   ({...}:{
                                     home.file = {
                                       ".config/nix/nix.conf".text = ''
@@ -165,3 +172,5 @@
     #   };
     # };
 }
+# home-manager using flake.nix
+# $
