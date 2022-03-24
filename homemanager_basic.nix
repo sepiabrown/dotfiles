@@ -3,9 +3,14 @@
   # - needs to add 'experimental-features = nix-command flakes' to nix.conf (generally found in ~/.config/nix)
   #   - with nix-unstable-installer: https://github.com/numtide/nix-unstable-installer (recommended)
   #   $ sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)
-  #     - can install flake directly using
+  #
+  #########################################
+  #     - can install homemanager directly using flake.nix (maybe with unstableNix)
+  #########################################
   #     $ nix-env --set-flag priority 6 nix
   #     $ nix build '.#homeConfigurations.sepiabrown.activationPackage' --extra-experimental-features flakes --extra-experimental-features nix-command
+  #     $ ./result/activate
+  #     $ home-manager switch --flake '<flake-uri>#jdoe'
   #   - on non-NixOS Linux distro (using multi user installation)
   #   $ sh <(curl -L https://nixos.org/nix/install) --daemon
   #   - on macOS
