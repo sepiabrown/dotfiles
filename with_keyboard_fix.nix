@@ -13,7 +13,7 @@
       # to enable meta to turn on application launcher in kde plasma, erase ~/.config/kwinrc to reset or put 'kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu" qdbus org.kde.KWin /KWin reconfigure' in the if statement instead.
       extraLayouts.custom_windows = # custom_windows: real xkb symbol file name
       let 
-        custom_windows_config = pkgs.writeText "windows_custom_xkeyboard" # windows_custom_xkeyboard : patch file name
+        custom_windows_config_220324 = pkgs.writeText "windows_custom_xkeyboard_220324" # windows_custom_xkeyboard : patch file name
 ''
 // '!!!' for changes made by sepiabrown
 default partial alphanumeric_keys modifier_keys
@@ -88,14 +88,13 @@ xkb_symbols "basic" // !!!
     key <KIUP> { [ XF86KbdBrightnessUp ] };
 
     include "kr(ralt_hangul)" // !!!
-    // include "kr(rctrl_hanja)" // !!! not possible for apple aluminium since there is no rctrl
 };
 '';
       in
       {
         description = "US layout with sepiabrownn's windows custom patch";
         languages   = [ "eng" ];
-        symbolsFile = custom_windows_config;
+        symbolsFile = custom_windows_config_220324;
       };
 
       extraLayouts.custom_apple =
