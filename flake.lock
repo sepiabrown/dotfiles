@@ -384,11 +384,11 @@
         "zsh-colored-man-pages": "zsh-colored-man-pages"
       },
       "locked": {
-        "lastModified": 1648208880,
-        "narHash": "sha256-YgPe56Vy+yLs1NGE3MUgEyZfDskAQ3Ru8q17tz/HcpM=",
+        "lastModified": 1648294884,
+        "narHash": "sha256-1XDIr2N2FGKMd/lZkHWk0p1I4m1OVp77DxgqxOAl8T4=",
         "owner": "pinpox",
         "repo": "nixos",
-        "rev": "a0cd32aa3b12a58ca814814a933fb4083d180888",
+        "rev": "ff0bf43918663c7a22365ac2678072f7ee20f4ac",
         "type": "github"
       },
       "original": {

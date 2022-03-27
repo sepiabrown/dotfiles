@@ -73,6 +73,7 @@
     dua # Disk Usage
     duc # Disk Usage
     testdisk # data recovery software. recover lost partition, make non booting disk bootable again
+    xautoclick
   ];
 
   programs = {
