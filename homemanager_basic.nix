@@ -74,6 +74,7 @@
     duc # Disk Usage
     testdisk # data recovery software. recover lost partition, make non booting disk bootable again
     xautoclick
+    poetry
   ];
 
   programs = {
