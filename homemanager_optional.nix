@@ -75,6 +75,7 @@
   shutter
   capture # no sound
   simplescreenrecorder # with sound
+  youtube-dl
 
   # unfree
   #myzoom-us
