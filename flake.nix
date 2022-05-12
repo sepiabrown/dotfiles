@@ -141,15 +141,31 @@
         configuration.imports = [ ./homemanager_basic.nix 
                                   ./homemanager_optional.nix 
                                   nix_config
-                                  ({...}:{
-                                    home.file = {
-                                      ".config/nix/nix.conf".text = ''
-                                        experimental-features = nix-command flakes
-                                        keep-derivations = true
-                                        keep-outputs = true
-                                      '';
-                                    };
-                                  })
+                                  ({nixpkgs.overlays = [
+                                    (_: _: { nimf_flake = nimf.defaultPackage.${system}; })
+                                    (_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
+                                    (_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+                                    (self: super: { nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
+                                      version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
+                                      src = super.fetchFromGitHub {
+                                        owner = "nix-community";
+                                        repo = "nix-direnv";
+                                        rev = version;
+                                        sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
+                                      };
+                                    });}) 
+                                    #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
+                                    #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
+                                  ];})
+                                  #({...}:{
+                                  #  home.file = {
+                                  #    ".config/nix/nix.conf".text = ''
+                                  #      experimental-features = nix-command flakes
+                                  #      keep-derivations = true
+                                  #      keep-outputs = true
+                                  #    '';
+                                  #  };
+                                  #})
                                 ];
       };
     };

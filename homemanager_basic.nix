@@ -344,6 +344,12 @@ popd
     "filter-file-download".text = ''
 - ltximg/**
     '';
+    ".config/nix/nix.conf".text = ''
+      experimental-features = nix-command flakes
+      keep-derivations = true
+      keep-outputs = true
+      substituters = https://cache.nixos.org https://cuda-maintainers.cachix.org
+    '';
     #".bashrc".text = ''
 #eval "''$(direnv hook bash)"
     #'';
