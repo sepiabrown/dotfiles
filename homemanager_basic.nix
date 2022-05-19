@@ -163,8 +163,10 @@
         la = "ls -A";
         l = "ls -CF";
         alert = "notify-send --urgency=low -i \"$([ $? = 0 ] && echo terminal || echo error)\" \"$(history|tail -n1|sed -e 's/^\\s*[0-9]\\+\\s*//;s/[;&|]\\s*alert$//')\"";
+        #tmux = "tmux -S ~/.tmp";
       }; # single quote needs less backslash!!! unintuitive!!!
       profileExtra = ''
+#echo "start profile"
 # if running bash
 if [ -n ''$BASH_VERSION ]; then
     # include .bashrc if it exists
@@ -188,8 +190,10 @@ export PATH
 if [ -e ''$HOME/.cargo/env ]; then . ''$HOME/.cargo/env; fi 
 
 if [ -e ''$HOME/.nix-profile/etc/profile.d/nix.sh ]; then . ''$HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+#echo "end profile"
       '';
       bashrcExtra = ''
+#echo "start bashrc"
 case $- in
     *i*) ;;
       *) return;;
@@ -249,6 +253,7 @@ if ! shopt -oq posix; then
 fi
 
 if [ -e ''$HOME/.cargo/env ]; then . ''$HOME/.cargo/env; fi 
+#echo "end bashrc"
       '';
     };
 
@@ -256,9 +261,14 @@ if [ -e ''$HOME/.cargo/env ]; then . ''$HOME/.cargo/env; fi
       enable = true;
     };
 
+    # Reconnecting ssh made 'command not found' error in tmux.
+    # Introducing socket did not help
+    # Solution: When new session is made, detach and reattach once.
+    #   To keep the session alive, quit the window holding tmux without detaching.(ex) via mouse click)
     tmux = {
       enable = true;
       keyMode = "vi";
+      #newSession = true;
     };
 
   };
