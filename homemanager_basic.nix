@@ -269,6 +269,7 @@ if [ -e ''$HOME/.cargo/env ]; then . ''$HOME/.cargo/env; fi
       enable = true;
       keyMode = "vi";
       #newSession = true;
+      extraConfig = "set -g mouse on";
     };
 
   };

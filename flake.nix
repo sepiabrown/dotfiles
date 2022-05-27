@@ -100,7 +100,7 @@
             ];})
 
             ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
-              nimf_flake 
+              #nimf_flake 
               hello_flake 
               filebrowser_flake 
               ];
