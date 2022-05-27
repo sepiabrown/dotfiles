@@ -363,11 +363,12 @@ Host code-server
   LocalForward 4444 localhost:4444
   LocalForward 4445 localhost:4445
 # config.yml in same directory with ./polynote.py
+# config.yml doesn't work
 Host polynote
   Hostname snubayes.duckdns.org
   User sepiabrown
   Port 7777
-  LocalForward 5555 localhost:5555
+  LocalForward 8192 localhost:8192
     '';
     "filter-file-upload".text = ''
 - ltximg/**
