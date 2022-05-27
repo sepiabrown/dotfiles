@@ -348,6 +348,27 @@ else
 fi
 popd
     '';
+    ".ssh/config".text = ''
+# ~/.jupyter/jupyter_notebook_config.py; (password in ~/.jupyter/jupyter_server_config.json)
+Host jupyter
+  Hostname snubayes.duckdns.org
+  User sepiabrown
+  Port 7777
+  LocalForward 3333 localhost:3333
+# ~/.config/code-server/config.yaml
+Host code-server
+  Hostname snubayes.duckdns.org
+  User sepiabrown
+  Port 7777
+  LocalForward 4444 localhost:4444
+  LocalForward 4445 localhost:4445
+# config.yml in same directory with ./polynote.py
+Host polynote
+  Hostname snubayes.duckdns.org
+  User sepiabrown
+  Port 7777
+  LocalForward 5555 localhost:5555
+    '';
     "filter-file-upload".text = ''
 - ltximg/**
 - Notability/**
@@ -356,10 +377,11 @@ popd
 - ltximg/**
     '';
     ".config/nix/nix.conf".text = ''
-      experimental-features = nix-command flakes
-      keep-derivations = true
-      keep-outputs = true
-      substituters = https://cache.nixos.org https://cuda-maintainers.cachix.org
+experimental-features = nix-command flakes
+keep-derivations = true
+keep-outputs = true
+substituters = https://cache.nixos.org https://jupyterwith.cachix.org https://ihaskell.cachix.org https://cuda-maintainers.cachix.org
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= jupyterwith.cachix.org-1:/kDy2B6YEhXGJuNguG1qyqIodMyO4w8KwWH4/vAc7CI= ihaskell.cachix.org-1:WoIvex/Ft/++sjYW3ntqPUL3jDGXIKDpX60pC8d5VLM=
     '';
     #".bashrc".text = ''
 #eval "''$(direnv hook bash)"
