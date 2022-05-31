@@ -51,6 +51,8 @@
   openssh
   nextcloud-client
   dropbox
+  mosh
+  sshfs
 
   # tools
   libreoffice
