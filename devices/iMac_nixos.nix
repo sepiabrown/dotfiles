@@ -31,12 +31,24 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  # Configure keymap in X11
+  services.xserver.layout = "custom_windows";
+  services.xserver.xkbOptions = "korean:ralt_hangul";
+
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
   # };
+  i18n.inputMethod.enabled = "kime";
+  i18n.inputMethod.kime.config = {
+    engine = {
+      hangul = {
+        layout = "sebeolsik-3-90";
+      };
+    };
+  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;

@@ -11,6 +11,10 @@
   #     $ nix build '.#homeConfigurations.sepiabrown.activationPackage' --extra-experimental-features flakes --extra-experimental-features nix-command
   #     $ ./result/activate
   #     $ home-manager switch --flake '<flake-uri>#jdoe'
+  #   - current priority
+  #     - nix-2.9 : 4
+  #     - home-manager-path : 5
+  #     - nix-2.7-pre : 6
   #   - on non-NixOS Linux distro (using multi user installation)
   #   $ sh <(curl -L https://nixos.org/nix/install) --daemon
   #   - on macOS

@@ -41,6 +41,7 @@
   # cmake
   # gcc
   cachix
+  nix-index
 
   # system
   glxinfo
