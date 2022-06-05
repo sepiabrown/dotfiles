@@ -77,9 +77,9 @@
             nix_config
 
             ({nixpkgs.overlays = [
-              (_: _: { nimf_flake = nimf.defaultPackage.${system}; })
-              (_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
-              (_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+              #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
+              #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
+              #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
               # because home-manager uses nixpkgs nix-direnv which requires 'enableFlakes' argument,
               # 'enableFlakes' is built into home-manager's module config used by xdg submodule. 
               # It is nearly impossible to fix submodule config. mkForce, mkRemovedOptionModule 
@@ -99,12 +99,12 @@
               #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
             ];})
 
-            ({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
-              #nimf_flake 
-              hello_flake 
-              filebrowser_flake 
-              ];
-            })
+            #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
+            #  #nimf_flake 
+            #  #hello_flake 
+            #  #filebrowser_flake 
+            #  ];
+            #})
 
             ./configuration_basic.nix
             ./configuration_optional.nix
@@ -142,9 +142,9 @@
                                   ./homemanager_optional.nix 
                                   nix_config
                                   ({nixpkgs.overlays = [
-                                    (_: _: { nimf_flake = nimf.defaultPackage.${system}; })
-                                    (_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
-                                    (_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+                                    #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
+                                    #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
+                                    #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
                                     (self: super: { nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
                                       version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
                                       src = super.fetchFromGitHub {
