@@ -366,6 +366,11 @@ Host code-server
   Port 7777
   LocalForward 4444 localhost:4444
   LocalForward 4445 localhost:4445
+Host rstudio-server
+  Hostname snubayes.duckdns.org
+  User sepiabrown
+  Port 7777
+  LocalForward 5555 localhost:5555
 # config.yml in same directory with ./polynote.py
 # config.yml doesn't work
 Host polynote
