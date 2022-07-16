@@ -46,7 +46,7 @@
   # services.xserver.xkbOptions = "eurosign:e";
   services.xserver.layout = "custom_apple";
   services.xserver.xkbOptions = "korean:ralt_hangul";
-  services.xserver.displayManager.sessionCommands = "setxkbmap -keycodes custom_apple";
+  #services.xserver.displayManager.sessionCommands = "setxkbmap -keycodes custom_apple";
 
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
@@ -54,14 +54,29 @@
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
   # };
-  i18n.inputMethod.enabled = "kime";
-  i18n.inputMethod.kime.config = {
-    engine = {
-      hangul = {
-        layout = "sebeolsik-3-90";
-      };
-    };
+
+  #i18n.inputMethod = {
+  #  enabled = "uim";
+  #};
+
+  i18n.inputMethod = {
+    enabled = "fcitx";
+    fcitx.engines = with pkgs.fcitx-engines; [ hangul ];
   };
+
+  #i18n.inputMethod = {
+  #  enabled = "ibus";
+  #  ibus.engines = with pkgs.ibus-engines; [ hangul ];
+  #};
+  #i18n.inputMethod.enabled = "kime";
+  #i18n.inputMethod.kime.config = {
+  #  engine = {
+  #    hangul = {
+  #      #layout = "sebeolsik-3-90";
+  #      layout = "dubeolsik";
+  #    };
+  #  };
+  #};
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
