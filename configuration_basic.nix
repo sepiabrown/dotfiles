@@ -66,44 +66,45 @@
 
 { config, pkgs, ... }:
 
-{ 
+{
   # system.copySystemConfiguration = true;  # not working with flakes?
 
-  imports = 
-  [ # Include the results of the hardware scan.
-  ];
+  imports =
+    [
+      # Include the results of the hardware scan.
+    ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking = {
     hostName = "sepiabrown-nix"; # Define your hostname.
     networkmanager = {
-      enable = true;   # wpa_spplicant and networkmanager collide
+      enable = true; # wpa_spplicant and networkmanager collide
       packages = [
-      #????????????????????????????????????
-      pkgs.networkmanager-l2tp
+        #????????????????????????????????????
+        pkgs.networkmanager-l2tp
       ];
     };
-  # wireless.enable = true;  # Enables wireless support via wpa_supplicant. Don't use with networkmanager
+    # wireless.enable = true;  # Enables wireless support via wpa_supplicant. Don't use with networkmanager
 
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour
-### useDHCP = false;
-  # extraHosts = ''
-  # 209.51.188.89 elpa.gnu.org
-  # '';
+    # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+    # Per-interface useDHCP will be mandatory in the future, so this generated config
+    # replicates the default behaviour
+    ### useDHCP = false;
+    # extraHosts = ''
+    # 209.51.188.89 elpa.gnu.org
+    # '';
 
-  # Device dependent options are in network.nix
-  #
-  # defaultGateway = "192.168.0.1";
-  # nameservers = [ "147.46.80.1" ];
-  # interfaces = {
-  #   enp4s0f0.ipv4.addresses = [ { 
-  #     address = "192.168.0.98";
-  #     prefixLength = 24;
-  #   } ]; 
-  # };
+    # Device dependent options are in network.nix
+    #
+    # defaultGateway = "192.168.0.1";
+    # nameservers = [ "147.46.80.1" ];
+    # interfaces = {
+    #   enp4s0f0.ipv4.addresses = [ { 
+    #     address = "192.168.0.98";
+    #     prefixLength = 24;
+    #   } ]; 
+    # };
   };
 
   # Configure network proxy if necessary
@@ -159,7 +160,7 @@
     ##network
     # protonvpn-cli
     # protonvpn-gui # consider installing when github, youtube is blocked
-    
+
     ##system
     efibootmgr
     gparted
@@ -175,11 +176,12 @@
   # };
 
   # List services that you want to enable:
-  services = { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
+  services = {
+    # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
     openssh.enable = true; # Enable the OpenSSH daemon.
     blueman.enable = true;
     xl2tpd.enable = true;
-    xserver = { 
+    xserver = {
       enable = true; # Enable the X11 windowing system.
       # displayManager.defaultSession = "mate";
       # desktopManager.mate.enable = true;

@@ -1,12 +1,13 @@
 { config, pkgs, inputs, ... }:
 
-{ 
+{
   # system.copySystemConfiguration = true;  # not working with flakes?
 
   imports =
-  [ # Include the results of the hardware scan.
-    #./crd/chrome-remote-desktop.nix
-  ];
+    [
+      # Include the results of the hardware scan.
+      #./crd/chrome-remote-desktop.nix
+    ];
 
   #(environment.variables = {
   #  QT_IM_MODULE = "zoom";
@@ -33,7 +34,8 @@
   ];
 
   # List services that you want to enable:
-  services = with pkgs; { # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
+  services = with pkgs; {
+    # https://nixos.org/manual/nixos/stable/#sec-modularity, but doesn't need pkgs.lib.mkForce.. maybe not yet!
     tailscale.enable = true;
     openssh.openFirewall = false;
     xrdp = {
@@ -77,13 +79,14 @@
         sha256 = "sha256-g5YwZR55DFHlpickMhCSUIzCMM7YWvdSqGvgo/wByDk="; # 5.12.8.so
       };
     in
-    [ #(final: prev: {
+    [
+      #(final: prev: {
       #  kime = prev.kime.override {
       #    qt5 = prev.qt512;
       #  };
       #})
       (final: prev: {
-        zoom-us = prev.zoom-us.overrideAttrs(old: {
+        zoom-us = prev.zoom-us.overrideAttrs (old: {
           #postFixup = old.postFixup + ''
           #  substituteInPlace $out/share/applications/Zoom.desktop --replace "Exec=" "Exec=env QT_IM_MODULE=kime "
           #'';
@@ -115,7 +118,7 @@
   };
 
   hardware.sane.enable = true;
-  
+
   users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # Optional: To protect your nix-shell against garbage collection you also need to add these options to your Nix configuration.

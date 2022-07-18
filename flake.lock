@@ -67,6 +67,21 @@
     },
     "flake-utils": {
       "locked": {
+        "lastModified": 1656928814,
+        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
         "lastModified": 1653893745,
         "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
         "owner": "numtide",
@@ -114,6 +129,27 @@
     },
     "home-manager": {
       "inputs": {
+        "nixpkgs": [
+          "nixos"
+        ]
+      },
+      "locked": {
+        "lastModified": 1656169755,
+        "narHash": "sha256-Nlnm4jeQWEGjYrE6hxi/7HYHjBSZ/E0RtjCYifnNsWk=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "4a3d01fb53f52ac83194081272795aa4612c2381",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "release-22.05",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "home-manager_2": {
+      "inputs": {
         "flake-compat": "flake-compat_2",
         "nixpkgs": [
           "pinpox",
@@ -133,27 +169,6 @@
       },
       "original": {
         "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_2111": {
-      "inputs": {
-        "nixpkgs": [
-          "nixos_2111"
-        ]
-      },
-      "locked": {
-        "lastModified": 1651519540,
-        "narHash": "sha256-3k6p8VsTwwRPQjE8rrMh+o2AZACZn/eeYJ7ivdQ/Iro=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "d93d56ab8c1c6aa575854a79b9d2f69d491db7d0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "ref": "release-21.11",
         "repo": "home-manager",
         "type": "github"
       }
@@ -304,18 +319,18 @@
         "type": "github"
       }
     },
-    "nixos_2111": {
+    "nixos": {
       "locked": {
-        "lastModified": 1644354168,
-        "narHash": "sha256-PU43iQr19pCi8Ds6rUZ0nYUAjWDEcmkhpJBdtrcH2SM=",
+        "lastModified": 1657996500,
+        "narHash": "sha256-L1HklaYMaOl32xxRBsgk4XIgswrOsSPGrHgSknGO1Oc=",
         "owner": "sepiabrown",
         "repo": "nixpkgs",
-        "rev": "55b1d253ed8066a5f3b51b2feb12194597ab13cb",
+        "rev": "66ad251573736ded388d8c188ebfc7759d42fa4c",
         "type": "github"
       },
       "original": {
         "owner": "sepiabrown",
-        "ref": "chrome-remote-desktop-21.11",
+        "ref": "chrome-remote-desktop_2205",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -447,10 +462,10 @@
       "inputs": {
         "dotfiles-awesome": "dotfiles-awesome",
         "flake-compat": "flake-compat",
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "forgit": "forgit",
         "fzf-lua": "fzf-lua",
-        "home-manager": "home-manager",
+        "home-manager": "home-manager_2",
         "indent-blankline-nvim-lua": "indent-blankline-nvim-lua",
         "krops": "krops",
         "matrix-hook": "matrix-hook",
@@ -552,9 +567,10 @@
     },
     "root": {
       "inputs": {
-        "home-manager_2111": "home-manager_2111",
+        "flake-utils": "flake-utils",
+        "home-manager": "home-manager",
         "nimf": "nimf",
-        "nixos_2111": "nixos_2111",
+        "nixos": "nixos",
         "pinpox": "pinpox"
       }
     },
