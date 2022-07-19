@@ -6,9 +6,13 @@
     #nixos_unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     #home-manager_unstable.url = "github:nix-community/home-manager";
     #home-manager_unstable.inputs.nixpkgs.follows = "nixos_unstable";
-    #nix-darwin.url = "github:lnl7/nix-darwin";
     #nixos_2105.url = "nixpkgs/nixos-21.05";
+    nixpkgs.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop_2205"; # for darwinConfigurations
     nixos.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop_2205";
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixos";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-22.05";
       inputs.nixpkgs.follows = "nixos";
@@ -24,155 +28,182 @@
     };
   };
   outputs = inputs: with inputs;
-    let
-      #system = "x86_64-linux";
-      #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
-      #pkgs = nixos.legacyPackages.x86_64-linux;#system;
-      pkgs = import nixos (nixos.lib.mkMerge [
-        (nixos.lib.mkIf nixos.stdenv.isLinux { system = "x86_64-linux"; })
-        (nixos.lib.mkIf nixos.stdenv.isDarwin { system = "x86_64-darwin"; })
-      ]);
-      #system = if pkgs.stdenv.isLinux then "x86_64-linux" else if pkgs.stdenv.isDarwin then "x86_64-darwin" else "";
-      #system = if builtins.currentSystem  == "x86_64-linux" then "x86_64-linux" else if builtins.currentSystem == "x86_64-darwin" then "x86_64-darwin" else "";
-      # lib = nixpkgs.lib;
-      # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
-      targets = map (pkgs.lib.removeSuffix ".nix") (
-        pkgs.lib.attrNames (
-          pkgs.lib.filterAttrs
-            (_: entryType: entryType == "regular")
-            (builtins.readDir ./devices)
-        )
-      );
-      nix_config = {
-        nixpkgs.config = {
-          #allowUnfree = true;
-          allowBroken = true;
-          allowUnfreePredicate = pkg: builtins.elem (nixos.lib.getName pkg) [
-            "corefonts"
-            "hplip"
-            "hplipWithPlugin"
-            "dropbox"
-            "zoom"
-            "foxitreader"
-            "vscode"
-            "vscode-with-extensions"
-            "vscode-extension-ms-vscode-remote-remote-ssh"
-            "chrome-remote-desktop"
-            "teamviewer"
-            "Oracle_VM_VirtualBox_Extension_Pack"
-            "lutris"
-            "steam"
-            "steam-original"
-            "steam-runtime"
-          ];
-          #permittedInsecurePackages = [
-          #  "xpdf-4.02"
-          #];
+    (flake-utils.lib.eachDefaultSystem (system:
+      let
+        #system = "x86_64-linux";
+        #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
+        #pkgs = nixos.legacyPackages.x86_64-linux;#system;
+        pkgs = import nixos {
+          inherit system;
         };
-      };
+        # lib = nixpkgs.lib;
+        # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
+        targets = map (pkgs.lib.removeSuffix ".nix") (
+          pkgs.lib.attrNames (
+            pkgs.lib.filterAttrs
+              (_: entryType: entryType == "regular")
+              (builtins.readDir ./devices)
+          )
+        );
+        nixpkgs_config = {
+          nixpkgs.config = {
+            #allowUnfree = true;
+            allowBroken = true;
+            allowUnfreePredicate = pkg: builtins.elem (nixos.lib.getName pkg) [
+              "corefonts"
+              "hplip"
+              "hplipWithPlugin"
+              "dropbox"
+              "zoom"
+              "foxitreader"
+              "vscode"
+              "vscode-with-extensions"
+              "vscode-extension-ms-vscode-remote-remote-ssh"
+              "chrome-remote-desktop"
+              "teamviewer"
+              "Oracle_VM_VirtualBox_Extension_Pack"
+              "lutris"
+              "steam"
+              "steam-original"
+              "steam-runtime"
+            ];
+            #permittedInsecurePackages = [
+            #  "xpdf-4.02"
+            #];
+          };
+        };
 
-      build-target = target: {
-        name = target;
-        value = nixos.lib.nixosSystem {
-          #inherit system;
-          system = if pkgs.stdenv.isLinux then "x86_64-linux" else if pkgs.stdenv.isDarwin then "x86_64-darwin" else "";
-          modules = [
-
-            nix_config
-
-            ({
-              nixpkgs.overlays = [
-                #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
-                #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
-                #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
-                # because home-manager uses nixpkgs nix-direnv which requires 'enableFlakes' argument,
-                # 'enableFlakes' is built into home-manager's module config used by xdg submodule. 
-                # It is nearly impossible to fix submodule config. mkForce, mkRemovedOptionModule 
-                # can't erase config's 'enableFlakes'. However the nix-community version doesn't 
-                # have argument for 'enableFlakes'.  Changing only version doesn't 
-                # affect the file status. Change sha256 arbitrarily to update!
-                (self: super: {
-                  nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
-                    version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
-                    src = super.fetchFromGitHub {
-                      owner = "nix-community";
-                      repo = "nix-direnv";
-                      rev = version;
-                      sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
-                    };
-                  });
-                })
-                #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
-                #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
-              ];
+        nixpkgs_overlays = {
+          nixpkgs.overlays = [
+            #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
+            #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
+            #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+            # because home-manager uses nixpkgs nix-direnv which requires 'enableFlakes' argument,
+            # 'enableFlakes' is built into home-manager's module config used by xdg submodule. 
+            # It is nearly impossible to fix submodule config. mkForce, mkRemovedOptionModule 
+            # can't erase config's 'enableFlakes'. However the nix-community version doesn't 
+            # have argument for 'enableFlakes'.  Changing only version doesn't 
+            # affect the file status. Change sha256 arbitrarily to update!
+            (self: super: {
+              nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
+                version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
+                src = super.fetchFromGitHub {
+                  owner = "nix-community";
+                  repo = "nix-direnv";
+                  rev = version;
+                  sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
+                };
+              });
             })
-
-            #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
-            #  #nimf_flake 
-            #  #hello_flake 
-            #  #filebrowser_flake 
-            #  ];
-            #})
-
-            ./configuration_basic.nix
-            ./configuration_optional.nix
-            #./homemanager_basic.nix
-            #./homemanager_optional.nix
-            ./with_keyboard_fix.nix
-            ./secret.nix
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.sepiabrown.imports = [
-                ./homemanager_basic.nix
-                ./homemanager_optional.nix
-              ] ++ pkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
-                (./devices + "/${target}/homemanager.nix")
-              ];
-            }
-            (./devices + "/${target}.nix")
-            (./devices + "/${target}/hardware-configuration.nix")
+            #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
+            #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
           ];
-          specialArgs = { inherit inputs; };
         };
-      };
 
-    in
-    {
-      nixosConfigurations = builtins.listToAttrs (
-        pkgs.lib.flatten (map (target: [ (build-target target) ]) targets)
-      );
+
+        build-target = target: {
+          name = target;
+          value = nixos.lib.nixosSystem {
+            inherit system;
+            modules = [
+
+              nixpkgs_config
+
+              nixpkgs_overlays
+
+              #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
+              #  #nimf_flake 
+              #  #hello_flake 
+              #  #filebrowser_flake 
+              #  ];
+              #})
+
+              ./configuration_basic.nix
+              ./configuration_optional.nix
+              #./homemanager_basic.nix
+              #./homemanager_optional.nix
+              ./with_keyboard_fix.nix
+              ./secret.nix
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.sepiabrown.imports = [
+                  ./homemanager_basic.nix
+                  ./homemanager_optional.nix
+                ] ++ pkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
+                  (./devices + "/${target}/homemanager.nix")
+                ];
+              }
+              (./devices + "/${target}.nix")
+              (./devices + "/${target}/hardware-configuration.nix")
+            ];
+            specialArgs = { inherit inputs; };
+          };
+        };
+
+        build-target2 = target: {
+          name = target;
+          value = darwin.lib.darwinSystem {
+            inherit system;
+            modules = [
+
+              nixpkgs_config
+
+              nixpkgs_overlays
+
+              #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
+              #  #nimf_flake 
+              #  #hello_flake 
+              #  #filebrowser_flake 
+              #  ];
+              #})
+
+              #./configuration_basic.nix
+              #./configuration_optional.nix
+              #./homemanager_basic.nix
+              #./homemanager_optional.nix
+              #./with_keyboard_fix.nix
+              ./secret_mac.nix
+              home-manager.darwinModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.bayeslab.imports = [
+                  ./homemanager_basic.nix
+                  ./homemanager_optional.nix
+                ] ++ pkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
+                  (./devices + "/${target}/homemanager.nix")
+                ];
+              }
+              (./devices + "/${target}.nix")
+              #(./devices + "/${target}/hardware-configuration.nix")
+            ];
+            specialArgs = { inherit inputs; };
+          };
+        };
+
+      in
+      {
+        nixosConfigurations = builtins.listToAttrs (
+          pkgs.lib.flatten (map (target: [ (build-target target) ]) targets)
+        );
+
+        darwinConfigurations = builtins.listToAttrs (
+          pkgs.lib.flatten (map (target: [ (build-target2 target) ]) targets)
+        );
+      })) // {
       homeConfigurations = {
         sepiabrown = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
+          inherit pkgs; #system
           username = "sepiabrown";
-          system = if pkgs.stdenv.isLinux then "x86_64-linux" else if pkgs.stdenv.isDarwin then "x86_64-darwin" else "";
           homeDirectory = if pkgs.stdenv.isLinux then "/home/sepiabrown" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
           configuration.imports = [
             ./homemanager_basic.nix
             ./homemanager_optional.nix
-            nix_config
-            ({
-              nixpkgs.overlays = [
-                #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
-                #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
-                #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
-                (self: super: {
-                  nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
-                    version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
-                    src = super.fetchFromGitHub {
-                      owner = "nix-community";
-                      repo = "nix-direnv";
-                      rev = version;
-                      sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
-                    };
-                  });
-                })
-                #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
-                #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
-              ];
-            })
+            nixpkgs_config
+
+            nixpkgs_overlays
             #({...}:{
             #  home.file = {
             #    ".config/nix/nix.conf".text = ''

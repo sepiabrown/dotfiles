@@ -398,6 +398,7 @@
               LocalForward 8192 localhost:8192
             Host *
               AddKeysToAgent yes
+              IgnoreUnknown UseKeychain
               UseKeychain yes
               IdentityFile ~/.ssh/id_ed25519
           '';
