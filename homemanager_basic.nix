@@ -301,6 +301,7 @@
                   keyMode = "vi";
                   #newSession = true;
                   extraConfig = "set -g mouse on";
+                  historyLimit = 100000;
                 };
               };
 

@@ -28,11 +28,64 @@
     };
   };
   outputs = inputs: with inputs;
+    let
+      nixpkgs_config = {
+        nixpkgs.config = {
+          #allowUnfree = true;
+          allowBroken = true;
+          allowUnfreePredicate = pkg: builtins.elem (nixos.lib.getName pkg) [
+            "corefonts"
+            "hplip"
+            "hplipWithPlugin"
+            "dropbox"
+            "zoom"
+            "foxitreader"
+            "vscode"
+            "vscode-with-extensions"
+            "vscode-extension-ms-vscode-remote-remote-ssh"
+            "chrome-remote-desktop"
+            "teamviewer"
+            "Oracle_VM_VirtualBox_Extension_Pack"
+            "lutris"
+            "steam"
+            "steam-original"
+            "steam-runtime"
+          ];
+          #permittedInsecurePackages = [
+          #  "xpdf-4.02"
+          #];
+        };
+      };
+
+      nixpkgs_overlays = {
+        nixpkgs.overlays = [
+          #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
+          #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
+          #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
+          # because home-manager uses nixpkgs nix-direnv which requires 'enableFlakes' argument,
+          # 'enableFlakes' is built into home-manager's module config used by xdg submodule. 
+          # It is nearly impossible to fix submodule config. mkForce, mkRemovedOptionModule 
+          # can't erase config's 'enableFlakes'. However the nix-community version doesn't 
+          # have argument for 'enableFlakes'.  Changing only version doesn't 
+          # affect the file status. Change sha256 arbitrarily to update!
+          (self: super: {
+            nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
+              version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
+              src = super.fetchFromGitHub {
+                owner = "nix-community";
+                repo = "nix-direnv";
+                rev = version;
+                sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
+              };
+            });
+          })
+          #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
+          #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
+        ];
+      };
+    in
     (flake-utils.lib.eachDefaultSystem (system:
       let
-        #system = "x86_64-linux";
-        #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
-        #pkgs = nixos.legacyPackages.x86_64-linux;#system;
         pkgs = import nixos {
           inherit system;
         };
@@ -45,62 +98,6 @@
               (builtins.readDir ./devices)
           )
         );
-        nixpkgs_config = {
-          nixpkgs.config = {
-            #allowUnfree = true;
-            allowBroken = true;
-            allowUnfreePredicate = pkg: builtins.elem (nixos.lib.getName pkg) [
-              "corefonts"
-              "hplip"
-              "hplipWithPlugin"
-              "dropbox"
-              "zoom"
-              "foxitreader"
-              "vscode"
-              "vscode-with-extensions"
-              "vscode-extension-ms-vscode-remote-remote-ssh"
-              "chrome-remote-desktop"
-              "teamviewer"
-              "Oracle_VM_VirtualBox_Extension_Pack"
-              "lutris"
-              "steam"
-              "steam-original"
-              "steam-runtime"
-            ];
-            #permittedInsecurePackages = [
-            #  "xpdf-4.02"
-            #];
-          };
-        };
-
-        nixpkgs_overlays = {
-          nixpkgs.overlays = [
-            #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
-            #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
-            #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
-            # because home-manager uses nixpkgs nix-direnv which requires 'enableFlakes' argument,
-            # 'enableFlakes' is built into home-manager's module config used by xdg submodule. 
-            # It is nearly impossible to fix submodule config. mkForce, mkRemovedOptionModule 
-            # can't erase config's 'enableFlakes'. However the nix-community version doesn't 
-            # have argument for 'enableFlakes'.  Changing only version doesn't 
-            # affect the file status. Change sha256 arbitrarily to update!
-            (self: super: {
-              nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
-                version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
-                src = super.fetchFromGitHub {
-                  owner = "nix-community";
-                  repo = "nix-direnv";
-                  rev = version;
-                  sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
-                };
-              });
-            })
-            #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
-            #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
-          ];
-        };
-
-
         build-target = target: {
           name = target;
           value = nixos.lib.nixosSystem {
@@ -142,7 +139,7 @@
           };
         };
 
-        build-target2 = target: {
+        build-target_darwin = target: {
           name = target;
           value = darwin.lib.darwinSystem {
             inherit system;
@@ -190,12 +187,17 @@
         );
 
         darwinConfigurations = builtins.listToAttrs (
-          pkgs.lib.flatten (map (target: [ (build-target2 target) ]) targets)
+          pkgs.lib.flatten (map (target: [ (build-target_darwin target) ]) targets)
         );
       })) // {
       homeConfigurations = {
-        sepiabrown = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs; #system
+        sepiabrown = home-manager.lib.homeManagerConfiguration rec {
+          system = "x86_64-linux";
+          #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
+          #pkgs = nixos.legacyPackages.x86_64-linux;
+          pkgs = import nixos {
+            inherit system;
+          };
           username = "sepiabrown";
           homeDirectory = if pkgs.stdenv.isLinux then "/home/sepiabrown" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
           configuration.imports = [

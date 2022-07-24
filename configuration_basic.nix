@@ -444,4 +444,13 @@
 #   - nix build .#         # builds output in flake.nix, making them usable at result folder
 #   - nix build .#homeManagerConfigurations.sepiabrown.activationPackage && ./result/activate
 #   - nixos-rebuild switch --flake .# / nixos-rebuild switch --flake .#sepiabrown-nix
-
+#
+# Cross Compilation
+#
+# nativeBuildInputs (build -> host) VS buildInputs (host -> target)
+# - nativeBuildInputs : suitable for compiler packages. 
+# - buildInputs : suitable for normal packages.
+# - https://discourse.nixos.org/t/use-buildinputs-or-nativebuildinputs-for-nix-shell/8464
+#   -  In general though, nativeBuildInputs is useful for cross-compilation as commands from those derivations will be available on the buildPlatform and execute at build time. Whereas buildInputs will likely be the architecture of the hostPlatform, so the derivation can link against those inputs (and be used at run-time).
+# - https://nixos.org/manual/nixpkgs/stable/#possible-dependency-types
+#
