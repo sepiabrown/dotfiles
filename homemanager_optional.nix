@@ -74,6 +74,7 @@
           # gcc
           cachix
           nix-index
+          nix-tree
 
           # system
           #glxinfo
