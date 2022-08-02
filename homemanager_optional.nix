@@ -13,9 +13,9 @@
               ms-vscode-remote.remote-ssh
             ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
               name = "r";
-              publisher = "Ikuyadeu";
-              version = "2.3.5";
-              sha256 = "sha256-X6KfJLxjuUqgagyOZk8rYAs1LwtBWN67XWne1M0j9iQ=";
+              publisher = "REditorSupport";
+              version = "2.5.2";
+              sha256 = "sha256-qGmLlxpB5/IWfz4mj0PfFd/nnDd6xDiOH2xzDqJQlJo=";
             }];
             vscode-with-extensions = pkgs.vscode-with-extensions.override {
               vscodeExtensions = extensions;
@@ -94,6 +94,7 @@
           pandoc
           #python38Packages.nbconvert
           #texlive.combined.scheme-full
+          pdftk
 
           # JVM / Scala
           sbt
