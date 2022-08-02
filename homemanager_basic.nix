@@ -31,14 +31,27 @@
 #   $ yum makecache
 #   $ yum -y install cargo
 #   $ curl -L https://github.com/nix-community/nix-user-chroot/releases/download/1.2.2/nix-user-chroot-bin-1.2.2-x86_64-unknown-linux-musl
-#   $ mkdir -m 0755 ~/.nix
 #   $ cargo install nix-user-chroot
-#   $ nix-user-chroot ~/.nix bash -c "sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)"
+#     - on ~/.nix
+#     $ mkdir -m 0755 ~/.nix
+#     $ setfacl -bnR .nix
+#     $ nix-user-chroot ~/.nix bash -c "sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)"
 #   log in again or type $ . /home/sepiabrown/.nix-profile/etc/profile.d/nix.sh
-#     - Login procedure
-#     $ ssh -X -p 7777 -t sepiabrown@snubayes.duckdns.org "./.cargo/bin/nix-user-chroot ~/.nix bash -l"     
-#     $ unset HISTFILE
 #
+#     - not on ~/.nix
+#     $ cargo install nix-user-chroot
+#     $ mkdir -m 0755 .nix
+#     $ setfacl -bnR .nix
+#     $ nix-user-chroot ~/.nix bash -c "sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220127_558c4ee/install)"
+#     $ nix-user-chroot ~/.nix bash -c "curl -L https://nixos.org/nix/install | bash"
+#     log out and log in again with the below "Login procedure" and type 
+#     $ . /home/sepiabrown/.nix-profile/etc/profile.d/nix.sh
+#     $ cd dotfiles
+#     $ nix build .#homeConfigurations.sepiabrown.activationPackage --extra-experimental-features flakes --extra-experimental-features nix-command
+#
+#   - Login procedure
+#   $ ssh -X -p 7777 -t sepiabrown@snubayes.duckdns.org "./.cargo/bin/nix-user-chroot ~/.nix bash -l"     
+#   $ unset HISTFILE
 # After installing flake:
 # $ git update-index --skip-worktree flake.lock
 #
