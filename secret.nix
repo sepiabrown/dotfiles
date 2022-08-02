@@ -8,12 +8,13 @@
       # initialPassword = "P@ssw@rd01"; # Idea from Will T. Don't forget to set a password with ‘passwd’.
       home = "/home/sepiabrown";
       hashedPassword = "$6$U4rwuO8Gycc$lOleYt0NLgOoUj2FrROHM1qu01joT1RhM2FLgnhqZGtNd0ALnbBY5DIzMH0EY1WFs2SEK4o8Z1H35M8nKpguP0";
-      extraGroups = [ 
+      extraGroups = [
         "wheel"
         "networkmanager"
+        "docker"
       ]; # Enable ‘sudo’ for the user.
     };
-  }; 
+  };
   #nix.settings.allowed-users = [ "sepiabrown" ];
   nix.allowedUsers = [ "sepiabrown" ];
   nix.trustedUsers = [ "root" "sepiabrown" ];

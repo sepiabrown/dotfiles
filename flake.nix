@@ -8,17 +8,16 @@
     #home-manager_unstable.inputs.nixpkgs.follows = "nixos_unstable";
     #nixos_2105.url = "nixpkgs/nixos-21.05";
     nixpkgs.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop_2205"; # for darwinConfigurations
-    nixos.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop_2205";
     darwin = {
       url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-22.05";
-      inputs.nixpkgs.follows = "nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    nimf.url = "github:sepiabrown/nimf/NixOS_nimf";
-    pinpox.url = "github:pinpox/nixos";
+    #nimf.url = "github:sepiabrown/nimf/NixOS_nimf";
+    #pinpox.url = "github:pinpox/nixos";
     #nix-direnv.url = "github:nix-community/nix-direnv";
     #nixos_unstable.url = "github:nixos/nixpkgs/nixos-21.05";
     #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
@@ -33,7 +32,7 @@
         nixpkgs.config = {
           #allowUnfree = true;
           allowBroken = true;
-          allowUnfreePredicate = pkg: builtins.elem (nixos.lib.getName pkg) [
+          allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
             "corefonts"
             "hplip"
             "hplipWithPlugin"
@@ -83,119 +82,133 @@
           #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
         ];
       };
+      # in
+      # (flake-utils.lib.eachDefaultSystem (system:
+      #   let
+      pkgs = import nixpkgs {
+        #inherit system;
+        system = "x86_64-linux";
+      };
+      pkgs_darwin = import nixpkgs {
+        #inherit system;
+        system = "x86_64-darwin";
+      };
+      # lib = nixpkgs.lib;
+      # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
+      targets = map (nixpkgs.lib.removeSuffix ".nix") (
+        nixpkgs.lib.attrNames (
+          nixpkgs.lib.filterAttrs
+            (_: entryType: entryType == "regular")
+            (builtins.readDir ./devices)
+        )
+      );
+      targets_darwin = map (nixpkgs.lib.removeSuffix ".nix") (
+        nixpkgs.lib.attrNames (
+          nixpkgs_darwin.lib.filterAttrs
+            (_: entryType: entryType == "regular")
+            (builtins.readDir ./devices)
+        )
+      );
+      build-target = target: {
+        name = target;
+        value = nixpkgs.lib.nixosSystem {
+          #inherit system;
+          system = "x86_64-linux";
+          modules = [
+
+            nixpkgs_config
+
+            nixpkgs_overlays
+
+            #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
+            #  #nimf_flake 
+            #  #hello_flake 
+            #  #filebrowser_flake 
+            #  ];
+            #})
+
+            ./configuration_basic.nix
+            ./configuration_optional.nix
+            #./homemanager_basic.nix
+            #./homemanager_optional.nix
+            ./with_keyboard_fix.nix
+            ./secret.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.sepiabrown.imports = [
+                ./homemanager_basic.nix
+                ./homemanager_optional.nix
+              ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
+                (./devices + "/${target}/homemanager.nix")
+              ];
+            }
+            (./devices + "/${target}.nix")
+            (./devices + "/${target}/hardware-configuration.nix")
+          ];
+          specialArgs = { inherit inputs; };
+        };
+      };
+
+      build-target_darwin = target: {
+        name = target;
+        value = darwin.lib.darwinSystem {
+          #inherit system;
+          system = "x86_64-darwin";
+          modules = [
+
+            nixpkgs_config
+
+            nixpkgs_overlays
+
+            #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
+            #  #nimf_flake 
+            #  #hello_flake 
+            #  #filebrowser_flake 
+            #  ];
+            #})
+
+            #./configuration_basic.nix
+            #./configuration_optional.nix
+            #./homemanager_basic.nix
+            #./homemanager_optional.nix
+            #./with_keyboard_fix.nix
+            ./secret_mac.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.bayeslab.imports = [
+                ./homemanager_basic.nix
+                ./homemanager_optional.nix
+              ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
+                (./devices + "/${target}/homemanager.nix")
+              ];
+            }
+            (./devices + "/${target}.nix")
+            #(./devices + "/${target}/hardware-configuration.nix")
+          ];
+          specialArgs = { inherit inputs; };
+        };
+      };
+
     in
-    (flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixos {
-          inherit system;
-        };
-        # lib = nixpkgs.lib;
-        # maping devices: https://www.reddit.com/r/NixOS/comments/j4k2zz/does_anyone_use_flakes_to_manage_their_entire/
-        targets = map (pkgs.lib.removeSuffix ".nix") (
-          pkgs.lib.attrNames (
-            pkgs.lib.filterAttrs
-              (_: entryType: entryType == "regular")
-              (builtins.readDir ./devices)
-          )
-        );
-        build-target = target: {
-          name = target;
-          value = nixos.lib.nixosSystem {
-            inherit system;
-            modules = [
+    {
+      nixosConfigurations = builtins.listToAttrs (
+        nixpkgs.lib.flatten (map (target: [ (build-target target) ]) targets)
+      );
 
-              nixpkgs_config
-
-              nixpkgs_overlays
-
-              #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
-              #  #nimf_flake 
-              #  #hello_flake 
-              #  #filebrowser_flake 
-              #  ];
-              #})
-
-              ./configuration_basic.nix
-              ./configuration_optional.nix
-              #./homemanager_basic.nix
-              #./homemanager_optional.nix
-              ./with_keyboard_fix.nix
-              ./secret.nix
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.sepiabrown.imports = [
-                  ./homemanager_basic.nix
-                  ./homemanager_optional.nix
-                ] ++ pkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
-                  (./devices + "/${target}/homemanager.nix")
-                ];
-              }
-              (./devices + "/${target}.nix")
-              (./devices + "/${target}/hardware-configuration.nix")
-            ];
-            specialArgs = { inherit inputs; };
-          };
-        };
-
-        build-target_darwin = target: {
-          name = target;
-          value = darwin.lib.darwinSystem {
-            inherit system;
-            modules = [
-
-              nixpkgs_config
-
-              nixpkgs_overlays
-
-              #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
-              #  #nimf_flake 
-              #  #hello_flake 
-              #  #filebrowser_flake 
-              #  ];
-              #})
-
-              #./configuration_basic.nix
-              #./configuration_optional.nix
-              #./homemanager_basic.nix
-              #./homemanager_optional.nix
-              #./with_keyboard_fix.nix
-              ./secret_mac.nix
-              home-manager.darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.bayeslab.imports = [
-                  ./homemanager_basic.nix
-                  ./homemanager_optional.nix
-                ] ++ pkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
-                  (./devices + "/${target}/homemanager.nix")
-                ];
-              }
-              (./devices + "/${target}.nix")
-              #(./devices + "/${target}/hardware-configuration.nix")
-            ];
-            specialArgs = { inherit inputs; };
-          };
-        };
-
-      in
-      {
-        nixosConfigurations = builtins.listToAttrs (
-          pkgs.lib.flatten (map (target: [ (build-target target) ]) targets)
-        );
-
-        darwinConfigurations = builtins.listToAttrs (
-          pkgs.lib.flatten (map (target: [ (build-target_darwin target) ]) targets)
-        );
-      })) // {
+      darwinConfigurations = builtins.listToAttrs (
+        nixpkgs.lib.flatten (map (target: [ (build-target_darwin target) ]) targets)
+      );
+      #})) // {
       homeConfigurations = {
         sepiabrown = home-manager.lib.homeManagerConfiguration rec {
           system = "x86_64-linux";
           #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
           #pkgs = nixos.legacyPackages.x86_64-linux;
-          pkgs = import nixos {
+          pkgs = import nixpkgs {
             inherit system;
           };
           username = "sepiabrown";

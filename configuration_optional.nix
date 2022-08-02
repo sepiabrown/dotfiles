@@ -107,6 +107,7 @@
   networking.firewall = {
     allowedUDPPorts = [ 41641 631 ];
     allowedTCPPorts = [ 3389 631 ];
+    checkReversePath = "loose"; # warning: Strict reverse path filtering breaks Tailscale exit node use and some subnet routing setups. Consider setting `networking.firewall.checkReversePath` = 'loose'
   };
 
   virtualisation.virtualbox = {
@@ -115,6 +116,10 @@
       enableExtensionPack = true;
     };
     guest.enable = true;
+  };
+
+  virtualisation.docker = {
+    enable = true;
   };
 
   hardware.sane.enable = true;

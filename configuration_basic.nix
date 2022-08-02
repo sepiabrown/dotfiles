@@ -80,7 +80,7 @@
     hostName = "sepiabrown-nix"; # Define your hostname.
     networkmanager = {
       enable = true; # wpa_spplicant and networkmanager collide
-      packages = [
+      plugins = [
         #????????????????????????????????????
         pkgs.networkmanager-l2tp
       ];
@@ -145,7 +145,7 @@
     enable = true;
     support32Bit = true;
     zeroconf.discovery.enable = true;
-    extraModules = [ pkgs.pulseaudio-modules-bt ];
+    #extraModules = [ pkgs.pulseaudio-modules-bt ];
     package = pkgs.pulseaudioFull;
   };
 
