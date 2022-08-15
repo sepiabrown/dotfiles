@@ -47,6 +47,12 @@
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true; # default shell on catalina
   # programs.fish.enable = true;
+  nix = {
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+    package = pkgs.nixFlakes;
+  };
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

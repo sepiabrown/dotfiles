@@ -18,12 +18,15 @@
     };
     #nimf.url = "github:sepiabrown/nimf/NixOS_nimf";
     #pinpox.url = "github:pinpox/nixos";
-    #nix-direnv.url = "github:nix-community/nix-direnv";
+    nix-direnv_custom = {
+      url = "github:sepiabrown/nix-direnv/test_experimental";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     #nixos_unstable.url = "github:nixos/nixpkgs/nixos-21.05";
     #nixos_unstable_fixed.url = "github:sepiabrown/nixpkgs/c3805ba16cf4a060cdbb82d4ce21b74f9989dbb8";
     flake-utils = {
       url = "github:numtide/flake-utils";
-      #inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = inputs: with inputs;
@@ -56,8 +59,12 @@
         };
       };
 
-      nixpkgs_overlays = {
+      nixpkgs_overlays = (system : {
         nixpkgs.overlays = [
+          # Works
+          #(_: _: { nix-direnv = nix-direnv_custom.packages.${system}.default; })
+
+          # Needs Testing
           #(_: _: { nimf_flake = nimf.defaultPackage.${system}; })
           #(_: _: { hello_flake = pinpox.packages.${system}.hello-custom; })
           #(_: _: { filebrowser_flake = pinpox.packages.${system}.filebrowser; })
@@ -67,21 +74,23 @@
           # can't erase config's 'enableFlakes'. However the nix-community version doesn't 
           # have argument for 'enableFlakes'.  Changing only version doesn't 
           # affect the file status. Change sha256 arbitrarily to update!
-          (self: super: {
-            nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
-              version = "ed4cb3f30654f2266b5ed9fd6354c2592765b014"; # 2.1.2 version with nix_direnv_watch_file
-              src = super.fetchFromGitHub {
-                owner = "sepiabrown";
-                repo = "nix-direnv";
-                rev = version;
-                sha256 = "sha256-ho0f+GwgC6hiDp2prnKCZJcTnyGDrsAfyQIXHwQRcOw=";
-              };
-            });
-          })
-          #(_: _: { nix-direnv = nixos_unstable.legacyPackages.${system}.nix-direnv; })
+          #(self: super: {
+          #  nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
+          #    #version = "a12b8a53050fe1f5d526a4e9c52b89d7d8def22d"; # 2.1.2 version with nix_direnv_watch_file
+          #    version = "ed4cb3f30654f2266b5ed9fd6354c2592765b014"; # SW
+          #    src = super.fetchFromGitHub {
+          #      #owner = "nix-community";
+          #      owner = "sepiabrown";
+          #      repo = "nix-direnv";
+          #      rev = version;
+          #      sha256 = "sha256-6UvOnFmohdhFenpEangbLLEdE0PeessRJjiO0mcydWI=";
+          #      #sha256 = "sha256-ho0f+GwgC6hiDp2prnKCZJcTnyGDrsAfyQIXHwQRcOw=";
+          #    };
+          #  });
+          #})
           #(_: _: { protonvpn-gui_2105 = nixos_2105.legacyPackages.${system}.protonvpn-gui; })
         ];
-      };
+      });
       # in
       # (flake-utils.lib.eachDefaultSystem (system:
       #   let
@@ -104,14 +113,14 @@
       );
       build-target = target: {
         name = target;
-        value = nixpkgs.lib.nixosSystem {
+        value = nixpkgs.lib.nixosSystem rec {
           #inherit system;
           system = "x86_64-linux";
           modules = [
 
             nixpkgs_config
 
-            nixpkgs_overlays
+            (nixpkgs_overlays system)
 
             #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
             #  #nimf_flake 
@@ -147,14 +156,14 @@
 
       build-target_darwin = target: {
         name = target;
-        value = darwin.lib.darwinSystem {
+        value = darwin.lib.darwinSystem rec {
           #inherit system;
           system = "x86_64-darwin";
           modules = [
 
             nixpkgs_config
 
-            nixpkgs_overlays
+            (nixpkgs_overlays system)
 
             #({ pkgs, ... } : { environment.systemPackages = with pkgs; [ 
             #  #nimf_flake 

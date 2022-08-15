@@ -35,6 +35,21 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1656928814,
+        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -53,6 +68,28 @@
         "owner": "nix-community",
         "ref": "release-22.05",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nix-direnv_custom": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1660551550,
+        "narHash": "sha256-ZXW296CyZlCY2HBnAtfxDianhXwGRZRuUMWzC4GuxIU=",
+        "owner": "sepiabrown",
+        "repo": "nix-direnv",
+        "rev": "11ceaf0eac05a0bf63fc24feb0f0166976b143c5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sepiabrown",
+        "ref": "test_experimental",
+        "repo": "nix-direnv",
         "type": "github"
       }
     },
@@ -77,6 +114,7 @@
         "darwin": "darwin",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "nix-direnv_custom": "nix-direnv_custom",
         "nixpkgs": "nixpkgs"
       }
     }
