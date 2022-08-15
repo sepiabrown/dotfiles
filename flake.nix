@@ -69,12 +69,12 @@
           # affect the file status. Change sha256 arbitrarily to update!
           (self: super: {
             nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
-              version = "363835438f1291d0849d4645840e84044f3c9c15"; # version with nix_direnv_watch_file
+              version = "a12b8a53050fe1f5d526a4e9c52b89d7d8def22d"; # 2.1.2 version with nix_direnv_watch_file
               src = super.fetchFromGitHub {
                 owner = "nix-community";
                 repo = "nix-direnv";
                 rev = version;
-                sha256 = "sha256-w1RKbxwQNCu08eneYIFOnSlhdC6XOLFrIuT+iZu5/T8=";
+                sha256 = "sha256-6UvOnFmohdhFenpEangbLLEdE0PeessRJjiO0mcydWI=";
               };
             });
           })
@@ -98,13 +98,6 @@
       targets = map (nixpkgs.lib.removeSuffix ".nix") (
         nixpkgs.lib.attrNames (
           nixpkgs.lib.filterAttrs
-            (_: entryType: entryType == "regular")
-            (builtins.readDir ./devices)
-        )
-      );
-      targets_darwin = map (nixpkgs.lib.removeSuffix ".nix") (
-        nixpkgs.lib.attrNames (
-          nixpkgs_darwin.lib.filterAttrs
             (_: entryType: entryType == "regular")
             (builtins.readDir ./devices)
         )
@@ -140,7 +133,8 @@
               home-manager.users.sepiabrown.imports = [
                 ./homemanager_basic.nix
                 ./homemanager_optional.nix
-              ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
+              ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [ # Every folder needs to be git added!
+
                 (./devices + "/${target}/homemanager.nix")
               ];
             }
@@ -182,7 +176,8 @@
               home-manager.users.bayeslab.imports = [
                 ./homemanager_basic.nix
                 ./homemanager_optional.nix
-              ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [
+              ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [ # Every folder needs to be git added!
+
                 (./devices + "/${target}/homemanager.nix")
               ];
             }
@@ -250,5 +245,5 @@
   #   };
   # };
 }
-# home-manager using flake.nix
-# $
+# Every folder needs to be git added!
+#

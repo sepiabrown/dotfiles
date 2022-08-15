@@ -35,7 +35,7 @@
             # tools
             libreoffice
             okular # kde
-            vscode-with-extensions
+            #vscode-with-extensions
             foxitreader
 
             # multimedia
@@ -88,6 +88,7 @@
 
           # tools
           # evince # gnome
+          vscode-with-extensions
 
           # document tools
           poppler_utils
