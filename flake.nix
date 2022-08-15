@@ -130,11 +130,14 @@
             #})
 
             ./configuration_basic.nix
+            ./configuration_linux.nix
             ./configuration_optional.nix
-            #./homemanager_basic.nix
-            #./homemanager_optional.nix
+
             ./with_keyboard_fix.nix
             ./secret.nix
+
+            #./homemanager_basic.nix
+            #./homemanager_optional.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -172,10 +175,10 @@
             #  ];
             #})
 
-            #./configuration_basic.nix
+            ./configuration_basic.nix
+            ./configuration_darwin.nix
             #./configuration_optional.nix
-            #./homemanager_basic.nix
-            #./homemanager_optional.nix
+
             #./with_keyboard_fix.nix
             ./secret_mac.nix
             home-manager.darwinModules.home-manager
