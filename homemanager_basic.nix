@@ -62,37 +62,35 @@
 
 {
   config = lib.mkMerge [
-    (lib.mkIf pkgs.stdenv.isLinux
-      {
-        programs = {
-          gpg = {
-            enable = true;
-          };
-
-          chromium = {
-            enable = true;
-            extensions = [ "inomeogfingihgjfjlpeplalcfajhgai" ];
-          };
+    (lib.mkIf pkgs.stdenv.isLinux {
+      programs = {
+        gpg = {
+          enable = true;
         };
 
-        services = {
-          gpg-agent = {
-            enable = true;
-            pinentryFlavor = "qt";
-          };
+        chromium = {
+          enable = true;
+          extensions = [ "inomeogfingihgjfjlpeplalcfajhgai" ];
         };
+      };
 
-        home.packages = with pkgs;
-          [
-            # system
-            traceroute
-            refind
-            lvm2
-            baobab # Disk Usage Analyser
-            xautoclick
-          ];
-      }
-    )
+      services = {
+        gpg-agent = {
+          enable = true;
+          pinentryFlavor = "qt";
+        };
+      };
+
+      home.packages = with pkgs;
+        [
+          # system
+          traceroute
+          refind
+          lvm2
+          baobab # Disk Usage Analyser
+          xautoclick
+        ];
+    })
     {
       home.packages = with pkgs;
         [
@@ -269,9 +267,9 @@
             fi
 
             if [ "''$color_prompt" = yes ]; then
-                PS1=''\'''${debian_chroot:+(''$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\''$ '
+                PS1="''${debian_chroot:+(''$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\''$ "
             else
-                PS1=''\'''${debian_chroot:+(''$debian_chroot)}\u@\h:\w\''$ '
+                PS1="''${debian_chroot:+(''$debian_chroot)}\u@\h:\w\''$ "
             fi
             unset color_prompt force_color_prompt
 
@@ -298,146 +296,145 @@
 
             if [ -e ''$HOME/.cargo/env ]; then . ''$HOME/.cargo/env; fi 
             #echo "end bashrc"
-                  '';
-                };
+          '';
+        };
 
-                dircolors = {
-                  enable = true;
-                };
+        dircolors.enable = true;
 
-                # Reconnecting ssh made 'command not found' error in tmux.
-                # Introducing socket did not help
-                # Solution: When new session is made, detach and reattach once.
-                #   To keep the session alive, quit the window holding tmux without detaching.(ex) via mouse click)
-                tmux = {
-                  enable = true;
-                  keyMode = "vi";
-                  #newSession = true;
-                  extraConfig = "set -g mouse on";
-                  historyLimit = 100000;
-                };
-              };
+        # Reconnecting ssh made 'command not found' error in tmux.
+        # Introducing socket did not help
+        # Solution: When new session is made, detach and reattach once.
+        #   To keep the session alive, quit the window holding tmux without detaching.(ex) via mouse click)
+        tmux = {
+          enable = true;
+          keyMode = "vi";
+          #newSession = true;
+          extraConfig = "set -g mouse on";
+          historyLimit = 100000;
+        };
+      };
 
-              home.file = {
-                "my.rclone".source = pkgs.writeScript "my_rclone" ''
-            #!/usr/bin/env bash
-            RCLONEPATHS="_mobile __inbox _참고자료 통계학"
-            #RCLONEHOME= "/commonground/gd/"
-            RCLONEHOME="/home/sepiabrown/gd/"
-            RCLONEREMOTE="gd:"
-            RCLONEREMOTE2="db:"
-            FILTERFILEUPLOAD="/home/sepiabrown/filter-file-upload"
-            FILTERFILEDOWNLOAD="/home/sepiabrown/filter-file-download"
-            #rclone check "''${RCLONEREMOTE}" "''${RCLONEHOME}" --filter-from filter-file
-            #IFS=','
-            #for RCPATH in ''${RCLONEPATHS}
-            #  do
-            #    rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from filter-file
-            #  done
-            while true; do
-              read -p "Choose Task (copy, sync, check, quit..) : " task
-                if [ ''${task} == "quit" ]; then
-                  read -p "Press [Enter] key to end..."
+      home.file = {
+        "my.rclone".source = pkgs.writeScript "my_rclone" ''
+          #!/usr/bin/env bash
+          RCLONEPATHS="_mobile __inbox _참고자료 통계학"
+          #RCLONEHOME= "/commonground/gd/"
+          RCLONEHOME="/home/sepiabrown/gd/"
+          RCLONEREMOTE="gd:"
+          RCLONEREMOTE2="db:"
+          FILTERFILEUPLOAD="/home/sepiabrown/filter-file-upload"
+          FILTERFILEDOWNLOAD="/home/sepiabrown/filter-file-download"
+          #rclone check "''${RCLONEREMOTE}" "''${RCLONEHOME}" --filter-from filter-file
+          #IFS=','
+          #for RCPATH in ''${RCLONEPATHS}
+          #  do
+          #    rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from filter-file
+          #  done
+          while true; do
+            read -p "Choose Task (copy, sync, check, quit..) : " task
+              if [ ''${task} == "quit" ]; then
+                read -p "Press [Enter] key to end..."
+                exit 1
+              else
+                read -p "Choose Direction (remote to local : r , local to remote : l, dropbox : d) : " direction
+                read -p "Are you sure? : " safe
+                if [ ''${task} == "check" -a ''${safe} == "y" ]; then
+                  for RCPATH in $RCLONEPATHS; do
+                    rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from "''${FILTERFILEDOWNLOAD}"
+                  done
+                elif [ ''${direction} == "r" -a ''${safe} == "y" ]; then
+                  for RCPATH in $RCLONEPATHS; do
+                    echo "''${RCLONEHOME}''${RCPATH}"  
+                    rclone mkdir "''${RCLONEHOME}''${RCPATH}"
+                    rclone $task "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEDOWNLOAD}"
+                  done
+                  #  rclone $task "''${RCLONEREMOTE}" "''${RCLONEHOME}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --track-renames
+                elif [ ''${direction} == "l" -a ''${safe} == "y" ]; then
+                  for RCPATH in $RCLONEPATHS; do
+                    rclone mkdir "''${RCLONEREMOTE}''${RCPATH}"
+                    rclone $task "''${RCLONEHOME}''${RCPATH}" "''${RCLONEREMOTE}''${RCPATH}" --backup-dir "''${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEUPLOAD}"
+                  done
+                  #  rclone $task "''${RCLONEHOME}" "''${RCLONEREMOTE}" --backup-dir "''${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --track-renames
+                elif [ ''${direction} == "d" -a ''${safe} == "y" ]; then
+                  # for RCPATH in $RCLONEPATHS do
+                    rclone $task "''${RCLONEHOME}_mobile/structured" "''${RCLONEREMOTE2}/_mobile/structured" --backup-dir "''${RCLONEREMOTE2}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEUPLOAD}"
+                  # done
+                else 
+                  read -p "Error : Press [Enter] key to end..."
                   exit 1
-                else
-                  read -p "Choose Direction (remote to local : r , local to remote : l, dropbox : d) : " direction
-                  read -p "Are you sure? : " safe
-                  if [ ''${task} == "check" -a ''${safe} == "y" ]; then
-                    for RCPATH in $RCLONEPATHS; do
-                      rclone check "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --filter-from "''${FILTERFILEDOWNLOAD}"
-                    done
-                  elif [ ''${direction} == "r" -a ''${safe} == "y" ]; then
-                    for RCPATH in $RCLONEPATHS; do
-                      echo "''${RCLONEHOME}''${RCPATH}"  
-                      rclone mkdir "''${RCLONEHOME}''${RCPATH}"
-                      rclone $task "''${RCLONEREMOTE}''${RCPATH}" "''${RCLONEHOME}''${RCPATH}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEDOWNLOAD}"
-                    done
-                    #  rclone $task "''${RCLONEREMOTE}" "''${RCLONEHOME}" --backup-dir "''${RCLONEHOME}/tmp" --suffix .rclone --verbose --track-renames
-                  elif [ ''${direction} == "l" -a ''${safe} == "y" ]; then
-                    for RCPATH in $RCLONEPATHS; do
-                      rclone mkdir "''${RCLONEREMOTE}''${RCPATH}"
-                      rclone $task "''${RCLONEHOME}''${RCPATH}" "''${RCLONEREMOTE}''${RCPATH}" --backup-dir "''${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEUPLOAD}"
-                    done
-                    #  rclone $task "''${RCLONEHOME}" "''${RCLONEREMOTE}" --backup-dir "''${RCLONEREMOTE}/tmp" --suffix .rclone --verbose --track-renames
-                  elif [ ''${direction} == "d" -a ''${safe} == "y" ]; then
-                    # for RCPATH in $RCLONEPATHS do
-                      rclone $task "''${RCLONEHOME}_mobile/structured" "''${RCLONEREMOTE2}/_mobile/structured" --backup-dir "''${RCLONEREMOTE2}/tmp" --suffix .rclone --verbose --filter-from "''${FILTERFILEUPLOAD}"
-                    # done
-                  else 
-                    read -p "Error : Press [Enter] key to end..."
-                    exit 1
-                  fi
                 fi
-            done
-          '';
-          "apply-flake.sh".source = pkgs.writeScript "apply-flake_sh" ''
-            #!/bin/sh
-            # CONFIG_PATH="./system/configuration_current.nix"
-            pushd ~/dotfiles
-            if [ -z ''$1 ]; then
-              echo "needs at least one command"
-              # sudo nixos-rebuild switch -I nixos-config="''${CONFIG_PATH}" --flake .#
-            elif [ -z ''$2 ]; then
-              sudo nix flake update; sudo nixos-rebuild switch --flake ''$1
-            else
-              sudo nix flake update; sudo nix flake update & sudo nixos-rebuild switch --flake ''$1 -p ''$2 --show-trace
-            fi
-            popd
-          '';
-          ".ssh/config".text = ''
-            # ~/.jupyter/jupyter_notebook_config.py; (password in ~/.jupyter/jupyter_server_config.json)
-            Host jupyter
-              Hostname snubayes.duckdns.org
-              User sepiabrown
-              Port 7777
-              LocalForward 3333 localhost:3333
-            # ~/.config/code-server/config.yaml
-            Host code-server
-              Hostname snubayes.duckdns.org
-              User sepiabrown
-              Port 7777
-              LocalForward 4444 localhost:4444
-              LocalForward 4445 localhost:4445
-            Host rstudio-server
-              Hostname snubayes.duckdns.org
-              User sepiabrown
-              Port 7777
-              LocalForward 5555 localhost:5555
-            # config.yml in same directory with ./polynote.py
-            # config.yml doesn't work
-            Host polynote
-              Hostname snubayes.duckdns.org
-              User sepiabrown
-              Port 7777
-              LocalForward 8192 localhost:8192
-            Host *
-              AddKeysToAgent yes
-              IgnoreUnknown UseKeychain
-              UseKeychain yes
-              IdentityFile ~/.ssh/id_ed25519
-          '';
-          "filter-file-upload".text = ''
-            - ltximg/**
-            - Notability/**
-          '';
-          "filter-file-download".text = ''
-            - ltximg/**
-          '';
-          ".config/nix/nix.conf".text = ''
-            experimental-features = nix-command flakes
-            keep-derivations = true
-            keep-outputs = true
-            substituters = https://cache.nixos.org https://jupyterwith.cachix.org https://ihaskell.cachix.org https://cuda-maintainers.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= jupyterwith.cachix.org-1:/kDy2B6YEhXGJuNguG1qyqIodMyO4w8KwWH4/vAc7CI= ihaskell.cachix.org-1:WoIvex/Ft/++sjYW3ntqPUL3jDGXIKDpX60pC8d5VLM= cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E=
-          '';
-          #".bashrc".text = ''
-          #eval "''$(direnv hook bash)"
-          #'';
-          #".direnvrc".text = ''
-          #source /run/current-system/sw/share/nix-direnv/direnvrc 
-          #'';
-          };
-  }];
+              fi
+          done
+        '';
+        "apply-flake.sh".source = pkgs.writeScript "apply-flake_sh" ''
+          #!/bin/sh
+          # CONFIG_PATH="./system/configuration_current.nix"
+          pushd ~/dotfiles
+          if [ -z ''$1 ]; then
+            echo "needs at least one command"
+            # sudo nixos-rebuild switch -I nixos-config="''${CONFIG_PATH}" --flake .#
+          elif [ -z ''$2 ]; then
+            sudo nix flake update; sudo nixos-rebuild switch --flake ''$1
+          else
+            sudo nix flake update; sudo nix flake update & sudo nixos-rebuild switch --flake ''$1 -p ''$2 --show-trace
+          fi
+          popd
+        '';
+        ".ssh/config".text = ''
+          # ~/.jupyter/jupyter_notebook_config.py; (password in ~/.jupyter/jupyter_server_config.json)
+          Host jupyter
+            Hostname snubayes.duckdns.org
+            User sepiabrown
+            Port 7777
+            LocalForward 3333 localhost:3333
+          # ~/.config/code-server/config.yaml
+          Host code-server
+            Hostname snubayes.duckdns.org
+            User sepiabrown
+            Port 7777
+            LocalForward 4444 localhost:4444
+            LocalForward 4445 localhost:4445
+          Host rstudio-server
+            Hostname snubayes.duckdns.org
+            User sepiabrown
+            Port 7777
+            LocalForward 5555 localhost:5555
+          # config.yml in same directory with ./polynote.py
+          # config.yml doesn't work
+          Host polynote
+            Hostname snubayes.duckdns.org
+            User sepiabrown
+            Port 7777
+            LocalForward 8192 localhost:8192
+          Host *
+            AddKeysToAgent yes
+            IgnoreUnknown UseKeychain
+            UseKeychain yes
+            IdentityFile ~/.ssh/id_ed25519
+        '';
+        "filter-file-upload".text = ''
+          - ltximg/**
+          - Notability/**
+        '';
+        "filter-file-download".text = ''
+          - ltximg/**
+        '';
+        ".config/nix/nix.conf".text = ''
+          experimental-features = nix-command flakes
+          keep-derivations = true
+          keep-outputs = true
+          substituters = https://cache.nixos.org https://jupyterwith.cachix.org https://ihaskell.cachix.org https://cuda-maintainers.cachix.org
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= jupyterwith.cachix.org-1:/kDy2B6YEhXGJuNguG1qyqIodMyO4w8KwWH4/vAc7CI= ihaskell.cachix.org-1:WoIvex/Ft/++sjYW3ntqPUL3jDGXIKDpX60pC8d5VLM= cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E=
+        '';
+        #".zshrc".text = ''
+        #eval "''$(direnv hook bash)"
+        #'';
+        #".direnvrc".text = ''
+        #source /run/current-system/sw/share/nix-direnv/direnvrc 
+        #'';
+      };
+    }
+  ];
 }
 # TODO 1
 # environment = {  

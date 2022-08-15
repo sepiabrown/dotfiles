@@ -128,6 +128,10 @@
 
       programs = {
         emacs.enable = true;
+        zsh = {
+          enable = true; # default shell on catalina
+          enableSyntaxHighlighting = true;
+        };
       };
 
       fonts = {
