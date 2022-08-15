@@ -419,13 +419,7 @@
         "filter-file-download".text = ''
           - ltximg/**
         '';
-        ".config/nix/nix.conf".text = ''
-          experimental-features = nix-command flakes
-          keep-derivations = true
-          keep-outputs = true
-          substituters = https://cache.nixos.org https://jupyterwith.cachix.org https://ihaskell.cachix.org https://cuda-maintainers.cachix.org
-          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= jupyterwith.cachix.org-1:/kDy2B6YEhXGJuNguG1qyqIodMyO4w8KwWH4/vAc7CI= ihaskell.cachix.org-1:WoIvex/Ft/++sjYW3ntqPUL3jDGXIKDpX60pC8d5VLM= cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E=
-        '';
+        ".config/nix/nix.conf".text = builtins.readFile ./nix.conf;
         #".zshrc".text = ''
         #eval "''$(direnv hook bash)"
         #'';

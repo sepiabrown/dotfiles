@@ -15,5 +15,6 @@
 !/devices/
 !/user/
 !/apply-git.sh
+!/nix.conf
 !/crd
 !*.nix

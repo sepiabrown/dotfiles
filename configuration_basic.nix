@@ -152,12 +152,8 @@
   # security.sudo.extraConfig = ''
   #   %wheel      ALL=(ALL:ALL) NOPASSWD: ALL
   # '';
-  nix = {
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      keep-outputs = true
-      keep-derivations = true
-    '';
+  nix = { # Fix ".config/nix/nix.conf".text in homemanager_basic.nix
+    extraOptions = builtins.readFile ./nix.conf;
     package = pkgs.nixFlakes;
   };
 }
