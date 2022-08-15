@@ -69,12 +69,12 @@
           # affect the file status. Change sha256 arbitrarily to update!
           (self: super: {
             nix-direnv = super.nix-direnv.overrideAttrs (old: rec {
-              version = "a12b8a53050fe1f5d526a4e9c52b89d7d8def22d"; # 2.1.2 version with nix_direnv_watch_file
+              version = "ed4cb3f30654f2266b5ed9fd6354c2592765b014"; # 2.1.2 version with nix_direnv_watch_file
               src = super.fetchFromGitHub {
-                owner = "nix-community";
+                owner = "sepiabrown";
                 repo = "nix-direnv";
                 rev = version;
-                sha256 = "sha256-6UvOnFmohdhFenpEangbLLEdE0PeessRJjiO0mcydWI=";
+                sha256 = "sha256-ho0f+GwgC6hiDp2prnKCZJcTnyGDrsAfyQIXHwQRcOw=";
               };
             });
           })
