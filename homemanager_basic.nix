@@ -420,6 +420,9 @@
           - ltximg/**
         '';
         ".config/nix/nix.conf".text = builtins.readFile ./nix.conf;
+        ".kaggle/kaggle.json".text = ''
+          {"username":"suwonpark","key":"ffd3b06e5b9b6b853dc64b736a430f73"}
+        '';
         #".zshrc".text = ''
         #eval "''$(direnv hook bash)"
         #'';

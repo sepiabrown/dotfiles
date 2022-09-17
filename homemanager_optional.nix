@@ -103,6 +103,7 @@
 
           # multimedia
           youtube-dl
+          ytarchive
 
           # unfree
           #myzoom-us
