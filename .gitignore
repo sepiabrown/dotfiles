@@ -17,4 +17,6 @@
 !/apply-git.sh
 !/crd
 !/nix.conf
+!/zfs
+!/init/
 !*.nix

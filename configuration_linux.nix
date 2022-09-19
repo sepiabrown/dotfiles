@@ -7,7 +7,7 @@
       # Include the results of the hardware scan.
     ];
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = [ "ntfs" "zfs" ];
 
   networking = {
     networkmanager = {
@@ -95,6 +95,7 @@
     efibootmgr
     gparted
     partition-manager
+    vimHugeX
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -115,7 +116,10 @@
       enable = true; # Enable the X11 windowing system.
       # displayManager.defaultSession = "mate";
       # desktopManager.mate.enable = true;
+      displayManager.sessionCommands = "xmessage \"Hello World!\" &\n"; # or maybe pkgs.lib.mkForce true
+      #displayManager.lightdm.enable = true; # or maybe pkgs.lib.mkForce true
       displayManager.sddm.enable = true; # or maybe pkgs.lib.mkForce true
+      #desktopManager.mate.enable = true; # or maybe pkgs.lib.mkForce true
       desktopManager.plasma5.enable = true; # or maybe pkgs.lib.mkForce true
       libinput.enable = true; # Enable touchpad support.
       # keyboard layout settings : with_keyboard_fix, without_keyboard_fix

@@ -5,7 +5,7 @@ stdenv.mkDerivation rec {
   version = "unstable-2022-02-03";
 
   src = fetchurl {
-    sha256 = "sha256-CNE3kvAj7Jp4cB5x2D/YUA1H9Ri397C6rxQBRmstz1c=";
+    sha256 = "sha256-zpP/JONCuPf5S/O63fY1ZvZwigT7EMZytSKLaGaEPjE=";
     url = "https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb";
   };
 
