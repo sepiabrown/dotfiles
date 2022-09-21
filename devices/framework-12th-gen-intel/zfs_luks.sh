@@ -26,6 +26,19 @@ tee -a zfs.nix <<EOF
 {
   networking.hostId = "$(head -c 8 /etc/machine-id)";
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+  boot.initrd.luks.devices = {
+EOF
+
+for i in $DISK; do
+  printf "    $(printf "${i##*/}-crypt") = {\n" | tee -a zfs.nix
+  printf "      device = \"$(printf "${i}-part3")\";\n" | tee -a zfs.nix
+  printf "      preLVM = true;\n" | tee -a zfs.nix
+  printf "    };\n" | tee -a zfs.nix
+done
+
+tee -a zfs.nix <<EOF 
+    # preLVM is required even if we're not using LVM
+  };
   boot.initrd.supportedFilesystems = [ "zfs" ];
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.loader.efi.canTouchEfiVariables = false;
@@ -107,6 +120,18 @@ zpool create \
      done) -f
 #mirror \
 
+### Encrypt with LUKS:
+# https://blog.lazkani.io/posts/nixos-on-encrypted-zfs/
+for i in ${DISK}; do
+echo "Long PW"
+cryptsetup --batch-mode luksFormat ${i}-part3
+#cryptsetup luksFormat $(printf "$i-part3")
+echo "Check long PW"
+cryptsetup open --type luks ${i}-part3 ${i##*/}-crypt
+#cryptsetup open --type luks $(printf "$i-part3") crypt
+done
+echo "Check Finished"
+
 ### Create root pool:
 zpool create \
     -o ashift=12 \
@@ -122,8 +147,11 @@ zpool create \
     -O mountpoint=/ \
     rpool \
    $(for i in ${DISK}; do
-      printf "$i-part3 ";
+      printf "/dev/mapper/${i##*/}-crypt ";
      done) -f
+   #$(for i in ${DISK}; do
+   #   printf "$i-part3 ";
+   #  done)
 #mirror \
 
 ### Create root system container encrypting with native ZFS:
@@ -215,7 +243,7 @@ git add zfs.nix
 nixos-install -v --show-trace --no-root-passwd  --root /mnt --flake ../..#$DEVICE
 
 git add ../../flake.lock
-git commit -m "init ${DEVICE}: $(date +"%D %T")"
+git commit -m "init ${DEVICE}: $(date +"&D &T")"
 git push -f
 
 echo "######install finished SW######"
