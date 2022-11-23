@@ -195,21 +195,22 @@
       #})) // {
       homeConfigurations = {
         sepiabrown = home-manager.lib.homeManagerConfiguration rec {
-          system = "x86_64-linux";
           #legpkgs = nixos_unstable_fixed.legacyPackages.x86_64-linux;#system;
-          #pkgs = nixos.legacyPackages.x86_64-linux;
-          pkgs = import nixpkgs {
-            inherit system;
-          };
-          username = "sepiabrown";
-          homeDirectory = if pkgs.stdenv.isLinux then "/home/sepiabrown" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
-          #configuration.imports = [
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
             ./homemanager_basic.nix
             ./homemanager_optional.nix
             nixpkgs_config
 
             nixpkgs_overlays
+
+            {
+              home = {
+                username = "sepiabrown";
+                homeDirectory = if pkgs.stdenv.isLinux then "/home/sepiabrown" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
+                stateVersion = "22.11";
+              };
+            }
             #({...}:{
             #  home.file = {
             #    ".config/nix/nix.conf".text = ''

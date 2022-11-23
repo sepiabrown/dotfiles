@@ -37,6 +37,8 @@
             okular # kde
             #vscode-with-extensions
             foxitreader
+            xclip
+            xsel
 
             # multimedia
             vlc
@@ -44,6 +46,7 @@
             shutter #libwnck
             capture #no sound #slop
             simplescreenrecorder # with sound
+            ffmpeg
           ];
       }
     )
