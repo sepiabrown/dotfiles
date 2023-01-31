@@ -1,2 +1,2 @@
 # Dotfiles & Configs
-Personal dotfiles and configs used with NixOS configured on "mate+xmonad".
+Personal dotfiles and configs used with NixOS configured on Plasma KDE.
