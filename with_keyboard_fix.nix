@@ -11,17 +11,18 @@
       # Disable plasma application menu popup: https://www.reddit.com/r/kde/comments/9uspp8/how_do_i_disable_the_plasma_application_menu_pop/  https://zren.github.io/kde/#windowsmeta-key
       # kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "" qdbus org.kde.KWin /KWin reconfigure
       # to enable meta to turn on application launcher in kde plasma, erase ~/.config/kwinrc to reset or put 'kwriteconfig5 --file ~/.config/kwinrc --group ModifierOnlyShortcuts --key Meta "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu" qdbus org.kde.KWin /KWin reconfigure' in the if statement instead.
-      extraLayouts.custom_windows = # custom_windows: real xkb symbol file name
+      layout = "sb";
+      extraLayouts.sb = # Suwon_non_darwin: real xkb symbol file name
       let 
-        custom_windows_config_220324 = pkgs.writeText "windows_custom_xkeyboard_220324" # windows_custom_xkeyboard : patch file name
+        sb_non_darwin_config_220924 = pkgs.writeText "sb_non_darwin_xkeyboard_220924" # sb_non_darwin_xkeyboard_220924 : patch file name
 ''
-// '!!!' for changes made by sepiabrown
+// '!!!' : changes made by sb
 default partial alphanumeric_keys modifier_keys
 xkb_symbols "basic" // !!!
 {
     include "us(dvorak)" // !!!
     // key <ESC>  {	[ Escape		]	};
-    key <ESC>  {	[ 		]	}; // !!!
+    key <ESC>  {	[ Shift_R		]	}; // !!!
 
     // The extra key on many European keyboards:
     key <LSGT> {	[ less, greater, bar, brokenbar ] };
@@ -92,14 +93,14 @@ xkb_symbols "basic" // !!!
 '';
       in
       {
-        description = "US layout with sepiabrownn's windows custom patch";
+        description = "US dvorak layout with sepiabrown's patch";
         languages   = [ "eng" ];
-        symbolsFile = custom_windows_config_220324;
+        symbolsFile = sb_non_darwin_config_220924;
       };
 
-      extraLayouts.custom_apple =
+      extraLayouts.sb_darwin =
       let 
-        custom_apple_symbols = pkgs.writeText "custom_apple_symbols_xkeyboard"
+        sb_darwin_config_220924 = pkgs.writeText "sb_darwin_xkeyboard_220924"
 ''
 // '!!!' for changes made by sepiabrown
 default partial alphanumeric_keys modifier_keys
@@ -124,9 +125,9 @@ xkb_symbols "basic" // !!!
 '';
       in
       {
-        description = "US layout with sepiabrownn's apple aluminium custom patch";
+        description = "US dvorak layout with sepiabrown's patch for apple aluminium magic keyboard";
         languages   = [ "eng" ];
-        symbolsFile = custom_apple_symbols;
+        symbolsFile = sb_darwin_config_220924;
       };
     };
   };
@@ -138,7 +139,7 @@ xkb_symbols "basic" // !!!
 # Useful Sites
 # https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Enhancing.html#Defining_New_Layouts
 # https://www.charvolant.org/doug/xkb/html/node5.html
-# https://nixos.org/manual/nixos/stable/#custom-xkb-layouts
+# https://nixos.org/manual/nixos/stable/#Suwon-xkb-layouts
 # https://wiki.archlinux.org/title/X_keyboard_extension
 #
 # Useful Facts
@@ -149,8 +150,8 @@ xkb_symbols "basic" // !!!
 # ex) Mod3 + Shift_L + RTRN = terminal
 #
 # XKB compiler errors meaning:
-# ex) custom_apple:18:5: syntax error
-# custom_apple file was as follows:
+# ex) Suwon_apple:18:5: syntax error
+# Suwon_apple file was as follows:
 #1
 #2 // '!!!' for changes made by sepiabrown
 #3 default partial alphanumeric_keys modifier_keys
@@ -203,3 +204,12 @@ xkb_symbols "basic" // !!!
 # 1. Redirect <LWIN>, <RWIN> to other keys which breaks <LWIN> => Mod4 Link
 # 2. Redirect modifier_map Mod4 to other symbols also breaking the link
 # Usually 1 is preferred because (I think) it is going to be more consistent with other applications/system to preserve the modifier_map and symbol link instead of preserving key code and symbol link.
+#
+# Fcitx observations
+# - 한 + sb_non_darwin_220924 : seobeulsik not working, Caps Lock not working, ESC at RShift too
+# - 한 + English(Dvorak) : seobeulsik not working, Caps Lock at Windows, ESC at RShift too
+# - 한 + English(US) : seobeulsik not working, Caps Lock at Windows, ESC at RShift too
+# - 키보드 표시 + sb_non_darwin_220924 : dvorak working, Caps Lock at Windows, ESC at RShift too
+# - 키보드 표시 + English(Dvorak) : dvorak working, Caps Lock at Windows, ESC at RShift too
+# - 키보드 표시 + English(US) : dvorak not working, Caps Lock at Windows, ESC at RShift too
+

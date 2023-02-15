@@ -15,8 +15,8 @@
 
   environment.systemPackages = with pkgs; [
     # test
-    ponysay
-    cowsay
+    #ponysay
+    #cowsay
 
     # network/bluetooth/printer
     protonvpn-gui # run protonvpn-cli by nix run nixpkgs#protovpn-cli
@@ -115,8 +115,12 @@
       enable = true;
       enableExtensionPack = true;
     };
-    guest.enable = true;
+    ## When NixOS is installed inside VirtualBox
+    # guest.enable = true;
+    # guest.x11 = true;
   };
+  
+  users.extraGroups.vboxusers.members = [ "sepiabrown" ];
 
   virtualisation.docker = {
     enable = true;
@@ -124,7 +128,6 @@
 
   hardware.sane.enable = true;
 
-  users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # Optional: To protect your nix-shell against garbage collection you also need to add these options to your Nix configuration.
   # On other systems with Nix add the following configuration to your /etc/nix/nix.conf

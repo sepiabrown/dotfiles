@@ -4,7 +4,22 @@
 
   outputs = inputs: with inputs; #rec {
     let
-      init = true;
+      init = false;
+      home_sepiabrown = {
+        home = {
+          username = "sepiabrown";
+          homeDirectory = if pkgs.stdenv.isLinux then "/home/sepiabrown" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
+          #homeDirectory = "/home/sepiabrown";
+          stateVersion = "22.05";
+        };
+      };
+      home_sb = {
+        home = {
+          username = "sb";
+          homeDirectory = if pkgs.stdenv.isLinux then "/home/sb" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
+          stateVersion = "22.05";
+        };
+      };
       nixpkgs_config = {
         nixpkgs.config = {
           #allowUnfree = true;
@@ -113,23 +128,50 @@
             })
 
             (./devices + "/${target}/configuration.nix")
-            (./devices + "/${target}/hardware-configuration.nix")
+            (import (./devices + "/${target}/hardware-configuration.nix") { nixos-hardware = inputs.nixos-hardware; })
           ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/zfs.nix")) [ # Every folder needs to be git added!
             (./devices + "/${target}/zfs.nix")
           ] ++ nixpkgs.lib.optionals (!init) [
             ./configuration_optional.nix
             ./with_keyboard_fix.nix
+            ./network_gen.nix
             ./secret.nix
             ({ pkgs, ...}: {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.sepiabrown.imports = [
+              home-manager.users.sb.imports = [
                 ./homemanager_basic.nix
                 ./homemanager_optional.nix
+                home_sb
+                ({ pkgs, ...}: {
+                  #system.stateVersion = inputs.nixpkgs.lib.version;
+                  home.stateVersion = "22.05";#builtins.substring 0 5 inputs.nixpkgs.lib.version;
+                })
               ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [ # Every folder needs to be git added!
 
                 (./devices + "/${target}/homemanager.nix")
               ];
+              #home-manager.users.sepiabrown.imports = [
+                home-manager.users.sepiabrown = { pkgs, ... }: {
+                  #programs.doom-emacs = {
+                  #  enable = true;
+                  #  doomPrivateDir = ./doom.d;
+                  #};
+                
+                  imports = [
+                    #nix-doom-emacs.hmModule
+                    ./homemanager_basic.nix
+                    ./homemanager_optional.nix
+                    home_sepiabrown
+                    ({ pkgs, ...}: {
+                      #system.stateVersion = inputs.nixpkgs.lib.version;
+                      home.stateVersion = "22.05";#builtins.substring 0 5 inputs.nixpkgs.lib.version;
+                    })
+                  ] ++ nixpkgs.lib.optionals (builtins.pathExists (./devices + "/${target}/homemanager.nix")) [ # Every folder needs to be git added!
+
+                    (./devices + "/${target}/homemanager.nix")
+                  ];
+                };
               #home.file = {
               #  ".config/nix/nix.conf".text = ''
               #    experimental-features = nix-command flakes
@@ -201,16 +243,8 @@
             ./homemanager_basic.nix
             ./homemanager_optional.nix
             nixpkgs_config
-
             nixpkgs_overlays
-
-            {
-              home = {
-                username = "sepiabrown";
-                homeDirectory = if pkgs.stdenv.isLinux then "/home/sepiabrown" else if pkgs.stdenv.isDarwin then "/Users/bayeslab/SW" else "";
-                stateVersion = "22.11";
-              };
-            }
+            home_sepiabrown
             #({...}:{
             #  home.file = {
             #    ".config/nix/nix.conf".text = ''
@@ -243,11 +277,16 @@
   # };
 
   inputs = {
+    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
     #nixos_unstable.url = "github:sepiabrown/nixpkgs/nixos-unstable";
     #home-manager_unstable.url = "github:nix-community/home-manager";
     #nixos_2105.url = "nixpkgs/nixos-21.05";
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    #nixpkgs.url = "path:nixpkgs"; #unstabl
+    #nixpkgs.url = /home/sepiabrown/dotfiles/nixpkgs; #unstabl
+    #nixpkgs.url = "nixpkgs/f677051"; #unstabl
+    #nixpkgs.url = "nixpkgs/ae1dc133ea5f1538d035af41e5ddbc2ebcb67b90"; #unstabl
     #nixpkgs.url = "nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:sepiabrown/nixpkgs/test_autostart";
     #nixpkgs.url = "github:sepiabrown/nixpkgs/chrome-remote-desktop_2205"; # for darwinConfigurations
     darwin = {
       url = "github:lnl7/nix-darwin";
@@ -269,6 +308,7 @@
     flake-utils = {
       url = "github:numtide/flake-utils";
     };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   nixConfig = {

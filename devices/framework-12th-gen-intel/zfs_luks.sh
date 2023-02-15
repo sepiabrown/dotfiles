@@ -253,7 +253,8 @@ zpool export -a
 
 ### Reboot:
 echo "reboot"
-shutdown -P now
+echo "add user by 'useradd -m <user>'"
+#shutdown -P now
 #reboot
 
 #

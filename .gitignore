@@ -20,3 +20,5 @@
 !/zfs
 !/init/
 !*.nix
+!/nixpkgs/
+!doom.d/

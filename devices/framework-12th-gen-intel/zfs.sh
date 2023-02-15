@@ -193,8 +193,19 @@ nix-env -iA nixpkgs.nix nixpkgs.cacert
 nixos-generate-config --root /mnt
 
 sed -i "/.\/hardware-configuration.nix/d" /mnt/etc/nixos/configuration.nix
-#sed -i "s|\[ (modulesPath|\[ ./zfs.nix (modulesPath|g" /mnt/etc/nixos/hardware-configuration.nix
+sed -i "1i { nixos-hardware }:" /mnt/etc/nixos/hardware-configuration.nix
+#sed -i "s|{ config|{ nixos-hardware, config|g" /mnt/etc/nixos/hardware-configuration.nix
+sed -i "s|\[ (modulesPath|\[ nixos-hardware.nixosModules.${DEVICE} (modulesPath|g" /mnt/etc/nixos/hardware-configuration.nix
 #sed -i "s|./hardware-configuration.nix|./hardware-configuration.nix ./zfs.nix|g" /mnt/etc/nixos/configuration.nix
+
+{ nixos-hardware, config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports =
+    [ framework-12th-gen-intel (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+
+
 
 sed -i '/boot.loader/d' /mnt/etc/nixos/configuration.nix
 sed -i '/services.xserver/d' /mnt/etc/nixos/configuration.nix
@@ -225,7 +236,8 @@ zpool export -a
 
 ### Reboot:
 echo "reboot"
-shutdown -P now
+echo "add users by 'useradd -m <user>'"
+#shutdown -P now
 #reboot
 
 #

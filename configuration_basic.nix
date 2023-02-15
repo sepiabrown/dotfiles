@@ -2,6 +2,16 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 #
+# ### IMPORTANT! ###
+# - After installing NixOS and booting for the first time, you need to either
+#  - add the `sepiabrown` folder under `/home` path with `chown sepiabrown sepiabrown`.
+# - For keyboard, check whether right shift works as `Escape`.
+# - For network in kde plasma, go to preference > KDE Wallet 
+#   > Check 'Different wallet for local passwords'
+#   > Create 'localwallet' with 0 length password
+#   > add wifi password psk in the 'localwallet'
+#   - wifi password should be configured with
+#     'Store password for this user only (encrypted)' checked
 # Configuring ssh :
 # $ ssh-keygen -t ed25519 -C "sepiabrown@naver.com"
 # $ eval "$(ssh-agent -s)"
@@ -125,7 +135,10 @@
   # List packages installed in system profile. To search, run:
   # nix search wget
   environment.systemPackages = with pkgs; [
+    #nimf
     firefox
+    gitFull
+    nixos-option
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -191,9 +204,11 @@
 # What does nixos.firefox-esr-wayland mean?
 #
 # A1.
-# They are attribute name. Accessible like a path.
-# They are made in the form of variable names in .nix files in ~/.nix-defexpr/channels_root/nixos/...
-# Many of them are aliases!
+# It is an attribute name. Accessible like a path.
+# It is made in the form of variable names in .nix files in ~/.nix-defexpr/channels_root/nixos/...
+# 
+# A2.
+# It is an alias!(Below #8) 
 #
 # Aliases:
 # Check
@@ -242,7 +257,7 @@
 #     attrPath = "firefox-esr-91-unwrapped";
 #
 ######################################################################
-# Wil T 
+# William Taylor's guide 
 #
 # Bin paths(not editable):
 #   /run/current-system/sw/bin

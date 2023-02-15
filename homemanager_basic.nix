@@ -63,6 +63,7 @@
 {
   config = lib.mkMerge [
     (lib.mkIf pkgs.stdenv.isLinux {
+      manual.manpages.enable = false;
       programs = {
         gpg = {
           enable = true;
@@ -89,6 +90,7 @@
           lvm2
           baobab # Disk Usage Analyser
           xautoclick
+          sl
         ];
     })
     {
@@ -140,36 +142,36 @@
           '';
         };
 
-        alacritty = {
-          enable = true;
-          settings = {
-            env.TERM = "xterm-256color";
-            window.dimensions = {
-              lines = 3;
-              columns = 200;
-            };
-            # key_bindings = [
-            #   {
-            #     key = "K";
-            #     mods = "Control";
-            #     chars = "\\x0c";
-            #   }
-            # ];
-          };
-          # setting alacritty in another way
-          # home.file = {
-          #   ".config/alacritty/alacritty.yaml".text = ''
-          #     env:
-          #       TERM: xterm-256color
-          #     window:
-          #       dimensions:
-          #         lines : 3
-          #         columns : 200
-          #     key_bindings:
-          #       - { key: K, mods: Control, chars: "\x0c"  }
-          #   '';
-          # };
-        };
+        #alacritty = {
+        #  enable = true;
+        #  settings = {
+        #    env.TERM = "xterm-256color";
+        #    window.dimensions = {
+        #      lines = 200;
+        #      columns = 200;
+        #    };
+        #    # key_bindings = [
+        #    #   {
+        #    #     key = "K";
+        #    #     mods = "Control";
+        #    #     chars = "\\x0c";
+        #    #   }
+        #    # ];
+        #  };
+        #  # setting alacritty in another way
+        #  # home.file = {
+        #  #   ".config/alacritty/alacritty.yaml".text = ''
+        #  #     env:
+        #  #       TERM: xterm-256color
+        #  #     window:
+        #  #       dimensions:
+        #  #         lines : 3
+        #  #         columns : 200
+        #  #     key_bindings:
+        #  #       - { key: K, mods: Control, chars: "\x0c"  }
+        #  #   '';
+        #  # };
+        #};
 
         git = {
           enable = true;
@@ -312,11 +314,32 @@
           extraConfig = "set -g mouse on";
           historyLimit = 100000;
         };
+######################
+# Not Tested on darwin
+######################
+        kitty = {
+          enable = true;
+          keybindings = {
+            "ctrl+c" = "copy_or_interrupt";
+            "ctrl+f>2" = "set_font_size 20";
+            "f1" = "launch --stdin-source=@screen_scrollback --stdin-add-formatting less +G -R";
+          };
+          settings = {
+            scrollback_lines = -1;
+            enable_audio_bell = false;
+            update_check_interval = 0;
+            initial_window_width = "79c";
+            initial_window_height = "24c";
+            font_size = "14.0";
+          };
+          theme = "Space Gray Eighties";
+        };
       };
 
       home.file = {
         "my.rclone".source = pkgs.writeScript "my_rclone" ''
           #!/usr/bin/env bash
+          echo hi
           RCLONEPATHS="_mobile __inbox _참고자료 통계학"
           #RCLONEHOME= "/commonground/gd/"
           RCLONEHOME="/home/sepiabrown/gd/"
@@ -418,6 +441,12 @@
         '';
         "filter-file-download".text = ''
           - ltximg/**
+        '';
+        ".config/gh/hosts.yml".text = ''
+          github.com:
+              user: sepiabrown
+              oauth_token: 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
+              git_protocol: ssh
         '';
         ".config/nix/nix.conf".text = builtins.readFile ./nix.conf;
         ".kaggle/kaggle.json".text = ''

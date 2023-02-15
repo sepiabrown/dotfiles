@@ -40,6 +40,10 @@
             xclip
             xsel
 
+            # gpg
+            zbar
+            paperkey
+
             # multimedia
             vlc
             flameshot
@@ -92,6 +96,7 @@
           # tools
           # evince # gnome
           vscode-with-extensions
+          progress
 
           # document tools
           poppler_utils
